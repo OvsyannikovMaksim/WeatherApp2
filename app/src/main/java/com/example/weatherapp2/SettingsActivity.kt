@@ -17,6 +17,10 @@ class SettingsActivity : AppCompatActivity() {
             finish()
         }
 
+        binding.saveButton.setOnClickListener {
+            SaveDialog().show(supportFragmentManager, "SaveDialog")
+        }
+
     }
 
 
