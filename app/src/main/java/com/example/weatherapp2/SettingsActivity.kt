@@ -1,9 +1,7 @@
 package com.example.weatherapp2
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import com.example.weatherapp2.databinding.ActivityMainBinding
+import androidx.appcompat.app.AppCompatActivity
 import com.example.weatherapp2.databinding.ActivitySettingsBinding
 
 class SettingsActivity : AppCompatActivity() {
@@ -13,10 +11,12 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.toolbar.title = getString(R.string.setting_activity_name)
         setSupportActionBar(binding.toolbar)
-        binding.toolbar.setNavigationOnClickListener{
+        binding.toolbar.setNavigationOnClickListener {
             finish()
         }
+
     }
 
 

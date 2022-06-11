@@ -7,6 +7,7 @@
     tools:context=".SettingsActivity">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -22,13 +23,27 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <TextView
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/switch_map"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Settings Activity"
+
+        android:text="Live weather"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.15"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
+
+    <Button
+        android:id="@+id/save_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginBottom="75dp"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
