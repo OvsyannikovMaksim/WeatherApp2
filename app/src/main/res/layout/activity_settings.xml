@@ -31,7 +31,8 @@
         android:text="@string/choose_map"
         app:layout_constraintStart_toEndOf="@id/guideline1"
         app:layout_constraintTop_toTopOf="@id/maps_spinner"
-        app:layout_constraintBottom_toBottomOf="@id/maps_spinner"/>
+        app:layout_constraintBottom_toBottomOf="@id/maps_spinner"
+        />
 
 
     <androidx.appcompat.widget.AppCompatSpinner
@@ -40,14 +41,15 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_marginTop="25dp"
+        android:textAlignment="center"
         app:layout_constraintEnd_toStartOf="@id/guideline2"
         app:layout_constraintStart_toEndOf="@+id/map_text"
-        app:layout_constraintTop_toBottomOf="@id/appBarLayout" />
-
+        app:layout_constraintTop_toBottomOf="@id/appBarLayout"
+        android:entries="@array/maps_spinner"/>
 
 
     <com.google.android.material.switchmaterial.SwitchMaterial
-        android:id="@+id/switch_map"
+        android:id="@+id/switch_service"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -56,7 +58,30 @@
         app:layout_constraintStart_toStartOf="@id/guideline1"
         app:layout_constraintTop_toBottomOf="@id/maps_spinner" />
 
+    <EditText
+        android:id="@+id/time_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toStartOf="@id/text_minutes"
+        app:layout_constraintStart_toStartOf="@id/guideline1"
+        app:layout_constraintTop_toBottomOf="@id/switch_service"
+        android:visibility="invisible"
+        android:text="30"
+        android:maxLength="3"
+        android:digits="1234567890"
+        android:inputType="numberDecimal" />
 
+    <TextView
+        android:id="@+id/text_minutes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/minutes"
+        android:visibility="invisible"
+        app:layout_constraintBaseline_toBaselineOf="@+id/time_text"
+        app:layout_constraintEnd_toStartOf="@id/guideline2"
+        app:layout_constraintStart_toEndOf="@id/time_text"
+        />
 
     <Button
         android:id="@+id/save_button"

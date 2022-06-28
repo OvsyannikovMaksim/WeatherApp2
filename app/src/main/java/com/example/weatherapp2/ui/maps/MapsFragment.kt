@@ -4,39 +4,31 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import com.example.weatherapp2.databinding.FragmentMapYandexBinding
+import com.example.weatherapp2.R
+import com.example.weatherapp2.SharedPreferences
+import com.example.weatherapp2.databinding.FragmentMapBinding
 
 class MapsFragment : Fragment() {
 
-    private var _binding: FragmentMapYandexBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+    private lateinit var mapBinding: FragmentMapBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val dashboardViewModel =
-            ViewModelProvider(this).get(MapsViewModel::class.java)
-
-        _binding = FragmentMapYandexBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-        val textView: TextView = binding.textDashboard
-        dashboardViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+        mapBinding = FragmentMapBinding.inflate(inflater, container, false)
+        if (SharedPreferences.preferences.getString(getString(R.string.map), "Google") == "Google"
+        ) {
+            mapBinding.textGoogle.visibility = View.VISIBLE
+            mapBinding.textYandex.visibility = View.GONE
+        } else if (SharedPreferences.preferences.getString(getString(R.string.map), "Google") == "Yandex"
+        ) {
+            mapBinding.textGoogle.visibility = View.GONE
+            mapBinding.textYandex.visibility = View.VISIBLE
         }
-        return root
-    }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+        return mapBinding.root
     }
 }
