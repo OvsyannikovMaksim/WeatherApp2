@@ -5,8 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.weatherapp2.R
-import com.example.weatherapp2.SharedPreferences
+import com.example.weatherapp2.LocalDataCache
 import com.example.weatherapp2.databinding.FragmentMapBinding
 
 class MapsFragment : Fragment() {
@@ -19,11 +18,11 @@ class MapsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         mapBinding = FragmentMapBinding.inflate(inflater, container, false)
-        if (SharedPreferences.preferences.getString(getString(R.string.map), "Google") == "Google"
+        if (LocalDataCache.getChosenMap() == "Google"
         ) {
             mapBinding.textGoogle.visibility = View.VISIBLE
             mapBinding.textYandex.visibility = View.GONE
-        } else if (SharedPreferences.preferences.getString(getString(R.string.map), "Google") == "Yandex"
+        } else if (LocalDataCache.getChosenMap() == "Yandex"
         ) {
             mapBinding.textGoogle.visibility = View.GONE
             mapBinding.textYandex.visibility = View.VISIBLE

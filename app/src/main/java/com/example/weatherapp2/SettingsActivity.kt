@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import com.example.weatherapp2.databinding.ActivitySettingsBinding
 
-class SettingsActivity : AppCompatActivity(), SaveDialog.NoticeDialogListener {
+class SettingsActivity : AppCompatActivity(), SaveSettingsDialog.NoticeDialogListener {
     private lateinit var binding: ActivitySettingsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,40 +19,36 @@ class SettingsActivity : AppCompatActivity(), SaveDialog.NoticeDialogListener {
             finish()
         }
 
-        binding.switchService.isChecked = SharedPreferences
-            .preferences.getBoolean(getString(R.string.service), false)
+        binding.switchService.isChecked = LocalDataCache.getServiceState()
         if (binding.switchService.isChecked) {
             binding.timeText.visibility = View.VISIBLE
             binding.textMinutes.visibility = View.VISIBLE
 
             binding.timeText.setText(
-                SharedPreferences.preferences
-                    .getInt(getString(R.string.update_time), 30).toString()
+                LocalDataCache.getServiceUpdateTime().toString()
             )
         }
 
-        binding.switchService.setOnCheckedChangeListener { _, b ->
-            checkSwitch(b)
+        binding.switchService.setOnCheckedChangeListener { _, isViewsVisible ->
+            syncPeriodViewsVisibility(isViewsVisible)
         }
 
         binding.saveButton.setOnClickListener {
-            SaveDialog().show(supportFragmentManager, "SaveDialog")
+            SaveSettingsDialog().show(supportFragmentManager, "SaveDialog")
         }
     }
 
     override fun onDialogPositiveClick(dialog: DialogFragment) {
-        SharedPreferences.preferences.edit()
-            .putBoolean(getString(R.string.service), binding.switchService.isChecked)
-            .putInt(getString(R.string.update_time), binding.timeText.text.toString().toInt())
-            .putString(getString(R.string.map), binding.mapsSpinner.selectedItem.toString())
-            .apply()
+        LocalDataCache.setServiceUpdateTime(binding.timeText.text.toString().toInt())
+        LocalDataCache.setServiceState(binding.switchService.isChecked)
+        LocalDataCache.setChosenMap(binding.mapsSpinner.selectedItem.toString())
     }
 
     override fun onDialogNegativeClick(dialog: DialogFragment) {
     }
 
-    private fun checkSwitch(bool: Boolean) {
-        if (bool) {
+    private fun syncPeriodViewsVisibility(isViewsVisible: Boolean) {
+        if (isViewsVisible) {
             binding.timeText.visibility = View.VISIBLE
             binding.textMinutes.visibility = View.VISIBLE
         } else {

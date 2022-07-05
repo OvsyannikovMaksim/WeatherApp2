@@ -6,7 +6,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 
-class SaveDialog : DialogFragment() {
+class SaveSettingsDialog : DialogFragment() {
 
     private lateinit var listener: NoticeDialogListener
 

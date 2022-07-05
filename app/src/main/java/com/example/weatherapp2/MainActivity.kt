@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        SharedPreferences.init(applicationContext)
+        LocalDataCache.init(applicationContext)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -33,7 +33,8 @@ class MainActivity : AppCompatActivity() {
 
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_home, R.id.navigation_maps
+                R.id.navigation_home,
+                R.id.navigation_maps
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -46,7 +47,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
         if (item.itemId == R.id.action_settings) {
             val intent = Intent(this, SettingsActivity::class.java)
             startActivity(intent)
