@@ -3,4 +3,19 @@
     <string name="title_home">Home</string>
     <string name="title_maps">Map</string>
     <string name="settings">Settings</string>
+    <string name="setting_activity_name">Settings</string>
+    <string name="choose_map">Choose map:</string>
+    <string name="live_weather_text">Live weather</string>
+    <string name="save_button_text">Save</string>
+    <string name="dialog_text">Do you want to save?</string>
+    <string name="cancel_button_text">Cancel</string>
+    <string name="shared_pref_tag" translatable="false">SharedPref</string>
+    <string name="service" translatable="false">service</string>
+    <string name="minutes">minutes</string>
+    <string name="update_time" translatable="false">update_time</string>
+    <string name="map">map</string>
+    <string-array name="maps_spinner">
+        <item>Google</item>
+        <item>Yandex</item>
+    </string-array>
 </resources>

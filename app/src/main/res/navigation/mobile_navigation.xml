@@ -15,6 +15,6 @@
         android:id="@+id/navigation_maps"
         android:name="com.example.weatherapp2.ui.maps.MapsFragment"
         android:label="@string/title_maps"
-        tools:layout="@layout/fragment_map_yandex" />
+        tools:layout="@layout/fragment_map" />
 
 </navigation>
