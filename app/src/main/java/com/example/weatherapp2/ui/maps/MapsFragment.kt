@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.weatherapp2.LocalDataCache
 import com.example.weatherapp2.databinding.FragmentMapBinding
+import com.example.weatherapp2.model.repository.LocalDataCache
 
 class MapsFragment : Fragment() {
 

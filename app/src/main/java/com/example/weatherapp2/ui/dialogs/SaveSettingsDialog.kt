@@ -1,10 +1,11 @@
-package com.example.weatherapp2
+package com.example.weatherapp2.ui.dialogs
 
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import com.example.weatherapp2.R
 
 class SaveSettingsDialog : DialogFragment() {
 

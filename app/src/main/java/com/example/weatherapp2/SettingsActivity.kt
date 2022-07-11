@@ -5,6 +5,8 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import com.example.weatherapp2.databinding.ActivitySettingsBinding
+import com.example.weatherapp2.model.repository.LocalDataCache
+import com.example.weatherapp2.ui.dialogs.SaveSettingsDialog
 
 class SettingsActivity : AppCompatActivity(), SaveSettingsDialog.NoticeDialogListener {
     private lateinit var binding: ActivitySettingsBinding
