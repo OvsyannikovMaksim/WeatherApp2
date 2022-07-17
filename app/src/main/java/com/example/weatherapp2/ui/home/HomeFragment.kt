@@ -11,9 +11,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weatherapp2.databinding.FragmentHomeBinding
 import com.example.weatherapp2.model.api.OpenWeatherApiRetrofit
-import com.example.weatherapp2.model.common.CityCoordinate
 import com.example.weatherapp2.model.common.openWeatherApi.CityWeatherFullInfo
+import com.example.weatherapp2.model.db.DataBase
 import com.example.weatherapp2.model.repository.CityWeatherRepoImpl
+import com.example.weatherapp2.model.repository.LocalRepoImpl
 import com.example.weatherapp2.ui.WeatherFullInfoAdapter
 
 class HomeFragment : Fragment() {
@@ -29,7 +30,10 @@ class HomeFragment : Fragment() {
     ): View {
         fragmentHomeBinding = FragmentHomeBinding.inflate(inflater, container, false)
         val cityWeatherRepoImpl = CityWeatherRepoImpl(OpenWeatherApiRetrofit.openWeatherApi)
-        homeViewModelFactory = HomeViewModelFactory(cityWeatherRepoImpl)
+        val dataBase = DataBase.getDataBase(this.context!!)!!
+        val localDao = dataBase.localDao()
+        val localRepo = LocalRepoImpl(localDao)
+        homeViewModelFactory = HomeViewModelFactory(cityWeatherRepoImpl, localRepo)
         homeViewModel = ViewModelProvider(this, homeViewModelFactory).get(HomeViewModel::class.java)
         return fragmentHomeBinding.root
     }
@@ -42,8 +46,7 @@ class HomeFragment : Fragment() {
             LinearLayoutManager.VERTICAL,
             false
         )
-        val test = listOf(CityCoordinate("55", "55"), CityCoordinate("-55", "-55"))
-        homeViewModel.getCitiesInfo(test, "ru")
+        homeViewModel.getCitiesInfo("ru")
         val recyclerView = fragmentHomeBinding.cityInfoRecyclerview
         recyclerView.layoutManager = mLayout
         val weatherFullInfoAdapter = WeatherFullInfoAdapter()
