@@ -8,7 +8,7 @@ class CityWeatherRepoImpl(private val openWeatherApi: OpenWeatherApi) : CityWeat
     private val API_KEY_OPEN_WEATHER: String = "4eddd7394f54a0dd81465aa802a837f5"
     private val EXCLUDE_FULL_INFO: String = "minutely,hourly,alerts"
 
-    override fun getCityWeatherFullInfo(
+    override suspend fun getCityWeatherFullInfo(
         latitude: String,
         longitude: String,
         lang: String

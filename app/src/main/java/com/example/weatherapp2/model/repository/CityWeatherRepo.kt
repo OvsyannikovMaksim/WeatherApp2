@@ -4,7 +4,7 @@ import com.example.weatherapp2.model.common.openWeatherApi.CityWeatherFullInfo
 
 interface CityWeatherRepo {
 
-    fun getCityWeatherFullInfo(
+    suspend fun getCityWeatherFullInfo(
         latitude: String,
         longitude: String,
         lang: String

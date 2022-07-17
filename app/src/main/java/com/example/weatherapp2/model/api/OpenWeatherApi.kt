@@ -7,7 +7,7 @@ import retrofit2.http.Query
 interface OpenWeatherApi {
 
     @GET("data/2.5/onecall")
-    fun getCityWeatherInfo(
+    suspend fun getCityWeatherInfo(
         @Query("lat") latitude: String,
         @Query("lon") longitude: String,
         @Query("exclude") exclude: String,
