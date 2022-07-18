@@ -7,8 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.weatherapp2.R
 import com.example.weatherapp2.databinding.FragmentHomeBinding
 import com.example.weatherapp2.model.api.OpenWeatherApiRetrofit
 import com.example.weatherapp2.model.common.openWeatherApi.CityWeatherFullInfo
@@ -54,6 +56,13 @@ class HomeFragment : Fragment() {
         citiesWeather.observe(viewLifecycleOwner) {
             weatherFullInfoAdapter.submitList(it)
             recyclerView.adapter = weatherFullInfoAdapter
+        }
+        fragmentHomeBinding.addCityButton.setOnClickListener {
+            /*parentFragmentManager.beginTransaction()
+                .replace(R.id.nav_host_fragment_activity_main, InputCitiesFragment())
+                .addToBackStack(null)
+                .commit()*/
+            it.findNavController().navigate(R.id.action_navigation_home_to_navigation_input_city)
         }
     }
 }

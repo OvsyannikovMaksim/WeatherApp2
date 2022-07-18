@@ -9,12 +9,24 @@
         android:id="@+id/navigation_home"
         android:name="com.example.weatherapp2.ui.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_input_city"
+            app:destination="@id/navigation_input_city"
+            app:popUpTo="@id/navigation_home"
+            app:popUpToInclusive="true" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_maps"
         android:name="com.example.weatherapp2.ui.maps.MapsFragment"
         android:label="@string/title_maps"
         tools:layout="@layout/fragment_map" />
+
+    <fragment
+        android:id="@+id/navigation_input_city"
+        android:name="com.example.weatherapp2.ui.inputCities.InputCitiesFragment"
+        android:label="@string/title_input_city"
+        tools:layout="@layout/fragment_input_cities" />
 
 </navigation>

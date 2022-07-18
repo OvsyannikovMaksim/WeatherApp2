@@ -7,7 +7,6 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.weatherapp2.model.common.CityCoordinate
 import com.example.weatherapp2.model.common.openWeatherApi.CityWeatherFullInfo
-import com.example.weatherapp2.model.common.openWeatherApi.Weather
 
 @Database(entities = [CityCoordinate::class, CityWeatherFullInfo::class], version = 1)
 @TypeConverters(Converters::class)

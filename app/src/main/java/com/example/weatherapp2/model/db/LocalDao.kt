@@ -5,9 +5,9 @@ import com.example.weatherapp2.model.common.CityCoordinate
 import com.example.weatherapp2.model.common.openWeatherApi.CityWeatherFullInfo
 
 @Dao
-interface LocalDao{
+interface LocalDao {
 
-    //Это для координат городов
+    // Это для координат городов
     @Query("SELECT * FROM CityCoordinate")
     suspend fun getCitiesCoordinates(): List<CityCoordinate>
 
@@ -17,13 +17,13 @@ interface LocalDao{
     @Delete
     suspend fun deleteCityCoordinate(cityCoordinate: CityCoordinate)
 
-    //Это для погоды
+    // Это для погоды
     @Query("SELECT * FROM CityWeatherFullInfo WHERE lon =:longitude and lat=:latitude ")
     suspend fun getOneCityWeatherFullInfo(latitude: Double, longitude: Double): CityWeatherFullInfo
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addOneCityWeatherFullInfo(cityWeatherFullInfo:CityWeatherFullInfo)
+    suspend fun addOneCityWeatherFullInfo(cityWeatherFullInfo: CityWeatherFullInfo)
 
     @Delete
-    suspend fun deleteOneCityWeatherFullInfo(cityWeatherFullInfo:CityWeatherFullInfo)
+    suspend fun deleteOneCityWeatherFullInfo(cityWeatherFullInfo: CityWeatherFullInfo)
 }

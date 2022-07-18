@@ -4,9 +4,9 @@ import com.example.weatherapp2.model.common.CityCoordinate
 import com.example.weatherapp2.model.common.openWeatherApi.CityWeatherFullInfo
 import com.example.weatherapp2.model.db.LocalDao
 
-class LocalRepoImpl(private val localDao: LocalDao): LocalRepo {
+class LocalRepoImpl(private val localDao: LocalDao) : LocalRepo {
 
-    override suspend fun getCitiesCoordinates(): List<CityCoordinate>{
+    override suspend fun getCitiesCoordinates(): List<CityCoordinate> {
         return localDao.getCitiesCoordinates()
     }
 
