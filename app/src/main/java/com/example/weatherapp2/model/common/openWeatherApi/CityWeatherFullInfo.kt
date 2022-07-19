@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class CityWeatherFullInfo(
-    @PrimaryKey(autoGenerate = true) val id: Int,
+    @PrimaryKey var id: Int,
     val lat: Double,
     val lon: Double,
     val timezone: String,

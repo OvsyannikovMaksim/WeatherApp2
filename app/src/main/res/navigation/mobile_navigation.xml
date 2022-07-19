@@ -14,7 +14,7 @@
             android:id="@+id/action_navigation_home_to_navigation_input_city"
             app:destination="@id/navigation_input_city"
             app:popUpTo="@id/navigation_home"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="false" />
     </fragment>
 
     <fragment

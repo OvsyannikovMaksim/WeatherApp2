@@ -18,7 +18,10 @@ interface LocalDao {
     suspend fun deleteCityCoordinate(cityCoordinate: CityCoordinate)
 
     // Это для погоды
-    @Query("SELECT * FROM CityWeatherFullInfo WHERE lon =:longitude and lat=:latitude ")
+    @Query("SELECT * FROM CityWeatherFullInfo")
+    suspend fun getAllCityWeatherFullInfo(): List<CityWeatherFullInfo>
+
+    @Query("SELECT * FROM CityWeatherFullInfo WHERE lon =:longitude and lat=:latitude")
     suspend fun getOneCityWeatherFullInfo(latitude: Double, longitude: Double): CityWeatherFullInfo
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

@@ -13,6 +13,8 @@ interface LocalRepo {
     suspend fun deleteCityCoordinate(cityCoordinate: CityCoordinate)
 
     // Это для погоды
+    suspend fun getAllCityWeatherFullInfo(): List<CityWeatherFullInfo>
+
     suspend fun getOneCityWeatherFullInfo(latitude: Double, longitude: Double): CityWeatherFullInfo
 
     suspend fun addOneCityWeatherFullInfo(cityWeatherFullInfo: CityWeatherFullInfo)

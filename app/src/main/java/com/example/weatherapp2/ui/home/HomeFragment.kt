@@ -48,7 +48,7 @@ class HomeFragment : Fragment() {
             LinearLayoutManager.VERTICAL,
             false
         )
-        homeViewModel.getCitiesInfo("ru")
+        homeViewModel.getCitiesInfoAndLoadItToLocalRepo("ru")
         val recyclerView = fragmentHomeBinding.cityInfoRecyclerview
         recyclerView.layoutManager = mLayout
         val weatherFullInfoAdapter = WeatherFullInfoAdapter()
@@ -58,10 +58,6 @@ class HomeFragment : Fragment() {
             recyclerView.adapter = weatherFullInfoAdapter
         }
         fragmentHomeBinding.addCityButton.setOnClickListener {
-            /*parentFragmentManager.beginTransaction()
-                .replace(R.id.nav_host_fragment_activity_main, InputCitiesFragment())
-                .addToBackStack(null)
-                .commit()*/
             it.findNavController().navigate(R.id.action_navigation_home_to_navigation_input_city)
         }
     }

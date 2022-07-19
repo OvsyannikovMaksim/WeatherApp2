@@ -18,6 +18,10 @@ class LocalRepoImpl(private val localDao: LocalDao) : LocalRepo {
         localDao.deleteCityCoordinate(cityCoordinate)
     }
 
+    override suspend fun getAllCityWeatherFullInfo(): List<CityWeatherFullInfo> {
+        return localDao.getAllCityWeatherFullInfo()
+    }
+
     override suspend fun getOneCityWeatherFullInfo(
         latitude: Double,
         longitude: Double
