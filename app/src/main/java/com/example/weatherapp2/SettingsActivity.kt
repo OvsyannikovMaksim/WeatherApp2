@@ -1,6 +1,7 @@
 package com.example.weatherapp2
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
@@ -20,7 +21,7 @@ class SettingsActivity : AppCompatActivity(), SaveSettingsDialog.NoticeDialogLis
         binding.toolbar.setNavigationOnClickListener {
             finish()
         }
-
+        binding.mapsSpinner.setSelection(LocalDataCache.getChosenMapId())
         binding.switchService.isChecked = LocalDataCache.getServiceState()
         if (binding.switchService.isChecked) {
             binding.timeText.visibility = View.VISIBLE
@@ -43,7 +44,8 @@ class SettingsActivity : AppCompatActivity(), SaveSettingsDialog.NoticeDialogLis
     override fun onDialogPositiveClick(dialog: DialogFragment) {
         LocalDataCache.setServiceUpdateTime(binding.timeText.text.toString().toInt())
         LocalDataCache.setServiceState(binding.switchService.isChecked)
-        LocalDataCache.setChosenMap(binding.mapsSpinner.selectedItem.toString())
+        LocalDataCache.setChosenMapId(binding.mapsSpinner.selectedItemPosition)
+        finish()
     }
 
     override fun onDialogNegativeClick(dialog: DialogFragment) {

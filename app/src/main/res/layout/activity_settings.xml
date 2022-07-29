@@ -41,11 +41,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_marginTop="25dp"
+        android:entries="@array/maps_spinner"
         android:textAlignment="center"
         app:layout_constraintEnd_toStartOf="@id/guideline2"
         app:layout_constraintStart_toEndOf="@+id/map_text"
-        app:layout_constraintTop_toBottomOf="@id/appBarLayout"
-        android:entries="@array/maps_spinner"/>
+        app:layout_constraintTop_toBottomOf="@id/appBarLayout" />
 
 
     <com.google.android.material.switchmaterial.SwitchMaterial

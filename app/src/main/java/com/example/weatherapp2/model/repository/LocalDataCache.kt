@@ -9,8 +9,8 @@ object LocalDataCache {
     private const val SharedPreferencesTag = "SharedPreferencesTag"
     private const val ServiceUpdateTimeTag = "ServiceUpdateTimeTag"
     private const val ServiceStateTag = "ServiceStateTag"
-    private const val ChosenMapTag = "ChosenMapTag"
-    private const val DefaultChosenMap = "Google"
+    private const val ChosenMapIdTag = "ChosenMapIdTag"
+    private const val DefaultChosenMap = 0
 
     fun init(context: Context) {
         preferences = context.getSharedPreferences(
@@ -39,13 +39,13 @@ object LocalDataCache {
             .apply()
     }
 
-    fun getChosenMap(): String? {
-        return preferences.getString(ChosenMapTag, DefaultChosenMap)
+    fun getChosenMapId(): Int {
+        return preferences.getInt(ChosenMapIdTag, DefaultChosenMap)
     }
 
-    fun setChosenMap(chosenMap: String) {
+    fun setChosenMapId(chosenMapId: Int) {
         preferences.edit()
-            .putString(ChosenMapTag, chosenMap)
+            .putInt(ChosenMapIdTag, chosenMapId)
             .apply()
     }
 }
