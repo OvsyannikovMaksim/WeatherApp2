@@ -1,6 +1,7 @@
 package com.example.weatherapp2.model.repository
 
 import com.example.weatherapp2.model.api.OpenWeatherApi
+import com.example.weatherapp2.model.common.CityInfo
 import com.example.weatherapp2.model.common.openWeatherApi.CityWeatherFullInfo
 
 class CityWeatherRepoImpl(private val openWeatherApi: OpenWeatherApi) : CityWeatherRepo {
@@ -24,5 +25,9 @@ class CityWeatherRepoImpl(private val openWeatherApi: OpenWeatherApi) : CityWeat
         )
         result.id = cityId
         return result
+    }
+
+    override suspend fun getCityCoordinateByName(cityName: String): List<CityInfo> {
+        return openWeatherApi.getCityCoordinateByName(cityName, "5", API_KEY_OPEN_WEATHER)
     }
 }

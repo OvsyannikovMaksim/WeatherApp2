@@ -1,16 +1,23 @@
 package com.example.weatherapp2.ui.inputCities
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.weatherapp2.model.common.CityCoordinate
-import com.example.weatherapp2.model.repository.LocalRepo
-import kotlinx.coroutines.*
+import com.example.weatherapp2.model.common.CityInfo
+import com.example.weatherapp2.model.repository.CityWeatherRepoImpl
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 
-class InputCitiesModel(private val localRepo: LocalRepo) : ViewModel() {
+class InputCitiesModel(
+    private val cityWeatherRepoImpl: CityWeatherRepoImpl
+) : ViewModel() {
 
-    fun addTwoCities() {
+    var resultOfSearch: MutableLiveData<List<CityInfo>> = MutableLiveData()
+
+    fun getCitiesFromLine(cityName: String) {
         CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
-            localRepo.addCityCoordinate(CityCoordinate(55.80282, 37.97836))
-            localRepo.addCityCoordinate(CityCoordinate(36.00769, 5.60755))
+            resultOfSearch.postValue(cityWeatherRepoImpl.getCityCoordinateByName(cityName))
         }
     }
 }

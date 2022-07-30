@@ -27,6 +27,27 @@
         android:id="@+id/navigation_input_city"
         android:name="com.example.weatherapp2.ui.inputCities.InputCitiesFragment"
         android:label="@string/title_input_city"
-        tools:layout="@layout/fragment_input_cities" />
+        tools:layout="@layout/fragment_input_cities" >
+        <action
+            android:id="@+id/action_navigation_input_city_to_navigation_edit_city"
+            app:destination="@id/navigation_edit_city" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_edit_city"
+        android:name="com.example.weatherapp2.ui.editCity.EditCityFragment"
+        android:label="@string/title_edit_city"
+        tools:layout="@layout/fragment_edit_city" >
+        <action
+            android:id="@+id/action_navigation_edit_city_to_save_dialog"
+            app:destination="@id/navigation_save_dialog" />
+    </fragment>
+    <dialog
+        android:id="@+id/navigation_save_dialog"
+        android:name="com.example.weatherapp2.ui.saveDialog.SaveDialog">
+        <action
+            android:id="@+id/action_navigation_save_dialog_to_navigation_home"
+            app:destination="@id/navigation_home" />
+    </dialog>
 
 </navigation>

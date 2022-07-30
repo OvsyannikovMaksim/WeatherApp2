@@ -1,7 +1,6 @@
 package com.example.weatherapp2.ui.maps
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,7 +28,7 @@ class MapsFragment : Fragment() {
         changeMap()
     }
 
-    private fun changeMap(){
+    private fun changeMap() {
         if (LocalDataCache.getChosenMapId() == 0
         ) {
             mapBinding.textGoogle.visibility = View.VISIBLE

@@ -19,4 +19,7 @@
         <item>Google</item>
         <item>Yandex</item>
     </string-array>
+    <string name="text_city_input">Input city name</string>
+    <string name="title_edit_city">Edit City</string>
+    <string name="text_city_comment">Input comment</string>
 </resources>

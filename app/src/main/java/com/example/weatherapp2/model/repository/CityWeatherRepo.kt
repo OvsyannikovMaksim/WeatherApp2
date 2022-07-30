@@ -1,5 +1,6 @@
 package com.example.weatherapp2.model.repository
 
+import com.example.weatherapp2.model.common.CityInfo
 import com.example.weatherapp2.model.common.openWeatherApi.CityWeatherFullInfo
 
 interface CityWeatherRepo {
@@ -10,4 +11,8 @@ interface CityWeatherRepo {
         longitude: String,
         lang: String
     ): CityWeatherFullInfo
+
+    suspend fun getCityCoordinateByName(
+        cityName: String
+    ): List<CityInfo>
 }

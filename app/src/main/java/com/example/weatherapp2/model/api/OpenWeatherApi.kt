@@ -1,5 +1,6 @@
 package com.example.weatherapp2.model.api
 
+import com.example.weatherapp2.model.common.CityInfo
 import com.example.weatherapp2.model.common.openWeatherApi.CityWeatherFullInfo
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -15,4 +16,11 @@ interface OpenWeatherApi {
         @Query("units") units: String,
         @Query("appid") appid: String
     ): CityWeatherFullInfo
+
+    @GET("geo/1.0/direct")
+    suspend fun getCityCoordinateByName(
+        @Query("q") cityName: String,
+        @Query("limit") limit: String,
+        @Query("appid") appid: String
+    ): List<CityInfo>
 }

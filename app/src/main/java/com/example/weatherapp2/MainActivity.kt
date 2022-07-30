@@ -5,8 +5,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -47,6 +47,17 @@ class MainActivity : AppCompatActivity() {
             Log.d("TAG", "here")
             navController.popBackStack()
         }
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.id == R.id.navigation_input_city ||
+                destination.id == R.id.navigation_edit_city ||
+                destination.id == R.id.navigation_save_dialog
+            ) {
+                binding.navView.visibility = View.GONE
+            } else {
+                binding.navView.visibility = View.VISIBLE
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -61,5 +72,4 @@ class MainActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
-
 }
