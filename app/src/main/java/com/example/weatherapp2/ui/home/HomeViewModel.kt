@@ -36,6 +36,9 @@ class HomeViewModel(
             cityCoordinate.id!!,
             cityCoordinate.lat.toString(),
             cityCoordinate.lon.toString(),
+            cityCoordinate.name,
+            cityCoordinate.state,
+            cityCoordinate.country,
             language
         )
     }
@@ -66,9 +69,6 @@ class HomeViewModel(
         try {
             launch {
                 resultForAllCitiesFromApi.clear()
-                for (city in cities) {
-                    val temp = loadOneCityInfoFromApi(city, language)
-                }
                 cities.forEach { resultForAllCitiesFromApi.add(loadOneCityInfoFromApi(it, language)) }
                 Log.d(
                     "HomeViewModel.kt: getCitiesInfoFromApi()",

@@ -31,7 +31,7 @@ class WeatherFullInfoAdapter :
     ) {
 
         fun bind(cityWeather: CityWeatherFullInfo) {
-            cityWeatherBinding.cityName.text = cityWeather.timezone
+            cityWeatherBinding.cityName.text = createFullCityName(cityWeather)
             val weatherPictureUri = Uri.parse(
                 "http://openweathermap.org/img/wn/${cityWeather.current.weather.first().icon}@2x.png"
             )
@@ -39,6 +39,14 @@ class WeatherFullInfoAdapter :
                 cityWeatherBinding.weatherImage
             )
             cityWeatherBinding.cityTemperature.text = cityWeather.current.temp.roundToInt().toString() + "\u00B0 С"
+        }
+
+        private fun createFullCityName(cityWeather: CityWeatherFullInfo): String {
+            return if (cityWeather.state != null) {
+                "${cityWeather.name}, ${cityWeather.state}, ${cityWeather.country}"
+            } else {
+                "${cityWeather.name}, ${cityWeather.country}"
+            }
         }
     }
 

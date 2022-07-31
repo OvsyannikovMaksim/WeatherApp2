@@ -9,8 +9,9 @@ data class CityWeatherFullInfo(
     @PrimaryKey var id: Int,
     val lat: Double,
     val lon: Double,
-    val timezone: String,
-    val timezone_offset: Int,
+    var name: String,
+    var state: String?,
+    var country: String,
     @Embedded val current: Current
     // @Ignore val daily: List<Daily>
 )

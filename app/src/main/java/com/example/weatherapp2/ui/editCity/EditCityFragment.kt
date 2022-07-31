@@ -10,14 +10,12 @@ import android.view.ViewGroup
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.example.weatherapp2.R
 import com.example.weatherapp2.databinding.FragmentEditCityBinding
 import com.example.weatherapp2.model.common.CityCoordinate
 import com.example.weatherapp2.model.common.CityInfo
-import com.example.weatherapp2.ui.dialogs.SaveSettingsDialog
 import com.squareup.picasso.Picasso
 
 class EditCityFragment : Fragment() {

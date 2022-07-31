@@ -13,6 +13,9 @@ class CityWeatherRepoImpl(private val openWeatherApi: OpenWeatherApi) : CityWeat
         cityId: Int,
         latitude: String,
         longitude: String,
+        name: String,
+        state: String?,
+        country: String,
         lang: String
     ): CityWeatherFullInfo {
         val result = openWeatherApi.getCityWeatherInfo(
@@ -24,6 +27,9 @@ class CityWeatherRepoImpl(private val openWeatherApi: OpenWeatherApi) : CityWeat
             API_KEY_OPEN_WEATHER
         )
         result.id = cityId
+        result.name = name
+        result.state = state
+        result.country = country
         return result
     }
 

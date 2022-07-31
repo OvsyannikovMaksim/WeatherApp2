@@ -9,6 +9,9 @@ interface CityWeatherRepo {
         cityId: Int,
         latitude: String,
         longitude: String,
+        name: String,
+        state: String?,
+        country: String,
         lang: String
     ): CityWeatherFullInfo
 
