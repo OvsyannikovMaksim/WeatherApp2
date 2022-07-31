@@ -15,6 +15,9 @@
             app:destination="@id/navigation_input_city"
             app:popUpTo="@id/navigation_home"
             app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_navigation_home_to_weatherFullInfoFragment"
+            app:destination="@id/navigation_weatherFullInfoFragment" />
     </fragment>
 
     <fragment
@@ -47,6 +50,25 @@
         android:name="com.example.weatherapp2.ui.saveDialog.SaveDialog">
         <action
             android:id="@+id/action_navigation_save_dialog_to_navigation_home"
+            app:destination="@id/navigation_home" />
+    </dialog>
+    <fragment
+        android:id="@+id/navigation_weatherFullInfoFragment"
+        android:name="com.example.weatherapp2.ui.weatherFullInfo.WeatherFullInfoFragment"
+        android:label="Weather Info" >
+        <action
+            android:id="@+id/action_navigation_weatherFullInfoFragment_to_navigation_edit_city"
+            app:destination="@id/navigation_edit_city" />
+        <action
+            android:id="@+id/action_navigation_weatherFullInfoFragment_to_navigation_delete_dialog"
+            app:destination="@id/navigation_delete_dialog" />
+    </fragment>
+
+    <dialog
+        android:id="@+id/navigation_delete_dialog"
+        android:name="com.example.weatherapp2.ui.deleteDialog.DeleteDialog">
+        <action
+            android:id="@+id/action_navigation_delete_dialog_to_navigation_home"
             app:destination="@id/navigation_home" />
     </dialog>
 

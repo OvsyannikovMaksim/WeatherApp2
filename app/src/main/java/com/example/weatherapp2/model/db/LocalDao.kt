@@ -11,8 +11,14 @@ interface LocalDao {
     @Query("SELECT * FROM CityCoordinate")
     suspend fun getCitiesCoordinates(): List<CityCoordinate>
 
+    @Query("SELECT * FROM CityCoordinate WHERE id =:id")
+    suspend fun getOneCity(id: Int): CityCoordinate?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addCityCoordinate(cityCoordinate: CityCoordinate)
+
+    @Update
+    suspend fun updateCityCoordinate(cityCoordinate: CityCoordinate)
 
     @Delete
     suspend fun deleteCityCoordinate(cityCoordinate: CityCoordinate)

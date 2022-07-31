@@ -1,5 +1,6 @@
-package com.example.weatherapp2.ui.saveDialog
+package com.example.weatherapp2.ui.weatherFullInfo
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.weatherapp2.model.common.CityCoordinate
 import com.example.weatherapp2.model.repository.LocalRepo
@@ -8,17 +9,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
-class SaveDialogModel(
-    private val localRepo: LocalRepo
-) : ViewModel() {
+class WeatherFullInfoModel(val localRepo: LocalRepo) : ViewModel() {
 
-    fun putCityToRepo(city: CityCoordinate) {
+    var cityCoordinate: MutableLiveData<CityCoordinate> = MutableLiveData()
+
+    fun getCityFromRepo(id: Int) {
         CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
-            if (city.id?.let { localRepo.getOneCity(it) } == null) {
-                localRepo.addCityCoordinate(city)
-            } else {
-                localRepo.updateCityCoordinate(city)
-            }
+            cityCoordinate.postValue(localRepo.getOneCity(id))
         }
     }
 }

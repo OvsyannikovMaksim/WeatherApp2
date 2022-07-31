@@ -17,7 +17,7 @@ import com.example.weatherapp2.model.common.openWeatherApi.CityWeatherFullInfo
 import com.example.weatherapp2.model.db.DataBase
 import com.example.weatherapp2.model.repository.CityWeatherRepoImpl
 import com.example.weatherapp2.model.repository.LocalRepoImpl
-import com.example.weatherapp2.ui.WeatherFullInfoAdapter
+import com.example.weatherapp2.ui.WeatherInfoAdapter
 
 class HomeFragment : Fragment() {
 
@@ -48,14 +48,14 @@ class HomeFragment : Fragment() {
             LinearLayoutManager.VERTICAL,
             false
         )
-        homeViewModel.getCitiesInfoAndLoadItToLocalRepo("ru")
+        homeViewModel.getCitiesInfoAndLoadItToLocalRepo("en")
         val recyclerView = fragmentHomeBinding.cityInfoRecyclerview
         recyclerView.layoutManager = mLayout
-        val weatherFullInfoAdapter = WeatherFullInfoAdapter()
+        val weatherInfoAdapter = WeatherInfoAdapter()
         val citiesWeather: LiveData<List<CityWeatherFullInfo>> = homeViewModel.cityWeatherList
         citiesWeather.observe(viewLifecycleOwner) {
-            weatherFullInfoAdapter.submitList(it)
-            recyclerView.adapter = weatherFullInfoAdapter
+            weatherInfoAdapter.submitList(it)
+            recyclerView.adapter = weatherInfoAdapter
         }
         fragmentHomeBinding.addCityButton.setOnClickListener {
             it.findNavController().navigate(R.id.action_navigation_home_to_navigation_input_city)

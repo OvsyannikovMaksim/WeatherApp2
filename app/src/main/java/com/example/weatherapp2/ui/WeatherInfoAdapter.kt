@@ -1,18 +1,21 @@
 package com.example.weatherapp2.ui
 
 import android.net.Uri
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.weatherapp2.R
 import com.example.weatherapp2.databinding.CityWeatherBinding
 import com.example.weatherapp2.model.common.openWeatherApi.CityWeatherFullInfo
 import com.squareup.picasso.Picasso
 import kotlin.math.roundToInt
 
-class WeatherFullInfoAdapter :
-    ListAdapter<CityWeatherFullInfo, WeatherFullInfoAdapter.WeatherVH>(DiffCallback) {
+class WeatherInfoAdapter :
+    ListAdapter<CityWeatherFullInfo, WeatherInfoAdapter.WeatherVH>(DiffCallback) {
 
     private lateinit var cityWeatherBinding: CityWeatherBinding
 
@@ -39,6 +42,14 @@ class WeatherFullInfoAdapter :
                 cityWeatherBinding.weatherImage
             )
             cityWeatherBinding.cityTemperature.text = cityWeather.current.temp.roundToInt().toString() + "\u00B0 С"
+            cityWeatherBinding.cityWeatherCard.setOnClickListener {
+                val bundle = Bundle()
+                bundle.putParcelable("FullInfoKey", cityWeather)
+                it.findNavController().navigate(
+                    R.id.action_navigation_home_to_weatherFullInfoFragment,
+                    bundle
+                )
+            }
         }
 
         private fun createFullCityName(cityWeather: CityWeatherFullInfo): String {

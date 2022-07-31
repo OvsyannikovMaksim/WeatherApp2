@@ -24,6 +24,7 @@ class HomeViewModel(
             getCitiesList()
             Log.d("HomeViewModel.kt: getCitiesInfoAndLoadItToLocalRepo()", cities.toString())
             getAllCitiesInfoFromRepo()
+            delay(2000)
             if (getCitiesInfoFromApi(language) && resultForAllCitiesFromApi.isNotEmpty()) {
                 Log.d("HomeViewModel.kt: getCitiesInfoAndLoadItToLocalRepo()", "Download to repo")
                 loadCitiesToRepo(resultForAllCitiesFromApi)

@@ -51,7 +51,9 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id == R.id.navigation_input_city ||
                 destination.id == R.id.navigation_edit_city ||
-                destination.id == R.id.navigation_save_dialog
+                destination.id == R.id.navigation_save_dialog ||
+                destination.id == R.id.navigation_weatherFullInfoFragment ||
+                destination.id == R.id.navigation_delete_dialog
             ) {
                 binding.navView.visibility = View.GONE
             } else {

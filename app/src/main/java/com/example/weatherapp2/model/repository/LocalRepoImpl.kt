@@ -10,8 +10,16 @@ class LocalRepoImpl(private val localDao: LocalDao) : LocalRepo {
         return localDao.getCitiesCoordinates()
     }
 
+    override suspend fun getOneCity(id: Int): CityCoordinate? {
+        return localDao.getOneCity(id)
+    }
+
     override suspend fun addCityCoordinate(cityCoordinate: CityCoordinate) {
         localDao.addCityCoordinate(cityCoordinate)
+    }
+
+    override suspend fun updateCityCoordinate(cityCoordinate: CityCoordinate) {
+        localDao.updateCityCoordinate(cityCoordinate)
     }
 
     override suspend fun deleteCityCoordinate(cityCoordinate: CityCoordinate) {

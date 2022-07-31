@@ -8,7 +8,11 @@ interface LocalRepo {
     // Это для координат городов
     suspend fun getCitiesCoordinates(): List<CityCoordinate>
 
+    suspend fun getOneCity(id: Int): CityCoordinate?
+
     suspend fun addCityCoordinate(cityCoordinate: CityCoordinate)
+
+    suspend fun updateCityCoordinate(cityCoordinate: CityCoordinate)
 
     suspend fun deleteCityCoordinate(cityCoordinate: CityCoordinate)
 

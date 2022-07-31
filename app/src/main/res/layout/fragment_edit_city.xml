@@ -38,7 +38,7 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <androidx.appcompat.widget.AppCompatButton
+    <Button
         android:id="@+id/add_picture_button"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
@@ -46,7 +46,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/input_city_comment"
         android:layout_marginTop="30dp"
-        android:text="Add Picture"/>
+        android:text="@string/add_picture_button"/>
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/city_pic"
@@ -59,7 +59,7 @@
         android:layout_marginTop="10dp"
         android:maxHeight="100dp"/>
 
-    <androidx.appcompat.widget.AppCompatButton
+    <Button
         android:id="@+id/save_city_button"
         android:layout_width="100dp"
         android:layout_height="50dp"
@@ -68,6 +68,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="30dp"
         android:layout_marginTop="30dp"
-        android:text="Save"/>
+        android:text="@string/save_button"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
