@@ -19,7 +19,7 @@ class SaveDialog : DialogFragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        val dataBase = DataBase.getDataBase(this.context!!)!!
+        val dataBase = DataBase.getDataBase(this.requireContext())!!
         val localDao = dataBase.localDao()
         val localRepo = LocalRepoImpl(localDao)
         saveDialogModelFactory = SaveDialogModelFactory(localRepo)
@@ -36,7 +36,7 @@ class SaveDialog : DialogFragment() {
                 .setPositiveButton(
                     R.string.save_button_text
                 ) { _, _ ->
-                    arguments!!.getParcelable<CityCoordinate>("CityKey")
+                    requireArguments().getParcelable<CityCoordinate>("CityKey")
                         ?.let { it1 -> saveDialogModel.putCityToRepo(it1) }
                     findNavController().navigate(
                         R.id.action_navigation_save_dialog_to_navigation_home

@@ -12,7 +12,7 @@ class CurrentMapper : Mapper<Current, CurrentParsed> {
 
     override fun map(src: Current, context: Context): CurrentParsed = CurrentParsed(
 
-        "${round(src.temp).toInt()} ${context.getString(R.string.celsius)}",
+        context.getString(R.string.celsius, round(src.temp).toInt()),
         "${context.getString(R.string.feels)} ${round(src.feels_like).toInt()} ${context.getString(
             R.string.celsius
         )}",

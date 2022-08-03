@@ -30,14 +30,12 @@ class WeatherFullInfoFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        val dataBase = DataBase.getDataBase(this.context!!)!!
+        val dataBase = DataBase.getDataBase(this.requireContext())!!
         val localDao = dataBase.localDao()
         val localRepo = LocalRepoImpl(localDao)
         weatherFullInfoModelFactory = WeatherFullInfoModelFactory(localRepo)
-        weatherFullInfoModel = ViewModelProvider(this, weatherFullInfoModelFactory).get(
-            WeatherFullInfoModel::class.java
-        )
-        cityWeatherFullInfo = arguments!!.getParcelable("FullInfoKey")!!
+        weatherFullInfoModel = ViewModelProvider(this, weatherFullInfoModelFactory)[WeatherFullInfoModel::class.java]
+        cityWeatherFullInfo = requireArguments().getParcelable("FullInfoKey")!!
         weatherFullInfoModel.getCityFromRepo(cityWeatherFullInfo.id)
     }
 

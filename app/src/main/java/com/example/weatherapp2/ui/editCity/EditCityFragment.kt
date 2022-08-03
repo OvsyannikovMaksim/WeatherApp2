@@ -42,8 +42,8 @@ class EditCityFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         fragmentEditCityBinding = FragmentEditCityBinding.inflate(inflater, container, false)
-        cityInfo = arguments!!.getParcelable("CityInfoKey")
-        cityCoordinate = arguments!!.getParcelable("CityCoordinateKey")
+        cityInfo = requireArguments().getParcelable("CityInfoKey")
+        cityCoordinate = requireArguments().getParcelable("CityCoordinateKey")
         return fragmentEditCityBinding.root
     }
 
@@ -86,11 +86,13 @@ class EditCityFragment : Fragment() {
             Picasso.with(context).load(Uri.parse(cityCoordinate.pic_uri))
                 .into(fragmentEditCityBinding.cityPic)
         }
+
         fragmentEditCityBinding.addPictureButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK)
             intent.type = "image/*"
             getPictureFromGalleryLauncher.launch(intent)
         }
+
         fragmentEditCityBinding.saveCityButton.setOnClickListener {
             val city = CityCoordinate(
                 cityCoordinate.name,

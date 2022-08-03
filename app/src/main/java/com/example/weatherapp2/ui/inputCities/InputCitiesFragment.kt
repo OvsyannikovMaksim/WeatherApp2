@@ -31,9 +31,7 @@ class InputCitiesFragment : Fragment() {
         super.onAttach(context)
         val cityWeatherRepoImpl = CityWeatherRepoImpl(OpenWeatherApiRetrofit.openWeatherApi)
         inputCitiesModelFactory = InputCitiesModelFactory(cityWeatherRepoImpl)
-        inputCitiesModel = ViewModelProvider(this, inputCitiesModelFactory).get(
-            InputCitiesModel::class.java
-        )
+        inputCitiesModel = ViewModelProvider(this, inputCitiesModelFactory)[InputCitiesModel::class.java]
     }
 
     override fun onCreateView(
@@ -55,7 +53,7 @@ class InputCitiesFragment : Fragment() {
         fragmentInputCitiesBinding.inputCityNameEditText.setOnKeyListener { view, _, keyEvent ->
             if (keyEvent.action == KeyEvent.ACTION_DOWN && keyEvent.keyCode == KeyEvent.KEYCODE_ENTER) {
                 fragmentInputCitiesBinding.inputCityNameEditText.clearFocus()
-                hideKeyboard(context!!, view)
+                hideKeyboard(requireContext(), view)
                 inputCitiesModel.getCitiesFromLine(
                     fragmentInputCitiesBinding.inputCityNameEditText.text.toString()
                 )

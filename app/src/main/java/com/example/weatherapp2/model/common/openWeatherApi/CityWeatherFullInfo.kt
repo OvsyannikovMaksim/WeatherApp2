@@ -17,5 +17,4 @@ data class CityWeatherFullInfo(
     var state: String?,
     var country: String,
     @Embedded val current: @RawValue Current
-    // @Ignore val daily: List<Daily>
 ) : Parcelable

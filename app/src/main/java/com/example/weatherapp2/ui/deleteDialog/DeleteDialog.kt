@@ -20,13 +20,11 @@ class DeleteDialog : DialogFragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        val dataBase = DataBase.getDataBase(this.context!!)!!
+        val dataBase = DataBase.getDataBase(this.requireContext())!!
         val localDao = dataBase.localDao()
         val localRepo = LocalRepoImpl(localDao)
         deleteDialogModelFactory = DeleteDialogModelFactory(localRepo)
-        deleteDialogModel = ViewModelProvider(this, deleteDialogModelFactory).get(
-            DeleteDialogModel::class.java
-        )
+        deleteDialogModel = ViewModelProvider(this, deleteDialogModelFactory)[DeleteDialogModel::class.java]
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -37,10 +35,10 @@ class DeleteDialog : DialogFragment() {
                 .setPositiveButton(
                     R.string.delete_button_text
                 ) { _, _ ->
-                    val cityCoordinate = arguments!!.getParcelable<CityCoordinate>(
+                    val cityCoordinate = requireArguments().getParcelable<CityCoordinate>(
                         "CityCoordinateKey"
                     )
-                    val cityWeatherFullInfo = arguments!!.getParcelable<CityWeatherFullInfo>(
+                    val cityWeatherFullInfo = requireArguments().getParcelable<CityWeatherFullInfo>(
                         "CityWeatherFullInfoKey"
                     )
                     deleteDialogModel.deleteCity(cityCoordinate!!, cityWeatherFullInfo!!)

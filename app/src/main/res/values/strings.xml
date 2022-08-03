@@ -22,7 +22,7 @@
     <string name="text_city_input">Input city name</string>
     <string name="title_edit_city">Edit City</string>
     <string name="text_city_comment">Input comment</string>
-    <string name="celsius" translatable="false">°C</string>
+    <string name="celsius" translatable="false">%1$d °C</string>
     <string name="UV">UV index</string>
     <string name="pressure">hPa</string>
     <string name="ms">m/s</string>

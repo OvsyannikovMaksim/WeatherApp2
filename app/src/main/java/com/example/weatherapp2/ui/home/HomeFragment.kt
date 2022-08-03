@@ -32,11 +32,11 @@ class HomeFragment : Fragment() {
     ): View {
         fragmentHomeBinding = FragmentHomeBinding.inflate(inflater, container, false)
         val cityWeatherRepoImpl = CityWeatherRepoImpl(OpenWeatherApiRetrofit.openWeatherApi)
-        val dataBase = DataBase.getDataBase(this.context!!)!!
+        val dataBase = DataBase.getDataBase(this.requireContext())!!
         val localDao = dataBase.localDao()
         val localRepo = LocalRepoImpl(localDao)
         homeViewModelFactory = HomeViewModelFactory(cityWeatherRepoImpl, localRepo)
-        homeViewModel = ViewModelProvider(this, homeViewModelFactory).get(HomeViewModel::class.java)
+        homeViewModel = ViewModelProvider(this, homeViewModelFactory)[HomeViewModel::class.java]
         return fragmentHomeBinding.root
     }
 

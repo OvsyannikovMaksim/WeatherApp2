@@ -15,7 +15,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/citiesRecyclerView"
         android:layout_margin="15dp"
-
         app:endIconDrawable="@drawable/ic_baseline_search_24">
 
         <com.google.android.material.textfield.TextInputEditText

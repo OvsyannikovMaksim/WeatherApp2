@@ -1,5 +1,6 @@
 package com.example.weatherapp2.ui
 
+import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -41,7 +42,7 @@ class WeatherInfoAdapter :
             Picasso.with(itemView.context).load(weatherPictureUri).into(
                 cityWeatherBinding.weatherImage
             )
-            cityWeatherBinding.cityTemperature.text = cityWeather.current.temp.roundToInt().toString() + "\u00B0 С"
+            cityWeatherBinding.cityTemperature.text = "${cityWeather.current.temp.roundToInt()} \u00B0 С"
             cityWeatherBinding.cityWeatherCard.setOnClickListener {
                 val bundle = Bundle()
                 bundle.putParcelable("FullInfoKey", cityWeather)
