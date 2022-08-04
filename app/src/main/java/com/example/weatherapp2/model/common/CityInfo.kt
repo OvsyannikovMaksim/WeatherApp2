@@ -5,9 +5,12 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class CityInfo(
+    val id: Int,
     val name: String,
+    val state: String?,
+    val country: String,
     val lat: Double,
     val lon: Double,
-    val country: String,
-    val state: String?
+    val comment: String?,
+    val pic: String?
 ) : Parcelable

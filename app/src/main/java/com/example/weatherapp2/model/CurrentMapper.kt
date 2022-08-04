@@ -13,9 +13,7 @@ class CurrentMapper : Mapper<Current, CurrentParsed> {
     override fun map(src: Current, context: Context): CurrentParsed = CurrentParsed(
 
         context.getString(R.string.celsius, round(src.temp).toInt()),
-        "${context.getString(R.string.feels)} ${round(src.feels_like).toInt()} ${context.getString(
-            R.string.celsius
-        )}",
+        context.getString(R.string.feels_celsius, round(src.feels_like).toInt()),
         "${src.pressure} ${context.getString(R.string.pressure)}",
         "${context.getString(R.string.humidity)} ${src.humidity}%",
         "${context.getString(R.string.UV)} ${src.uvi}",

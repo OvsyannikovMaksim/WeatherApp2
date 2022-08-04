@@ -1,8 +1,8 @@
 package com.example.weatherapp2.model.repository
 
 import com.example.weatherapp2.model.api.OpenWeatherApi
+import com.example.weatherapp2.model.common.CityFullInfo
 import com.example.weatherapp2.model.common.CityInfo
-import com.example.weatherapp2.model.common.openWeatherApi.CityWeatherFullInfo
 
 class CityWeatherRepoImpl(private val openWeatherApi: OpenWeatherApi) : CityWeatherRepo {
 
@@ -10,26 +10,23 @@ class CityWeatherRepoImpl(private val openWeatherApi: OpenWeatherApi) : CityWeat
     private val EXCLUDE_FULL_INFO: String = "minutely,hourly,alerts"
 
     override suspend fun getCityWeatherFullInfo(
-        cityId: Int,
-        latitude: String,
-        longitude: String,
-        name: String,
-        state: String?,
-        country: String,
+        cityInfo: CityInfo,
         lang: String
-    ): CityWeatherFullInfo {
+    ): CityFullInfo {
         val result = openWeatherApi.getCityWeatherInfo(
-            latitude,
-            longitude,
+            cityInfo.lat.toString(),
+            cityInfo.lon.toString(),
             EXCLUDE_FULL_INFO,
             lang,
             "metric",
             API_KEY_OPEN_WEATHER
         )
-        result.id = cityId
-        result.name = name
-        result.state = state
-        result.country = country
+        result.name = cityInfo.name
+        result.comment = cityInfo.comment
+        result.state = cityInfo.state
+        result.country = cityInfo.country
+        result.pic = cityInfo.pic
+        result.id = cityInfo.id
         return result
     }
 

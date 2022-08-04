@@ -8,7 +8,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.weatherapp2.R
-import com.example.weatherapp2.model.common.CityCoordinate
+import com.example.weatherapp2.model.common.CityFullInfo
 import com.example.weatherapp2.model.db.DataBase
 import com.example.weatherapp2.model.repository.LocalRepoImpl
 
@@ -23,9 +23,7 @@ class SaveDialog : DialogFragment() {
         val localDao = dataBase.localDao()
         val localRepo = LocalRepoImpl(localDao)
         saveDialogModelFactory = SaveDialogModelFactory(localRepo)
-        saveDialogModel = ViewModelProvider(this, saveDialogModelFactory).get(
-            SaveDialogModel::class.java
-        )
+        saveDialogModel = ViewModelProvider(this, saveDialogModelFactory)[SaveDialogModel::class.java]
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -36,7 +34,7 @@ class SaveDialog : DialogFragment() {
                 .setPositiveButton(
                     R.string.save_button_text
                 ) { _, _ ->
-                    requireArguments().getParcelable<CityCoordinate>("CityKey")
+                    requireArguments().getParcelable<CityFullInfo>("CityKey")
                         ?.let { it1 -> saveDialogModel.putCityToRepo(it1) }
                     findNavController().navigate(
                         R.id.action_navigation_save_dialog_to_navigation_home

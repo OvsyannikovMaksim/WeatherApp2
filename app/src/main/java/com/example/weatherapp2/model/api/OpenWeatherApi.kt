@@ -1,7 +1,7 @@
 package com.example.weatherapp2.model.api
 
+import com.example.weatherapp2.model.common.CityFullInfo
 import com.example.weatherapp2.model.common.CityInfo
-import com.example.weatherapp2.model.common.openWeatherApi.CityWeatherFullInfo
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -15,7 +15,7 @@ interface OpenWeatherApi {
         @Query("lang") lang: String,
         @Query("units") units: String,
         @Query("appid") appid: String
-    ): CityWeatherFullInfo
+    ): CityFullInfo
 
     @GET("geo/1.0/direct")
     suspend fun getCityCoordinateByName(

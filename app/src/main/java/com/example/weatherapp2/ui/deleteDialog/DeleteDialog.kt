@@ -8,8 +8,6 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.weatherapp2.R
-import com.example.weatherapp2.model.common.CityCoordinate
-import com.example.weatherapp2.model.common.openWeatherApi.CityWeatherFullInfo
 import com.example.weatherapp2.model.db.DataBase
 import com.example.weatherapp2.model.repository.LocalRepoImpl
 
@@ -30,18 +28,13 @@ class DeleteDialog : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return activity?.let {
             val builder = AlertDialog.Builder(it)
-            builder.setTitle(R.string.save_button_text)
+            builder.setTitle(R.string.delete_button_text)
                 .setMessage(R.string.delete_dialog_text)
                 .setPositiveButton(
                     R.string.delete_button_text
                 ) { _, _ ->
-                    val cityCoordinate = requireArguments().getParcelable<CityCoordinate>(
-                        "CityCoordinateKey"
-                    )
-                    val cityWeatherFullInfo = requireArguments().getParcelable<CityWeatherFullInfo>(
-                        "CityWeatherFullInfoKey"
-                    )
-                    deleteDialogModel.deleteCity(cityCoordinate!!, cityWeatherFullInfo!!)
+                    val cityId = requireArguments().getInt("CityIdKey")
+                    deleteDialogModel.deleteCity(cityId)
                     findNavController().navigate(
                         R.id.action_navigation_delete_dialog_to_navigation_home
                     )

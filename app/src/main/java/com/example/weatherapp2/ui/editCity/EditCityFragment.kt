@@ -3,7 +3,6 @@ package com.example.weatherapp2.ui.editCity
 import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +15,7 @@ import androidx.navigation.findNavController
 import com.example.weatherapp2.R
 import com.example.weatherapp2.databinding.FragmentEditCityBinding
 import com.example.weatherapp2.model.common.CityCoordinate
+import com.example.weatherapp2.model.common.CityFullInfo
 import com.example.weatherapp2.model.common.CityInfo
 import com.squareup.picasso.Picasso
 
@@ -43,14 +43,14 @@ class EditCityFragment : Fragment() {
     ): View {
         fragmentEditCityBinding = FragmentEditCityBinding.inflate(inflater, container, false)
         cityInfo = requireArguments().getParcelable("CityInfoKey")
-        cityCoordinate = requireArguments().getParcelable("CityCoordinateKey")
+        // cityCoordinate = requireArguments().getParcelable("CityCoordinateKey")
         return fragmentEditCityBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (cityInfo == null && cityCoordinate != null) {
-            createBinding(cityCoordinate!!)
+            // createBinding(cityCoordinate!!)
         } else if (cityInfo != null && cityCoordinate == null) {
             createBinding(cityInfo!!)
         }
@@ -64,44 +64,15 @@ class EditCityFragment : Fragment() {
             getPictureFromGalleryLauncher.launch(intent)
         }
         fragmentEditCityBinding.saveCityButton.setOnClickListener {
-            val city = CityCoordinate(
+            val city = CityFullInfo(
                 cityInfo.name,
                 cityInfo.state,
                 cityInfo.country,
                 cityInfo.lat,
                 cityInfo.lon,
                 fragmentEditCityBinding.inputCityCommentEditText.text.toString(),
-                picUri
-            )
-            val bundle = Bundle()
-            bundle.putParcelable("CityKey", city)
-            it.findNavController().navigate(R.id.action_navigation_edit_city_to_save_dialog, bundle)
-        }
-    }
-
-    private fun createBinding(cityCoordinate: CityCoordinate) {
-        fragmentEditCityBinding.cityName.text = createFullCityName(cityCoordinate)
-        fragmentEditCityBinding.inputCityCommentEditText.setText(cityCoordinate.comment)
-        if (cityCoordinate.pic_uri != null) {
-            Picasso.with(context).load(Uri.parse(cityCoordinate.pic_uri))
-                .into(fragmentEditCityBinding.cityPic)
-        }
-
-        fragmentEditCityBinding.addPictureButton.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK)
-            intent.type = "image/*"
-            getPictureFromGalleryLauncher.launch(intent)
-        }
-
-        fragmentEditCityBinding.saveCityButton.setOnClickListener {
-            val city = CityCoordinate(
-                cityCoordinate.name,
-                cityCoordinate.state,
-                cityCoordinate.country,
-                cityCoordinate.lat,
-                cityCoordinate.lon,
-                fragmentEditCityBinding.inputCityCommentEditText.text.toString(),
-                picUri
+                picUri,
+                null
             )
             val bundle = Bundle()
             bundle.putParcelable("CityKey", city)
@@ -117,18 +88,10 @@ class EditCityFragment : Fragment() {
         }
     }
 
-    private fun createFullCityName(cityCoordinate: CityCoordinate): String {
-        return if (cityCoordinate.state != null) {
-            "${cityCoordinate.name}, ${cityCoordinate.state}, ${cityCoordinate.country}"
-        } else {
-            "${cityCoordinate.name}, ${cityCoordinate.country}"
-        }
-    }
-
     private fun getPictureFromGallery(result: ActivityResult) {
         if (result.resultCode == RESULT_OK && result.data != null) {
             picUri = result.data!!.data.toString()
-            Picasso.with(context).load(result.data!!.data).into(fragmentEditCityBinding.cityPic)
+            Picasso.get().load(result.data!!.data).into(fragmentEditCityBinding.cityPic)
         }
     }
 }

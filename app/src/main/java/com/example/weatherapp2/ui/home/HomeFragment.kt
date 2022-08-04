@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weatherapp2.R
 import com.example.weatherapp2.databinding.FragmentHomeBinding
 import com.example.weatherapp2.model.api.OpenWeatherApiRetrofit
-import com.example.weatherapp2.model.common.openWeatherApi.CityWeatherFullInfo
+import com.example.weatherapp2.model.common.CityFullInfo
 import com.example.weatherapp2.model.db.DataBase
 import com.example.weatherapp2.model.repository.CityWeatherRepoImpl
 import com.example.weatherapp2.model.repository.LocalRepoImpl
@@ -52,7 +52,7 @@ class HomeFragment : Fragment() {
         val recyclerView = fragmentHomeBinding.cityInfoRecyclerview
         recyclerView.layoutManager = mLayout
         val weatherInfoAdapter = WeatherInfoAdapter()
-        val citiesWeather: LiveData<List<CityWeatherFullInfo>> = homeViewModel.cityWeatherList
+        val citiesWeather: LiveData<List<CityFullInfo>> = homeViewModel.cityWeatherList
         citiesWeather.observe(viewLifecycleOwner) {
             weatherInfoAdapter.submitList(it)
             recyclerView.adapter = weatherInfoAdapter

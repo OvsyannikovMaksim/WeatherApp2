@@ -1,8 +1,8 @@
 package com.example.weatherapp2.ui
 
-import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.findNavController
@@ -11,12 +11,12 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp2.R
 import com.example.weatherapp2.databinding.CityWeatherBinding
-import com.example.weatherapp2.model.common.openWeatherApi.CityWeatherFullInfo
+import com.example.weatherapp2.model.common.CityFullInfo
 import com.squareup.picasso.Picasso
 import kotlin.math.roundToInt
 
 class WeatherInfoAdapter :
-    ListAdapter<CityWeatherFullInfo, WeatherInfoAdapter.WeatherVH>(DiffCallback) {
+    ListAdapter<CityFullInfo, WeatherInfoAdapter.WeatherVH>(DiffCallback) {
 
     private lateinit var cityWeatherBinding: CityWeatherBinding
 
@@ -34,18 +34,17 @@ class WeatherInfoAdapter :
         cityWeatherBinding.root
     ) {
 
-        fun bind(cityWeather: CityWeatherFullInfo) {
+        fun bind(cityWeather: CityFullInfo) {
             cityWeatherBinding.cityName.text = createFullCityName(cityWeather)
             val weatherPictureUri = Uri.parse(
-                "http://openweathermap.org/img/wn/${cityWeather.current.weather.first().icon}@2x.png"
+                "https://openweathermap.org/img/wn/${cityWeather.current!!.weather.first().icon}@2x.png"
             )
-            Picasso.with(itemView.context).load(weatherPictureUri).into(
-                cityWeatherBinding.weatherImage
-            )
+            Log.d("TAG", weatherPictureUri.toString())
+            Picasso.get().load(weatherPictureUri).into(cityWeatherBinding.weatherImage)
             cityWeatherBinding.cityTemperature.text = "${cityWeather.current.temp.roundToInt()} \u00B0 С"
             cityWeatherBinding.cityWeatherCard.setOnClickListener {
                 val bundle = Bundle()
-                bundle.putParcelable("FullInfoKey", cityWeather)
+                bundle.putInt("FullInfoKey", cityWeather.id!!)
                 it.findNavController().navigate(
                     R.id.action_navigation_home_to_weatherFullInfoFragment,
                     bundle
@@ -53,25 +52,25 @@ class WeatherInfoAdapter :
             }
         }
 
-        private fun createFullCityName(cityWeather: CityWeatherFullInfo): String {
-            return if (cityWeather.state != null) {
-                "${cityWeather.name}, ${cityWeather.state}, ${cityWeather.country}"
+        private fun createFullCityName(cityInfo: CityFullInfo): String {
+            return if (cityInfo.state != null) {
+                "${cityInfo.name}, ${cityInfo.state}, ${cityInfo.country}"
             } else {
-                "${cityWeather.name}, ${cityWeather.country}"
+                "${cityInfo.name}, ${cityInfo.country}"
             }
         }
     }
 
-    object DiffCallback : DiffUtil.ItemCallback<CityWeatherFullInfo>() {
-        override fun areItemsTheSame(oldItem: CityWeatherFullInfo, newItem: CityWeatherFullInfo): Boolean {
+    object DiffCallback : DiffUtil.ItemCallback<CityFullInfo>() {
+        override fun areItemsTheSame(oldItem: CityFullInfo, newItem: CityFullInfo): Boolean {
             if (oldItem.lat == newItem.lat && oldItem.lon == newItem.lon) {
                 return true
             }
             return false
         }
 
-        override fun areContentsTheSame(oldItem: CityWeatherFullInfo, newItem: CityWeatherFullInfo): Boolean {
-            if (oldItem.current.temp == newItem.current.temp && oldItem.current.weather == newItem.current.weather) {
+        override fun areContentsTheSame(oldItem: CityFullInfo, newItem: CityFullInfo): Boolean {
+            if (oldItem.current!!.temp == newItem.current!!.temp && oldItem.current.weather == newItem.current.weather) {
                 return true
             }
             return false

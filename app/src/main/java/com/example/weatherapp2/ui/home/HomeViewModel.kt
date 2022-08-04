@@ -3,8 +3,8 @@ package com.example.weatherapp2.ui.home
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.weatherapp2.model.common.CityCoordinate
-import com.example.weatherapp2.model.common.openWeatherApi.CityWeatherFullInfo
+import com.example.weatherapp2.model.common.CityFullInfo
+import com.example.weatherapp2.model.common.CityInfo
 import com.example.weatherapp2.model.repository.CityWeatherRepoImpl
 import com.example.weatherapp2.model.repository.LocalRepo
 import kotlinx.coroutines.*
@@ -14,15 +14,15 @@ class HomeViewModel(
     private val localRepo: LocalRepo
 ) : ViewModel() {
 
-    var cityWeatherList: MutableLiveData<List<CityWeatherFullInfo>> = MutableLiveData()
-    private val cities = mutableListOf<CityCoordinate>()
-    private val resultForAllCitiesFromApi = mutableListOf<CityWeatherFullInfo>()
-    private val resultForAllCitiesFromRepo = mutableListOf<CityWeatherFullInfo>()
+    var cityWeatherList: MutableLiveData<List<CityFullInfo>> = MutableLiveData()
+    private val cityInfo = mutableListOf<CityInfo>()
+    private val resultForAllCitiesFromApi = mutableListOf<CityFullInfo>()
+    private val resultForAllCitiesFromRepo = mutableListOf<CityFullInfo>()
 
     fun getCitiesInfoAndLoadItToLocalRepo(language: String) {
         CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
-            getCitiesList()
-            Log.d("HomeViewModel.kt: getCitiesInfoAndLoadItToLocalRepo()", cities.toString())
+            getCitiesCoordinatesList()
+            Log.d("HomeViewModel.kt: getCitiesInfoAndLoadItToLocalRepo()", cityInfo.toString())
             getAllCitiesInfoFromRepo()
             delay(2000)
             if (getCitiesInfoFromApi(language) && resultForAllCitiesFromApi.isNotEmpty()) {
@@ -32,34 +32,22 @@ class HomeViewModel(
         }
     }
 
-    private suspend fun loadOneCityInfoFromApi(cityCoordinate: CityCoordinate, language: String): CityWeatherFullInfo {
-        return cityWeatherRepoImpl.getCityWeatherFullInfo(
-            cityCoordinate.id!!,
-            cityCoordinate.lat.toString(),
-            cityCoordinate.lon.toString(),
-            cityCoordinate.name,
-            cityCoordinate.state,
-            cityCoordinate.country,
-            language
-        )
+    private suspend fun loadOneCityInfoFromApi(cityInfo: CityInfo, language: String): CityFullInfo {
+        return cityWeatherRepoImpl.getCityWeatherFullInfo(cityInfo, language)
     }
 
-    private suspend fun loadAllCitiesInfoFromRepo(): List<CityWeatherFullInfo> {
-        return localRepo.getAllCityWeatherFullInfo()
-    }
-
-    private suspend fun getCitiesList() = withContext(SupervisorJob() + Dispatchers.IO) {
+    private suspend fun getCitiesCoordinatesList() = withContext(SupervisorJob() + Dispatchers.IO) {
         try {
             launch {
-                val temp = localRepo.getCitiesCoordinates()
+                val temp = localRepo.getAllCityInfo()
                 withContext(Dispatchers.Main) {
-                    cities.clear()
-                    cities.addAll(temp)
+                    cityInfo.clear()
+                    cityInfo.addAll(temp)
                 }
             }.join()
             true
         } catch (e: Throwable) {
-            Log.d("HomeViewModel.kt: getCitiesList()", e.toString())
+            Log.d("HomeViewModel.kt: getCitiesCoordinatesList()", e.toString())
             false
         }
     }
@@ -70,7 +58,11 @@ class HomeViewModel(
         try {
             launch {
                 resultForAllCitiesFromApi.clear()
-                cities.forEach { resultForAllCitiesFromApi.add(loadOneCityInfoFromApi(it, language)) }
+                cityInfo.forEach {
+                    resultForAllCitiesFromApi.add(
+                        loadOneCityInfoFromApi(it, language)
+                    )
+                }
                 Log.d(
                     "HomeViewModel.kt: getCitiesInfoFromApi()",
                     "SuccessDownloadInfoFromApi $resultForAllCitiesFromApi"
@@ -90,7 +82,11 @@ class HomeViewModel(
         try {
             launch {
                 resultForAllCitiesFromRepo.clear()
-                resultForAllCitiesFromRepo.addAll(loadAllCitiesInfoFromRepo())
+                for (cityFullInfo in localRepo.getAllCityFullInfo()) {
+                    if (cityFullInfo.current != null) {
+                        resultForAllCitiesFromRepo.add(cityFullInfo)
+                    }
+                }
                 Log.d(
                     "HomeViewModel.kt: getAllCitiesInfoFromRepo()",
                     "SuccessDownloadInfoFromRepo $resultForAllCitiesFromRepo"
@@ -108,12 +104,20 @@ class HomeViewModel(
         }
     }
 
-    private suspend fun loadCitiesToRepo(citiesWeatherFullInfo: List<CityWeatherFullInfo>) = withContext(
+    private suspend fun loadCitiesToRepo(citiesFullInfo: List<CityFullInfo>) = withContext(
         SupervisorJob() + Dispatchers.IO
     ) {
         try {
             launch {
-                citiesWeatherFullInfo.forEach { localRepo.addOneCityWeatherFullInfo(it) }
+                Log.d("HomeViewModel.kt: loadCitiesToRepo() input:", citiesFullInfo.toString())
+
+                for (cityFullInfo in citiesFullInfo) {
+                    if (localRepo.getOneCityFullInfo(cityFullInfo.id!!) != null) {
+                        localRepo.updateCityFullInfo(cityFullInfo)
+                    } else {
+                        localRepo.insertCityFullInfo(cityFullInfo)
+                    }
+                }
             }
             true
         } catch (e: Throwable) {

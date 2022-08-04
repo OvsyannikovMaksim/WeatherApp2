@@ -1,27 +1,22 @@
 package com.example.weatherapp2.model.repository
 
-import com.example.weatherapp2.model.common.CityCoordinate
-import com.example.weatherapp2.model.common.openWeatherApi.CityWeatherFullInfo
+import androidx.room.*
+import com.example.weatherapp2.model.common.CityFullInfo
+import com.example.weatherapp2.model.common.CityInfo
 
 interface LocalRepo {
 
-    // Это для координат городов
-    suspend fun getCitiesCoordinates(): List<CityCoordinate>
+    suspend fun getAllCityFullInfo(): List<CityFullInfo>
 
-    suspend fun getOneCity(id: Int): CityCoordinate?
+    suspend fun getOneCityFullInfo(id: Int): CityFullInfo?
 
-    suspend fun addCityCoordinate(cityCoordinate: CityCoordinate)
+    suspend fun getOneCityFullInfo(latitude: Double, longitude: Double): CityFullInfo?
 
-    suspend fun updateCityCoordinate(cityCoordinate: CityCoordinate)
+    suspend fun getAllCityInfo(): List<CityInfo>
 
-    suspend fun deleteCityCoordinate(cityCoordinate: CityCoordinate)
+    suspend fun insertCityFullInfo(cityFullInfo: CityFullInfo)
 
-    // Это для погоды
-    suspend fun getAllCityWeatherFullInfo(): List<CityWeatherFullInfo>
+    suspend fun updateCityFullInfo(cityFullInfo: CityFullInfo)
 
-    suspend fun getOneCityWeatherFullInfo(latitude: Double, longitude: Double): CityWeatherFullInfo
-
-    suspend fun addOneCityWeatherFullInfo(cityWeatherFullInfo: CityWeatherFullInfo)
-
-    suspend fun deleteOneCityWeatherFullInfo(cityWeatherFullInfo: CityWeatherFullInfo)
+    suspend fun deleteCityFullInfo(cityFullInfo: CityFullInfo)
 }

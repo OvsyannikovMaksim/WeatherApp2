@@ -14,8 +14,7 @@ import androidx.navigation.findNavController
 import com.example.weatherapp2.R
 import com.example.weatherapp2.databinding.FragmentWeatherFullInfoBinding
 import com.example.weatherapp2.model.CurrentMapper
-import com.example.weatherapp2.model.common.CityCoordinate
-import com.example.weatherapp2.model.common.openWeatherApi.CityWeatherFullInfo
+import com.example.weatherapp2.model.common.CityFullInfo
 import com.example.weatherapp2.model.db.DataBase
 import com.example.weatherapp2.model.repository.LocalRepoImpl
 import com.squareup.picasso.Picasso
@@ -25,8 +24,7 @@ class WeatherFullInfoFragment : Fragment() {
     private lateinit var weatherFullInfoModel: WeatherFullInfoModel
     private lateinit var weatherFullInfoModelFactory: WeatherFullInfoModelFactory
     private lateinit var fragmentWeatherFullInfoBinding: FragmentWeatherFullInfoBinding
-    lateinit var cityCoordinate: CityCoordinate
-    lateinit var cityWeatherFullInfo: CityWeatherFullInfo
+    private var cityId: Int = 0
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -35,8 +33,9 @@ class WeatherFullInfoFragment : Fragment() {
         val localRepo = LocalRepoImpl(localDao)
         weatherFullInfoModelFactory = WeatherFullInfoModelFactory(localRepo)
         weatherFullInfoModel = ViewModelProvider(this, weatherFullInfoModelFactory)[WeatherFullInfoModel::class.java]
-        cityWeatherFullInfo = requireArguments().getParcelable("FullInfoKey")!!
-        weatherFullInfoModel.getCityFromRepo(cityWeatherFullInfo.id)
+        cityId = requireArguments().getInt("FullInfoKey")
+        Log.d("WeatherFullInfoFragment.kt", cityId.toString())
+        weatherFullInfoModel.getCityFromRepo(cityId)
     }
 
     override fun onCreateView(
@@ -50,24 +49,27 @@ class WeatherFullInfoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val cityCoordinateLivaData: LiveData<CityCoordinate> = weatherFullInfoModel.cityCoordinate
+        val cityCoordinateLivaData: LiveData<CityFullInfo> = weatherFullInfoModel.cityCoordinate
         cityCoordinateLivaData.observe(viewLifecycleOwner) {
             Log.d("TAG", it.toString())
-            cityCoordinate = it
-            if (it.comment != "") {
-                fragmentWeatherFullInfoBinding.commentPretext.visibility = View.VISIBLE
-                fragmentWeatherFullInfoBinding.commentText.visibility = View.VISIBLE
-                fragmentWeatherFullInfoBinding.commentText.text = it.comment
-            }
-            if (it.pic_uri != null) {
-                Picasso.with(view.context).load(Uri.parse(it.pic_uri)).into(
-                    fragmentWeatherFullInfoBinding.cityPic
-                )
-            }
+            binding(it, view.context)
+        }
+    }
+
+    private fun binding(cityFullInfo: CityFullInfo, context: Context) {
+        if (cityFullInfo.comment != "") {
+            fragmentWeatherFullInfoBinding.commentPretext.visibility = View.VISIBLE
+            fragmentWeatherFullInfoBinding.commentText.visibility = View.VISIBLE
+            fragmentWeatherFullInfoBinding.commentText.text = cityFullInfo.comment
+        }
+        if (cityFullInfo.pic != null) {
+            Picasso.get().load(Uri.parse(cityFullInfo.pic)).into(
+                fragmentWeatherFullInfoBinding.cityPic
+            )
         }
         val currentMapper = CurrentMapper()
-        val currentWeather = currentMapper.map(cityWeatherFullInfo.current, view.context)
-        fragmentWeatherFullInfoBinding.placeName.text = createFullCityName(cityWeatherFullInfo)
+        val currentWeather = currentMapper.map(cityFullInfo.current!!, context)
+        fragmentWeatherFullInfoBinding.placeName.text = createFullCityName(cityFullInfo)
         fragmentWeatherFullInfoBinding.humidity.text = currentWeather.humidity
         fragmentWeatherFullInfoBinding.temperature.text = currentWeather.temp
         fragmentWeatherFullInfoBinding.UV.text = currentWeather.uvi
@@ -75,33 +77,32 @@ class WeatherFullInfoFragment : Fragment() {
         fragmentWeatherFullInfoBinding.pressure.text = currentWeather.pressure
         fragmentWeatherFullInfoBinding.weatherName.text = currentWeather.weatherDescription
         fragmentWeatherFullInfoBinding.wind.text = currentWeather.wind
-        Picasso.with(view.context).load(currentWeather.weatherPicture).into(
+        Picasso.get().load(currentWeather.weatherPicture).into(
             fragmentWeatherFullInfoBinding.weatherPic
         )
-        fragmentWeatherFullInfoBinding.editButton.setOnClickListener {
+        fragmentWeatherFullInfoBinding.editButton.setOnClickListener { it1 ->
             val bundle = Bundle()
-            bundle.putParcelable("CityCoordinateKey", cityCoordinate)
-            it.findNavController().navigate(
+            bundle.putInt("CityIdKey", cityFullInfo.id!!)
+            it1.findNavController().navigate(
                 R.id.action_navigation_weatherFullInfoFragment_to_navigation_edit_city,
                 bundle
             )
         }
-        fragmentWeatherFullInfoBinding.deleteButton.setOnClickListener {
+        fragmentWeatherFullInfoBinding.deleteButton.setOnClickListener { it1 ->
             val bundle = Bundle()
-            bundle.putParcelable("CityCoordinateKey", cityCoordinate)
-            bundle.putParcelable("CityWeatherFullInfoKey", cityWeatherFullInfo)
-            it.findNavController().navigate(
+            bundle.putInt("CityIdKey", cityFullInfo.id!!)
+            it1.findNavController().navigate(
                 R.id.action_navigation_weatherFullInfoFragment_to_navigation_delete_dialog,
                 bundle
             )
         }
     }
 
-    private fun createFullCityName(cityWeather: CityWeatherFullInfo): String {
-        return if (cityWeather.state != null) {
-            "${cityWeather.name}, ${cityWeather.state}, ${cityWeather.country}"
+    private fun createFullCityName(cityFullInfo: CityFullInfo): String {
+        return if (cityFullInfo.state != null) {
+            "${cityFullInfo.name}, ${cityFullInfo.state}, ${cityFullInfo.country}"
         } else {
-            "${cityWeather.name}, ${cityWeather.country}"
+            "${cityFullInfo.name}, ${cityFullInfo.country}"
         }
     }
 }

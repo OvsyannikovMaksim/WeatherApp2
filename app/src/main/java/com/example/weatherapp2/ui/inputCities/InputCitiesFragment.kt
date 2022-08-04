@@ -3,7 +3,6 @@ package com.example.weatherapp2.ui.inputCities
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -39,8 +38,6 @@ class InputCitiesFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        Log.d("InputCitiesFragment", "onCreateView")
-
         fragmentInputCitiesBinding = FragmentInputCitiesBinding.inflate(inflater, container, false)
         return fragmentInputCitiesBinding.root
     }

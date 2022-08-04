@@ -1,0 +1,124 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 2,
+    "identityHash": "ff98b03ae2c9de4684992d5dc4ecfe41",
+    "entities": [
+      {
+        "tableName": "CityFullInfo",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `state` TEXT, `country` TEXT NOT NULL, `lat` REAL NOT NULL, `lon` REAL NOT NULL, `comment` TEXT, `pic` TEXT, `id` INTEGER PRIMARY KEY AUTOINCREMENT, `temp` REAL, `feels_like` REAL, `pressure` INTEGER, `humidity` INTEGER, `uvi` REAL, `wind_speed` REAL, `wind_deg` INTEGER, `weather` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "state",
+            "columnName": "state",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "country",
+            "columnName": "country",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lat",
+            "columnName": "lat",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lon",
+            "columnName": "lon",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "comment",
+            "columnName": "comment",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "pic",
+            "columnName": "pic",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "current.temp",
+            "columnName": "temp",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "current.feels_like",
+            "columnName": "feels_like",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "current.pressure",
+            "columnName": "pressure",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "current.humidity",
+            "columnName": "humidity",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "current.uvi",
+            "columnName": "uvi",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "current.wind_speed",
+            "columnName": "wind_speed",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "current.wind_deg",
+            "columnName": "wind_deg",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "current.weather",
+            "columnName": "weather",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ff98b03ae2c9de4684992d5dc4ecfe41')"
+    ]
+  }
+}

@@ -1,38 +1,30 @@
 package com.example.weatherapp2.model.db
 
 import androidx.room.*
-import com.example.weatherapp2.model.common.CityCoordinate
-import com.example.weatherapp2.model.common.openWeatherApi.CityWeatherFullInfo
+import com.example.weatherapp2.model.common.CityFullInfo
+import com.example.weatherapp2.model.common.CityInfo
 
 @Dao
 interface LocalDao {
 
-    // Это для координат городов
-    @Query("SELECT * FROM CityCoordinate")
-    suspend fun getCitiesCoordinates(): List<CityCoordinate>
+    @Query("SELECT * FROM CityFullInfo")
+    suspend fun getAllCityFullInfo(): List<CityFullInfo>
 
-    @Query("SELECT * FROM CityCoordinate WHERE id =:id")
-    suspend fun getOneCity(id: Int): CityCoordinate?
+    @Query("SELECT * FROM CityFullInfo WHERE id =:id")
+    suspend fun getOneCityFullInfo(id: Int): CityFullInfo?
+
+    @Query("SELECT * FROM CityFullInfo WHERE lon =:longitude and lat=:latitude")
+    suspend fun getOneCityFullInfo(latitude: Double, longitude: Double): CityFullInfo?
+
+    @Query("SELECT id, name, state, country, lat, lon, comment, pic FROM CityFullInfo")
+    suspend fun getAllCityInfo(): List<CityInfo>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addCityCoordinate(cityCoordinate: CityCoordinate)
+    suspend fun insertCityFullInfo(cityFullInfo: CityFullInfo)
 
     @Update
-    suspend fun updateCityCoordinate(cityCoordinate: CityCoordinate)
+    suspend fun updateCityFullInfo(cityFullInfo: CityFullInfo)
 
     @Delete
-    suspend fun deleteCityCoordinate(cityCoordinate: CityCoordinate)
-
-    // Это для погоды
-    @Query("SELECT * FROM CityWeatherFullInfo")
-    suspend fun getAllCityWeatherFullInfo(): List<CityWeatherFullInfo>
-
-    @Query("SELECT * FROM CityWeatherFullInfo WHERE lon =:longitude and lat=:latitude")
-    suspend fun getOneCityWeatherFullInfo(latitude: Double, longitude: Double): CityWeatherFullInfo
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addOneCityWeatherFullInfo(cityWeatherFullInfo: CityWeatherFullInfo)
-
-    @Delete
-    suspend fun deleteOneCityWeatherFullInfo(cityWeatherFullInfo: CityWeatherFullInfo)
+    suspend fun deleteCityFullInfo(cityFullInfo: CityFullInfo)
 }
