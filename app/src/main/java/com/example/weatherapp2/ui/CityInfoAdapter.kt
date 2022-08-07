@@ -9,10 +9,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp2.R
 import com.example.weatherapp2.databinding.CityCoordinateBinding
-import com.example.weatherapp2.model.common.CityInfo
+import com.example.weatherapp2.model.common.CityFullInfo
 
 class CityInfoAdapter :
-    ListAdapter<CityInfo, CityInfoAdapter.CityVH>(DiffCallback) {
+    ListAdapter<CityFullInfo, CityInfoAdapter.CityVH>(DiffCallback) {
 
     private lateinit var cityCoordinateBinding: CityCoordinateBinding
 
@@ -30,11 +30,11 @@ class CityInfoAdapter :
         cityCoordinateBinding.root
     ) {
 
-        fun bind(cityInfo: CityInfo) {
-            cityCoordinateBinding.cityNameText.text = createFullCityName(cityInfo)
+        fun bind(cityFullInfo: CityFullInfo) {
+            cityCoordinateBinding.cityNameText.text = createFullCityName(cityFullInfo)
             cityCoordinateBinding.cityCoordinateCard.setOnClickListener {
                 val bundle = Bundle()
-                bundle.putParcelable("CityInfoKey", cityInfo)
+                bundle.putParcelable("CityInfoKey", cityFullInfo)
                 it.findNavController().navigate(
                     R.id.action_navigation_input_city_to_navigation_edit_city,
                     bundle
@@ -42,25 +42,25 @@ class CityInfoAdapter :
             }
         }
 
-        private fun createFullCityName(cityInfo: CityInfo): String {
-            return if (cityInfo.state != null) {
-                "${cityInfo.name}, ${cityInfo.state}, ${cityInfo.country}"
+        private fun createFullCityName(cityFullInfo: CityFullInfo): String {
+            return if (cityFullInfo.state != null) {
+                "${cityFullInfo.name}, ${cityFullInfo.state}, ${cityFullInfo.country}"
             } else {
-                "${cityInfo.name}, ${cityInfo.country}"
+                "${cityFullInfo.name}, ${cityFullInfo.country}"
             }
         }
     }
 
-    object DiffCallback : DiffUtil.ItemCallback<CityInfo>() {
+    object DiffCallback : DiffUtil.ItemCallback<CityFullInfo>() {
 
-        override fun areItemsTheSame(oldItem: CityInfo, newItem: CityInfo): Boolean {
+        override fun areItemsTheSame(oldItem: CityFullInfo, newItem: CityFullInfo): Boolean {
             if (oldItem.lat == newItem.lat && oldItem.lon == newItem.lon) {
                 return true
             }
             return false
         }
 
-        override fun areContentsTheSame(oldItem: CityInfo, newItem: CityInfo): Boolean {
+        override fun areContentsTheSame(oldItem: CityFullInfo, newItem: CityFullInfo): Boolean {
             if (oldItem.name == newItem.name && oldItem.country == newItem.country) {
                 return true
             }

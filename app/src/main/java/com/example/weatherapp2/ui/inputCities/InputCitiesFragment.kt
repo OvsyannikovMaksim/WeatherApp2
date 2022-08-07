@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp2.databinding.FragmentInputCitiesBinding
 import com.example.weatherapp2.model.api.OpenWeatherApiRetrofit
-import com.example.weatherapp2.model.common.CityInfo
+import com.example.weatherapp2.model.common.CityFullInfo
 import com.example.weatherapp2.model.repository.CityWeatherRepoImpl
 import com.example.weatherapp2.ui.CityInfoAdapter
 
@@ -46,11 +46,11 @@ class InputCitiesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val recyclerView = setupRecyclerView()
         val cityInfoAdapter = CityInfoAdapter()
-        val resultOfSearch: LiveData<List<CityInfo>> = inputCitiesModel.resultOfSearch
-        fragmentInputCitiesBinding.inputCityNameEditText.setOnKeyListener { view, _, keyEvent ->
+        val resultOfSearch: LiveData<List<CityFullInfo>> = inputCitiesModel.resultOfSearch
+        fragmentInputCitiesBinding.inputCityNameEditText.setOnKeyListener { v, _, keyEvent ->
             if (keyEvent.action == KeyEvent.ACTION_DOWN && keyEvent.keyCode == KeyEvent.KEYCODE_ENTER) {
                 fragmentInputCitiesBinding.inputCityNameEditText.clearFocus()
-                hideKeyboard(requireContext(), view)
+                hideKeyboard(requireContext(), v)
                 inputCitiesModel.getCitiesFromLine(
                     fragmentInputCitiesBinding.inputCityNameEditText.text.toString()
                 )

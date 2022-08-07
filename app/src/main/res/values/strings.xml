@@ -53,4 +53,9 @@
     <string name="delete_dialog_text">Do you want to delete?</string>
     <string name="add_picture_button">Add Picture</string>
     <string name="save_button">Save</string>
+    <string name="default_time">30</string>
+    <string name="input_time_hint">Input time in minutes</string>
+    <string name="city_weather_pic_description">show_weather_in_city</string>
+    <string name="add_city_button_description">add_city_button</string>
+    <string name="place_pic_description">place_pic</string>
 </resources>

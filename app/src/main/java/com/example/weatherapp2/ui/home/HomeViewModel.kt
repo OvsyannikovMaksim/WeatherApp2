@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.weatherapp2.model.common.CityFullInfo
-import com.example.weatherapp2.model.common.CityInfo
 import com.example.weatherapp2.model.repository.CityWeatherRepoImpl
 import com.example.weatherapp2.model.repository.LocalRepo
 import kotlinx.coroutines.*
@@ -15,14 +14,15 @@ class HomeViewModel(
 ) : ViewModel() {
 
     var cityWeatherList: MutableLiveData<List<CityFullInfo>> = MutableLiveData()
-    private val cityInfo = mutableListOf<CityInfo>()
+    private val cityFullInfo = mutableListOf<CityFullInfo>()
     private val resultForAllCitiesFromApi = mutableListOf<CityFullInfo>()
     private val resultForAllCitiesFromRepo = mutableListOf<CityFullInfo>()
 
     fun getCitiesInfoAndLoadItToLocalRepo(language: String) {
         CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
             getCitiesCoordinatesList()
-            Log.d("HomeViewModel.kt: getCitiesInfoAndLoadItToLocalRepo()", cityInfo.toString())
+            Log.d("HomeViewModel.kt: getCitiesInfoAndLoadItToLocalRepo()", cityFullInfo.toString())
+            delay(1000)
             getAllCitiesInfoFromRepo()
             delay(2000)
             if (getCitiesInfoFromApi(language) && resultForAllCitiesFromApi.isNotEmpty()) {
@@ -32,17 +32,17 @@ class HomeViewModel(
         }
     }
 
-    private suspend fun loadOneCityInfoFromApi(cityInfo: CityInfo, language: String): CityFullInfo {
-        return cityWeatherRepoImpl.getCityWeatherFullInfo(cityInfo, language)
+    private suspend fun loadOneCityInfoFromApi(cityFullInfo: CityFullInfo, language: String): CityFullInfo {
+        return cityWeatherRepoImpl.getCityWeatherFullInfo(cityFullInfo, language)
     }
 
     private suspend fun getCitiesCoordinatesList() = withContext(SupervisorJob() + Dispatchers.IO) {
         try {
             launch {
-                val temp = localRepo.getAllCityInfo()
+                val temp = localRepo.getAllCityFullInfo()
                 withContext(Dispatchers.Main) {
-                    cityInfo.clear()
-                    cityInfo.addAll(temp)
+                    cityFullInfo.clear()
+                    cityFullInfo.addAll(temp)
                 }
             }.join()
             true
@@ -58,7 +58,7 @@ class HomeViewModel(
         try {
             launch {
                 resultForAllCitiesFromApi.clear()
-                cityInfo.forEach {
+                cityFullInfo.forEach {
                     resultForAllCitiesFromApi.add(
                         loadOneCityInfoFromApi(it, language)
                     )

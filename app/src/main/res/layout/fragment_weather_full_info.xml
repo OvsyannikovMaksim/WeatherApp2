@@ -14,7 +14,8 @@
         app:layout_constraintEnd_toStartOf="@+id/place_name"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/place_pic_description"/>
 
     <TextView
         android:id="@+id/place_name"
@@ -52,7 +53,8 @@
         <ImageView
             android:id="@+id/weather_pic"
             android:layout_width="50dp"
-            android:layout_height="50dp" />
+            android:layout_height="50dp"
+            android:contentDescription="@string/city_weather_pic_description"/>
 
         <TextView
             android:id="@+id/weather_name"

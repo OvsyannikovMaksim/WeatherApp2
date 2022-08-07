@@ -2,35 +2,34 @@ package com.example.weatherapp2.model.repository
 
 import com.example.weatherapp2.model.api.OpenWeatherApi
 import com.example.weatherapp2.model.common.CityFullInfo
-import com.example.weatherapp2.model.common.CityInfo
 
 class CityWeatherRepoImpl(private val openWeatherApi: OpenWeatherApi) : CityWeatherRepo {
 
-    private val API_KEY_OPEN_WEATHER: String = "4eddd7394f54a0dd81465aa802a837f5"
-    private val EXCLUDE_FULL_INFO: String = "minutely,hourly,alerts"
+    private val apiKeyOpenWeather: String = "4eddd7394f54a0dd81465aa802a837f5"
+    private val excludeFullInfo: String = "minutely,hourly,alerts"
 
     override suspend fun getCityWeatherFullInfo(
-        cityInfo: CityInfo,
+        cityFullInfo: CityFullInfo,
         lang: String
     ): CityFullInfo {
         val result = openWeatherApi.getCityWeatherInfo(
-            cityInfo.lat.toString(),
-            cityInfo.lon.toString(),
-            EXCLUDE_FULL_INFO,
+            cityFullInfo.lat.toString(),
+            cityFullInfo.lon.toString(),
+            excludeFullInfo,
             lang,
             "metric",
-            API_KEY_OPEN_WEATHER
+            apiKeyOpenWeather
         )
-        result.name = cityInfo.name
-        result.comment = cityInfo.comment
-        result.state = cityInfo.state
-        result.country = cityInfo.country
-        result.pic = cityInfo.pic
-        result.id = cityInfo.id
+        result.name = cityFullInfo.name
+        result.comment = cityFullInfo.comment
+        result.state = cityFullInfo.state
+        result.country = cityFullInfo.country
+        result.pic = cityFullInfo.pic
+        result.id = cityFullInfo.id
         return result
     }
 
-    override suspend fun getCityCoordinateByName(cityName: String): List<CityInfo> {
-        return openWeatherApi.getCityCoordinateByName(cityName, "5", API_KEY_OPEN_WEATHER)
+    override suspend fun getCityCoordinateByName(cityName: String): List<CityFullInfo> {
+        return openWeatherApi.getCityCoordinateByName(cityName, "5", apiKeyOpenWeather)
     }
 }

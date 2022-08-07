@@ -1,8 +1,6 @@
 package com.example.weatherapp2.model.repository
 
-import androidx.room.*
 import com.example.weatherapp2.model.common.CityFullInfo
-import com.example.weatherapp2.model.common.CityInfo
 
 interface LocalRepo {
 
@@ -11,8 +9,6 @@ interface LocalRepo {
     suspend fun getOneCityFullInfo(id: Int): CityFullInfo?
 
     suspend fun getOneCityFullInfo(latitude: Double, longitude: Double): CityFullInfo?
-
-    suspend fun getAllCityInfo(): List<CityInfo>
 
     suspend fun insertCityFullInfo(cityFullInfo: CityFullInfo)
 

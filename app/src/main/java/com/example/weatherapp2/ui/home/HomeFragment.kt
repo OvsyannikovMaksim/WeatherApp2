@@ -1,5 +1,6 @@
 package com.example.weatherapp2.ui.home
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -25,18 +26,23 @@ class HomeFragment : Fragment() {
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var homeViewModelFactory: HomeViewModelFactory
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        fragmentHomeBinding = FragmentHomeBinding.inflate(inflater, container, false)
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
         val cityWeatherRepoImpl = CityWeatherRepoImpl(OpenWeatherApiRetrofit.openWeatherApi)
         val dataBase = DataBase.getDataBase(this.requireContext())!!
         val localDao = dataBase.localDao()
         val localRepo = LocalRepoImpl(localDao)
         homeViewModelFactory = HomeViewModelFactory(cityWeatherRepoImpl, localRepo)
         homeViewModel = ViewModelProvider(this, homeViewModelFactory)[HomeViewModel::class.java]
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        fragmentHomeBinding = FragmentHomeBinding.inflate(inflater, container, false)
+
         return fragmentHomeBinding.root
     }
 
@@ -56,6 +62,7 @@ class HomeFragment : Fragment() {
         citiesWeather.observe(viewLifecycleOwner) {
             weatherInfoAdapter.submitList(it)
             recyclerView.adapter = weatherInfoAdapter
+            fragmentHomeBinding.loadingIndicator.visibility = View.GONE
         }
         fragmentHomeBinding.addCityButton.setOnClickListener {
             it.findNavController().navigate(R.id.action_navigation_home_to_navigation_input_city)

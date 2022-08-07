@@ -1,7 +1,6 @@
 package com.example.weatherapp2.model.api
 
 import com.example.weatherapp2.model.common.CityFullInfo
-import com.example.weatherapp2.model.common.CityInfo
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -22,5 +21,5 @@ interface OpenWeatherApi {
         @Query("q") cityName: String,
         @Query("limit") limit: String,
         @Query("appid") appid: String
-    ): List<CityInfo>
+    ): List<CityFullInfo>
 }

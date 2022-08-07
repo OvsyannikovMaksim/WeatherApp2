@@ -30,7 +30,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/city_temperature"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginEnd="16dp"/>
+            android:layout_marginEnd="16dp"
+            android:contentDescription="@string/city_weather_pic_description"/>
 
         <TextView
             android:id="@+id/city_temperature"

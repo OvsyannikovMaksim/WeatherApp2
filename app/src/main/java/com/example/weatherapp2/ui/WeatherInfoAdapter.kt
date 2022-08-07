@@ -1,8 +1,8 @@
 package com.example.weatherapp2.ui
 
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.findNavController
@@ -23,14 +23,17 @@ class WeatherInfoAdapter :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherVH {
         val inflater: LayoutInflater = LayoutInflater.from(parent.context)
         cityWeatherBinding = CityWeatherBinding.inflate(inflater, parent, false)
-        return WeatherVH(cityWeatherBinding)
+        return WeatherVH(cityWeatherBinding, parent.context)
     }
 
     override fun onBindViewHolder(holder: WeatherVH, position: Int) {
         holder.bind(currentList[position])
     }
 
-    class WeatherVH(private val cityWeatherBinding: CityWeatherBinding) : RecyclerView.ViewHolder(
+    class WeatherVH(
+        private val cityWeatherBinding: CityWeatherBinding,
+        private val context: Context
+    ) : RecyclerView.ViewHolder(
         cityWeatherBinding.root
     ) {
 
@@ -39,9 +42,11 @@ class WeatherInfoAdapter :
             val weatherPictureUri = Uri.parse(
                 "https://openweathermap.org/img/wn/${cityWeather.current!!.weather.first().icon}@2x.png"
             )
-            Log.d("TAG", weatherPictureUri.toString())
             Picasso.get().load(weatherPictureUri).into(cityWeatherBinding.weatherImage)
-            cityWeatherBinding.cityTemperature.text = "${cityWeather.current.temp.roundToInt()} \u00B0 С"
+            cityWeatherBinding.cityTemperature.text = context.getString(
+                R.string.celsius,
+                cityWeather.current.temp.roundToInt()
+            )
             cityWeatherBinding.cityWeatherCard.setOnClickListener {
                 val bundle = Bundle()
                 bundle.putInt("FullInfoKey", cityWeather.id!!)

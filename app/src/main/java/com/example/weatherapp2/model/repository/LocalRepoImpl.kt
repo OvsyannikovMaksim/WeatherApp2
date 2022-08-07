@@ -1,7 +1,6 @@
 package com.example.weatherapp2.model.repository
 
 import com.example.weatherapp2.model.common.CityFullInfo
-import com.example.weatherapp2.model.common.CityInfo
 import com.example.weatherapp2.model.db.LocalDao
 
 class LocalRepoImpl(private val localDao: LocalDao) : LocalRepo {
@@ -16,10 +15,6 @@ class LocalRepoImpl(private val localDao: LocalDao) : LocalRepo {
 
     override suspend fun getOneCityFullInfo(latitude: Double, longitude: Double): CityFullInfo? {
         return localDao.getOneCityFullInfo(latitude, longitude)
-    }
-
-    override suspend fun getAllCityInfo(): List<CityInfo> {
-        return localDao.getAllCityInfo()
     }
 
     override suspend fun insertCityFullInfo(cityFullInfo: CityFullInfo) {

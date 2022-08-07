@@ -51,7 +51,6 @@ class WeatherFullInfoFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val cityCoordinateLivaData: LiveData<CityFullInfo> = weatherFullInfoModel.cityCoordinate
         cityCoordinateLivaData.observe(viewLifecycleOwner) {
-            Log.d("TAG", it.toString())
             binding(it, view.context)
         }
     }
@@ -82,7 +81,7 @@ class WeatherFullInfoFragment : Fragment() {
         )
         fragmentWeatherFullInfoBinding.editButton.setOnClickListener { it1 ->
             val bundle = Bundle()
-            bundle.putInt("CityIdKey", cityFullInfo.id!!)
+            bundle.putParcelable("CityInfoKey", cityFullInfo)
             it1.findNavController().navigate(
                 R.id.action_navigation_weatherFullInfoFragment_to_navigation_edit_city,
                 bundle
