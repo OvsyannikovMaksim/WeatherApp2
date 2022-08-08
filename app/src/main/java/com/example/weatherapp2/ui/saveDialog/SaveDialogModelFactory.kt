@@ -8,7 +8,9 @@ class SaveDialogModelFactory(
     private val localRepo: LocalRepo
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return modelClass.getConstructor(SaveDialogModel::class.java)
-            .newInstance(localRepo)
+        if (modelClass.isAssignableFrom(SaveDialogModel::class.java)) {
+            return SaveDialogModel(localRepo) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

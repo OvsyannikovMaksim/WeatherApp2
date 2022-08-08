@@ -8,7 +8,9 @@ class WeatherFullInfoModelFactory(
     private val localRepo: LocalRepo
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return modelClass.getConstructor(WeatherFullInfoFragment::class.java)
-            .newInstance(localRepo)
+        if (modelClass.isAssignableFrom(WeatherFullInfoModel::class.java)) {
+            return WeatherFullInfoModel(localRepo) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

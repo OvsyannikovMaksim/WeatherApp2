@@ -1,28 +1,26 @@
 package com.example.weatherapp2.ui.editCity
 
 import android.app.Activity.RESULT_OK
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
-import android.os.Environment
+import android.provider.MediaStore
 import android.text.format.DateFormat
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
-import com.example.weatherapp2.BuildConfig
 import com.example.weatherapp2.R
 import com.example.weatherapp2.databinding.FragmentEditCityBinding
 import com.example.weatherapp2.model.common.CityFullInfo
 import com.squareup.picasso.Picasso
-import java.io.File
 
 class EditCityFragment : Fragment() {
 
@@ -56,10 +54,12 @@ class EditCityFragment : Fragment() {
             ActivityResultContracts.RequestPermission()
         ) { isGranted: Boolean ->
             if (isGranted) {
-                uri = getPhotoUri()
-                getPictureFromCameraLauncher.launch(uri)
+                launchCamera()
+
             } else {
-                Log.d("requestPermissionLauncher", "else $isGranted")
+                if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.Q){
+                    launchCamera()
+                }
             }
         }
     }
@@ -114,8 +114,8 @@ class EditCityFragment : Fragment() {
             Picasso.get().load(result.data!!.data).into(fragmentEditCityBinding.cityPic)
         }
     }
-
-    private fun getPhotoUri(): Uri {
+    //using FileProvider
+   /* private fun getPhotoUri(): Uri {
         val df = DateFormat.format("yyyyMMdd_HHmmss", System.currentTimeMillis())
         val filename = "$df.jpg"
         val dir = File(Environment.getExternalStoragePublicDirectory("DCIM"), "WeatherApp")
@@ -126,5 +126,20 @@ class EditCityFragment : Fragment() {
             BuildConfig.APPLICATION_ID + ".provider",
             file
         )
+    }*/
+
+    private fun getPhotoUri(): Uri{
+        val df = DateFormat.format("yyyyMMdd_HHmmss", System.currentTimeMillis())
+        val path = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        val contentValues = ContentValues().apply{
+            put(MediaStore.Images.Media.DISPLAY_NAME, "$df.jpg")
+            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+        }
+        return requireContext().contentResolver.insert(path, contentValues)!!
+    }
+
+    private fun launchCamera(){
+        uri = getPhotoUri()
+        getPictureFromCameraLauncher.launch(uri)
     }
 }

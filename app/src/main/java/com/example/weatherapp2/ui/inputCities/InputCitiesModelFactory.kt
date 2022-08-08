@@ -8,7 +8,9 @@ class InputCitiesModelFactory(
     private val cityWeatherRepoImpl: CityWeatherRepoImpl
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return modelClass.getConstructor(InputCitiesModel::class.java)
-            .newInstance(cityWeatherRepoImpl)
+        if (modelClass.isAssignableFrom(InputCitiesModel::class.java)) {
+            return InputCitiesModel(cityWeatherRepoImpl) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
