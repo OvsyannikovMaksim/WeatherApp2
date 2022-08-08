@@ -10,9 +10,7 @@ class HomeViewModelFactory(
     private val localRepo: LocalRepo
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
-            return HomeViewModel(cityWeatherRepoImpl, localRepo) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
+        return modelClass.getConstructor(HomeViewModel::class.java)
+            .newInstance(cityWeatherRepoImpl, localRepo)
     }
 }
