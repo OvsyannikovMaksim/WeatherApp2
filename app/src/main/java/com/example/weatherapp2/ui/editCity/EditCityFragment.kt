@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
+import android.text.format.DateFormat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,20 +14,25 @@ import android.view.ViewGroup
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import com.example.weatherapp2.BuildConfig
 import com.example.weatherapp2.R
 import com.example.weatherapp2.databinding.FragmentEditCityBinding
 import com.example.weatherapp2.model.common.CityFullInfo
 import com.squareup.picasso.Picasso
+import java.io.File
 
 class EditCityFragment : Fragment() {
 
     private lateinit var fragmentEditCityBinding: FragmentEditCityBinding
-    private var cityFullInfo: CityFullInfo? = null
+    private lateinit var cityFullInfo: CityFullInfo
     private lateinit var getPictureFromGalleryLauncher: ActivityResultLauncher<Intent>
-    private lateinit var getGalleryPermissionLauncher: ActivityResultLauncher<String>
-    private var picUri: String? = null
+    private lateinit var getPictureFromCameraLauncher: ActivityResultLauncher<Uri>
+    private lateinit var getStoragePermissionLauncher: ActivityResultLauncher<String>
+    private lateinit var pic: String
+    private lateinit var  uri: Uri
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -35,14 +42,21 @@ class EditCityFragment : Fragment() {
             getPictureFromGallery(it)
         }
 
-        getGalleryPermissionLauncher = registerForActivityResult(
+        getPictureFromCameraLauncher = registerForActivityResult(
+            ActivityResultContracts.TakePicture()
+        ) { if(it){
+            pic = uri.toString()
+            Picasso.get().load(uri)
+                .into(fragmentEditCityBinding.cityPic)
+            }
+        }
+
+        getStoragePermissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestPermission()
         ) { isGranted: Boolean ->
             if (isGranted) {
-                Log.d("requestPermissionLauncher", "if $isGranted")
-                val intent = Intent(Intent.ACTION_PICK)
-                intent.type = "image/*"
-                getPictureFromGalleryLauncher.launch(intent)
+                uri = getPhotoUri()
+                getPictureFromCameraLauncher.launch(uri)
             } else {
                 Log.d("requestPermissionLauncher", "else $isGranted")
             }
@@ -55,33 +69,38 @@ class EditCityFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         fragmentEditCityBinding = FragmentEditCityBinding.inflate(inflater, container, false)
-        cityFullInfo = requireArguments().getParcelable("CityInfoKey")
+        cityFullInfo = requireArguments().getParcelable("CityInfoKey")!!
         return fragmentEditCityBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        createBinding(cityFullInfo!!)
-    }
-
-    private fun createBinding(cityFullInfo: CityFullInfo) {
         fragmentEditCityBinding.cityName.text = createFullCityName(cityFullInfo)
         fragmentEditCityBinding.inputCityCommentEditText.setText(cityFullInfo.comment)
         if (cityFullInfo.pic != null) {
             Picasso.get().load(Uri.parse(cityFullInfo.pic))
                 .into(fragmentEditCityBinding.cityPic)
         }
-        fragmentEditCityBinding.addPictureButton.setOnClickListener {
-            getGalleryPermissionLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+        fragmentEditCityBinding.addPictureGalleryButton.setOnClickListener {
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = "image/*"
+            getPictureFromGalleryLauncher.launch(intent)
         }
+        fragmentEditCityBinding.addPictureCameraButton.setOnClickListener {
+            getStoragePermissionLauncher.launch(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        }
+
+
         fragmentEditCityBinding.saveCityButton.setOnClickListener {
-            cityFullInfo.pic = picUri
+            cityFullInfo.pic = pic
             cityFullInfo.comment = fragmentEditCityBinding.inputCityCommentEditText.text.toString()
             val bundle = Bundle()
             bundle.putParcelable("CityKey", cityFullInfo)
             it.findNavController().navigate(R.id.action_navigation_edit_city_to_save_dialog, bundle)
         }
     }
+
+
 
     private fun createFullCityName(cityFullInfo: CityFullInfo): String {
         return if (cityFullInfo.state != null) {
@@ -93,8 +112,17 @@ class EditCityFragment : Fragment() {
 
     private fun getPictureFromGallery(result: ActivityResult) {
         if (result.resultCode == RESULT_OK && result.data != null) {
-            picUri = result.data!!.data.toString()
+            pic = result.data!!.data.toString()
             Picasso.get().load(result.data!!.data).into(fragmentEditCityBinding.cityPic)
         }
+    }
+
+    private fun getPhotoUri(): Uri{
+        val df = DateFormat.format("yyyyMMdd_HHmmss",System.currentTimeMillis())
+        val filename = "$df.jpg"
+        val dir = File(Environment.getExternalStoragePublicDirectory("DCIM"), "WeatherApp")
+        if(!dir.exists())  dir.mkdir()
+        val file = File(dir, filename)
+        return FileProvider.getUriForFile(requireContext(), BuildConfig.APPLICATION_ID + ".provider", file)
     }
 }

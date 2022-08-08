@@ -39,14 +39,24 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/add_picture_button"
+        android:id="@+id/add_picture_gallery_button"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/add_picture_camera_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/input_city_comment"
         android:layout_marginTop="30dp"
-        android:text="@string/add_picture_button"/>
+        android:text="@string/add_picture_gallery_button"/>
+
+    <Button
+        android:id="@+id/add_picture_camera_button"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/add_picture_gallery_button"
+        app:layout_constraintTop_toBottomOf="@id/input_city_comment"
+        android:layout_marginTop="30dp"
+        android:text="@string/add_picture_camera_button"/>
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/city_pic"
@@ -54,7 +64,7 @@
         android:layout_height="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/add_picture_button"
+        app:layout_constraintTop_toBottomOf="@id/add_picture_gallery_button"
         app:layout_constraintBottom_toTopOf="@id/save_city_button"
         android:layout_marginTop="10dp"
         android:maxHeight="100dp"/>
