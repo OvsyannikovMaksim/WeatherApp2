@@ -32,7 +32,7 @@ class EditCityFragment : Fragment() {
     private lateinit var getPictureFromCameraLauncher: ActivityResultLauncher<Uri>
     private lateinit var getStoragePermissionLauncher: ActivityResultLauncher<String>
     private lateinit var pic: String
-    private lateinit var  uri: Uri
+    private lateinit var uri: Uri
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -44,10 +44,11 @@ class EditCityFragment : Fragment() {
 
         getPictureFromCameraLauncher = registerForActivityResult(
             ActivityResultContracts.TakePicture()
-        ) { if(it){
-            pic = uri.toString()
-            Picasso.get().load(uri)
-                .into(fragmentEditCityBinding.cityPic)
+        ) {
+            if (it) {
+                pic = uri.toString()
+                Picasso.get().load(uri)
+                    .into(fragmentEditCityBinding.cityPic)
             }
         }
 
@@ -90,7 +91,6 @@ class EditCityFragment : Fragment() {
             getStoragePermissionLauncher.launch(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
         }
 
-
         fragmentEditCityBinding.saveCityButton.setOnClickListener {
             cityFullInfo.pic = pic
             cityFullInfo.comment = fragmentEditCityBinding.inputCityCommentEditText.text.toString()
@@ -99,8 +99,6 @@ class EditCityFragment : Fragment() {
             it.findNavController().navigate(R.id.action_navigation_edit_city_to_save_dialog, bundle)
         }
     }
-
-
 
     private fun createFullCityName(cityFullInfo: CityFullInfo): String {
         return if (cityFullInfo.state != null) {
@@ -117,12 +115,16 @@ class EditCityFragment : Fragment() {
         }
     }
 
-    private fun getPhotoUri(): Uri{
-        val df = DateFormat.format("yyyyMMdd_HHmmss",System.currentTimeMillis())
+    private fun getPhotoUri(): Uri {
+        val df = DateFormat.format("yyyyMMdd_HHmmss", System.currentTimeMillis())
         val filename = "$df.jpg"
         val dir = File(Environment.getExternalStoragePublicDirectory("DCIM"), "WeatherApp")
-        if(!dir.exists())  dir.mkdir()
+        if (!dir.exists()) dir.mkdir()
         val file = File(dir, filename)
-        return FileProvider.getUriForFile(requireContext(), BuildConfig.APPLICATION_ID + ".provider", file)
+        return FileProvider.getUriForFile(
+            requireContext(),
+            BuildConfig.APPLICATION_ID + ".provider",
+            file
+        )
     }
 }
