@@ -29,7 +29,7 @@ class EditCityFragment : Fragment() {
     private lateinit var getPictureFromGalleryLauncher: ActivityResultLauncher<Intent>
     private lateinit var getPictureFromCameraLauncher: ActivityResultLauncher<Uri>
     private lateinit var getStoragePermissionLauncher: ActivityResultLauncher<String>
-    private lateinit var pic: String
+    private var pic: String? = null
     private lateinit var uri: Uri
 
     override fun onAttach(context: Context) {
