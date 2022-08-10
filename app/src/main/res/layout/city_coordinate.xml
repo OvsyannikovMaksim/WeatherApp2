@@ -28,10 +28,12 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/city_name_text"
             android:layout_width="wrap_content"
+            android:maxWidth="300dp"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/place_pic"
+            android:maxLines="3"
             android:layout_marginStart="10dp"/>
 
 

@@ -9,8 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,15 +23,9 @@ import com.example.weatherapp2.ui.CityInfoAdapter
 class InputCitiesFragment : Fragment() {
 
     private lateinit var fragmentInputCitiesBinding: FragmentInputCitiesBinding
-    private lateinit var inputCitiesModel: InputCitiesModel
-    private lateinit var inputCitiesModelFactory: InputCitiesModelFactory
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        val cityWeatherRepoImpl = CityWeatherRepoImpl(OpenWeatherApiRetrofit.openWeatherApi)
-        inputCitiesModelFactory = InputCitiesModelFactory(cityWeatherRepoImpl)
-        inputCitiesModel = ViewModelProvider(this, inputCitiesModelFactory)[InputCitiesModel::class.java]
-    }
+    private val inputCitiesModel by viewModels<InputCitiesModel> { InputCitiesModelFactory(
+        CityWeatherRepoImpl(OpenWeatherApiRetrofit.openWeatherApi)
+    ) }
 
     override fun onCreateView(
         inflater: LayoutInflater,

@@ -1,11 +1,10 @@
 package com.example.weatherapp2.ui.saveDialog
 
 import android.app.Dialog
-import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.weatherapp2.R
 import com.example.weatherapp2.model.common.CityFullInfo
@@ -14,16 +13,13 @@ import com.example.weatherapp2.model.repository.LocalRepoImpl
 
 class SaveDialog : DialogFragment() {
 
-    private lateinit var saveDialogModelFactory: SaveDialogModelFactory
-    private lateinit var saveDialogModel: SaveDialogModel
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        val dataBase = DataBase.getDataBase(this.requireContext())!!
-        val localDao = dataBase.localDao()
-        val localRepo = LocalRepoImpl(localDao)
-        saveDialogModelFactory = SaveDialogModelFactory(localRepo)
-        saveDialogModel = ViewModelProvider(this, saveDialogModelFactory)[SaveDialogModel::class.java]
+    private val saveDialogModel by viewModels<SaveDialogModel> {
+        SaveDialogModelFactory(
+            LocalRepoImpl(
+                DataBase.getDataBase(this.requireContext())!!
+                    .localDao()
+            )
+        )
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

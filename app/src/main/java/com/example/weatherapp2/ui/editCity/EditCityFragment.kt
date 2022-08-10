@@ -71,6 +71,7 @@ class EditCityFragment : Fragment() {
     ): View {
         fragmentEditCityBinding = FragmentEditCityBinding.inflate(inflater, container, false)
         cityFullInfo = requireArguments().getParcelable("CityInfoKey")!!
+        pic = cityFullInfo.pic
         return fragmentEditCityBinding.root
     }
 
@@ -114,19 +115,6 @@ class EditCityFragment : Fragment() {
             Picasso.get().load(result.data!!.data).into(fragmentEditCityBinding.cityPic)
         }
     }
-    //using FileProvider
-   /* private fun getPhotoUri(): Uri {
-        val df = DateFormat.format("yyyyMMdd_HHmmss", System.currentTimeMillis())
-        val filename = "$df.jpg"
-        val dir = File(Environment.getExternalStoragePublicDirectory("DCIM"), "WeatherApp")
-        if (!dir.exists()) dir.mkdir()
-        val file = File(dir, filename)
-        return FileProvider.getUriForFile(
-            requireContext(),
-            BuildConfig.APPLICATION_ID + ".provider",
-            file
-        )
-    }*/
 
     private fun getPhotoUri(): Uri{
         val df = DateFormat.format("yyyyMMdd_HHmmss", System.currentTimeMillis())

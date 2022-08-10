@@ -1,13 +1,12 @@
 package com.example.weatherapp2.ui.home
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,17 +22,14 @@ import com.example.weatherapp2.ui.WeatherInfoAdapter
 class HomeFragment : Fragment() {
 
     private lateinit var fragmentHomeBinding: FragmentHomeBinding
-    private lateinit var homeViewModel: HomeViewModel
-    private lateinit var homeViewModelFactory: HomeViewModelFactory
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        val cityWeatherRepoImpl = CityWeatherRepoImpl(OpenWeatherApiRetrofit.openWeatherApi)
-        val dataBase = DataBase.getDataBase(this.requireContext())!!
-        val localDao = dataBase.localDao()
-        val localRepo = LocalRepoImpl(localDao)
-        homeViewModelFactory = HomeViewModelFactory(cityWeatherRepoImpl, localRepo)
-        homeViewModel = ViewModelProvider(this, homeViewModelFactory)[HomeViewModel::class.java]
+    private val homeViewModel by viewModels<HomeViewModel> {
+        HomeViewModelFactory(
+            CityWeatherRepoImpl(OpenWeatherApiRetrofit.openWeatherApi),
+            LocalRepoImpl(
+                DataBase.getDataBase(this.requireContext())!!
+                    .localDao()
+            )
+        )
     }
 
     override fun onCreateView(

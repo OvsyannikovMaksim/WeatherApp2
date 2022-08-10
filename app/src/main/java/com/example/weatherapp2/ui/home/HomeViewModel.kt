@@ -18,10 +18,10 @@ class HomeViewModel(
     private val resultForAllCitiesFromApi = mutableListOf<CityFullInfo>()
     private val resultForAllCitiesFromRepo = mutableListOf<CityFullInfo>()
 
+
     fun getCitiesInfoAndLoadItToLocalRepo(language: String) {
         CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
             getCitiesCoordinatesList()
-            Log.d("HomeViewModel.kt: getCitiesInfoAndLoadItToLocalRepo()", cityFullInfo.toString())
             delay(1000)
             getAllCitiesInfoFromRepo()
             delay(2000)

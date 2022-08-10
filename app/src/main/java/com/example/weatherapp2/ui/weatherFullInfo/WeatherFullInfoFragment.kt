@@ -8,8 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.example.weatherapp2.R
 import com.example.weatherapp2.databinding.FragmentWeatherFullInfoBinding
@@ -21,18 +21,19 @@ import com.squareup.picasso.Picasso
 
 class WeatherFullInfoFragment : Fragment() {
 
-    private lateinit var weatherFullInfoModel: WeatherFullInfoModel
-    private lateinit var weatherFullInfoModelFactory: WeatherFullInfoModelFactory
+    private val weatherFullInfoModel by viewModels<WeatherFullInfoModel> {
+        WeatherFullInfoModelFactory(
+            LocalRepoImpl(
+                DataBase.getDataBase(this.requireContext())!!
+                    .localDao()
+            )
+        )
+    }
     private lateinit var fragmentWeatherFullInfoBinding: FragmentWeatherFullInfoBinding
     private var cityId: Int = 0
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        val dataBase = DataBase.getDataBase(this.requireContext())!!
-        val localDao = dataBase.localDao()
-        val localRepo = LocalRepoImpl(localDao)
-        weatherFullInfoModelFactory = WeatherFullInfoModelFactory(localRepo)
-        weatherFullInfoModel = ViewModelProvider(this, weatherFullInfoModelFactory)[WeatherFullInfoModel::class.java]
         cityId = requireArguments().getInt("FullInfoKey")
         Log.d("WeatherFullInfoFragment.kt", cityId.toString())
         weatherFullInfoModel.getCityFromRepo(cityId)
