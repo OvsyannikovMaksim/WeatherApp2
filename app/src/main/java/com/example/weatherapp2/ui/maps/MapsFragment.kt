@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.example.weatherapp2.R
 import com.example.weatherapp2.databinding.FragmentMapBinding
 import com.example.weatherapp2.model.common.CityFullInfo
@@ -17,7 +18,6 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import java.lang.Math.round
 import kotlin.math.roundToInt
 
 class MapsFragment : Fragment(), OnMapReadyCallback {
@@ -46,9 +46,20 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         Log.d("Map", "onMapReady")
         googleMap.uiSettings.isZoomControlsEnabled = true
-        mapsViewModel.getCitiesFullInfo().observe(viewLifecycleOwner){ citiesFullInfo ->
+        mapsViewModel.getCitiesFullInfo().observe(viewLifecycleOwner) { citiesFullInfo ->
             val cityMarkers = createCityMarkers(citiesFullInfo)
             cityMarkers.forEach { googleMap.addMarker(it) }
+            googleMap.setOnInfoWindowClickListener {
+                val bundle = Bundle()
+                bundle.putDoubleArray(
+                    "FullInfoKey",
+                    doubleArrayOf(it.position.latitude, it.position.longitude)
+                )
+                findNavController().navigate(
+                    R.id.action_navigation_maps_to_navigation_weatherFullInfoFragment,
+                    bundle
+                )
+            }
         }
     }
 
@@ -56,11 +67,14 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         val markers = mutableListOf<MarkerOptions>()
         for (cityInfo in citiesFullInfo) {
             val marker = MarkerOptions()
-            if(cityInfo.comment!="") {
+            if (cityInfo.comment != "") {
                 marker.snippet(cityInfo.comment)
             }
             marker.position(LatLng(cityInfo.lat, cityInfo.lon))
-            val temp = requireContext().getString(R.string.celsius, cityInfo.current!!.temp.roundToInt())
+            val temp = requireContext().getString(
+                R.string.celsius,
+                cityInfo.current!!.temp.roundToInt()
+            )
             marker.title("${cityInfo.name}, ${cityInfo.country} $temp")
             markers.add(marker)
         }

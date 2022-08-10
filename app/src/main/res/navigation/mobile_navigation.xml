@@ -24,7 +24,11 @@
         android:id="@+id/navigation_maps"
         android:name="com.example.weatherapp2.ui.maps.MapsFragment"
         android:label="@string/title_maps"
-        tools:layout="@layout/fragment_map" />
+        tools:layout="@layout/fragment_map" >
+        <action
+            android:id="@+id/action_navigation_maps_to_navigation_weatherFullInfoFragment"
+            app:destination="@id/navigation_weatherFullInfoFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_input_city"

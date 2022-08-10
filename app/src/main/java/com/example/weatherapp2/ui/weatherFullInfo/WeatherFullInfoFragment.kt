@@ -3,7 +3,6 @@ package com.example.weatherapp2.ui.weatherFullInfo
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,13 +29,11 @@ class WeatherFullInfoFragment : Fragment() {
         )
     }
     private lateinit var fragmentWeatherFullInfoBinding: FragmentWeatherFullInfoBinding
-    private var cityId: Int = 0
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        cityId = requireArguments().getInt("FullInfoKey")
-        Log.d("WeatherFullInfoFragment.kt", cityId.toString())
-        weatherFullInfoModel.getCityFromRepo(cityId)
+        val coordinates = requireArguments().getDoubleArray("FullInfoKey")!!
+        weatherFullInfoModel.getCityFromRepo(coordinates[0], coordinates[1])
     }
 
     override fun onCreateView(
