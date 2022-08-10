@@ -5,10 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.weatherapp2.R
 import com.example.weatherapp2.databinding.FragmentMapBinding
-import com.example.weatherapp2.model.repository.LocalDataCache
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
 
-class MapsFragment : Fragment() {
+class MapsFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var mapBinding: FragmentMapBinding
 
@@ -18,25 +21,11 @@ class MapsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         mapBinding = FragmentMapBinding.inflate(inflater, container, false)
-        changeMap()
-
+        val q = childFragmentManager.findFragmentById(R.id.google_map) as SupportMapFragment
+        q.getMapAsync(this)
         return mapBinding.root
     }
 
-    override fun onResume() {
-        super.onResume()
-        changeMap()
-    }
-
-    private fun changeMap() {
-        if (LocalDataCache.getChosenMapId() == 0
-        ) {
-            mapBinding.textGoogle.visibility = View.VISIBLE
-            mapBinding.textYandex.visibility = View.GONE
-        } else if (LocalDataCache.getChosenMapId() == 1
-        ) {
-            mapBinding.textGoogle.visibility = View.GONE
-            mapBinding.textYandex.visibility = View.VISIBLE
-        }
+    override fun onMapReady(p0: GoogleMap) {
     }
 }

@@ -2,10 +2,13 @@ package com.example.weatherapp2.model.repository
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
 
 object LocalDataCache {
 
     private lateinit var preferences: SharedPreferences
+    private lateinit var applicationInfo: ApplicationInfo
     private const val SharedPreferencesTag = "SharedPreferencesTag"
     private const val ServiceUpdateTimeTag = "ServiceUpdateTimeTag"
     private const val ServiceStateTag = "ServiceStateTag"
@@ -17,6 +20,14 @@ object LocalDataCache {
             SharedPreferencesTag,
             Context.MODE_PRIVATE
         )
+        applicationInfo = context.packageManager.getApplicationInfo(
+            context.packageName,
+            PackageManager.GET_META_DATA
+        )
+    }
+
+    fun getMetaData(name: String): String{
+        return applicationInfo.metaData[name].toString()
     }
 
     fun getServiceUpdateTime(): Int {

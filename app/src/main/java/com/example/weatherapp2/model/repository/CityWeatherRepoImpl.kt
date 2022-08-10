@@ -1,11 +1,14 @@
 package com.example.weatherapp2.model.repository
 
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
 import com.example.weatherapp2.model.api.OpenWeatherApi
 import com.example.weatherapp2.model.common.CityFullInfo
 
+
 class CityWeatherRepoImpl(private val openWeatherApi: OpenWeatherApi) : CityWeatherRepo {
 
-    private val apiKeyOpenWeather: String = "4eddd7394f54a0dd81465aa802a837f5"
+    private val apiKeyOpenWeather: String = LocalDataCache.getMetaData("openWeatherApiKey") //"4eddd7394f54a0dd81465aa802a837f5"
     private val excludeFullInfo: String = "minutely,hourly,alerts"
 
     override suspend fun getCityWeatherFullInfo(
