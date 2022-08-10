@@ -3,18 +3,73 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@id/navigation_home">
 
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.example.weatherapp2.ui.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_input_city"
+            app:destination="@id/navigation_input_city"
+            app:popUpTo="@id/navigation_home"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_navigation_home_to_weatherFullInfoFragment"
+            app:destination="@id/navigation_weatherFullInfoFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_maps"
         android:name="com.example.weatherapp2.ui.maps.MapsFragment"
         android:label="@string/title_maps"
         tools:layout="@layout/fragment_map" />
+
+    <fragment
+        android:id="@+id/navigation_input_city"
+        android:name="com.example.weatherapp2.ui.inputCities.InputCitiesFragment"
+        android:label="@string/title_input_city"
+        tools:layout="@layout/fragment_input_cities" >
+        <action
+            android:id="@+id/action_navigation_input_city_to_navigation_edit_city"
+            app:destination="@id/navigation_edit_city" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_edit_city"
+        android:name="com.example.weatherapp2.ui.editCity.EditCityFragment"
+        android:label="@string/title_edit_city"
+        tools:layout="@layout/fragment_edit_city" >
+        <action
+            android:id="@+id/action_navigation_edit_city_to_save_dialog"
+            app:destination="@id/navigation_save_dialog" />
+    </fragment>
+    <dialog
+        android:id="@+id/navigation_save_dialog"
+        android:name="com.example.weatherapp2.ui.saveDialog.SaveDialog">
+        <action
+            android:id="@+id/action_navigation_save_dialog_to_navigation_home"
+            app:destination="@id/navigation_home" />
+    </dialog>
+    <fragment
+        android:id="@+id/navigation_weatherFullInfoFragment"
+        android:name="com.example.weatherapp2.ui.weatherFullInfo.WeatherFullInfoFragment"
+        android:label="Weather Info" >
+        <action
+            android:id="@+id/action_navigation_weatherFullInfoFragment_to_navigation_edit_city"
+            app:destination="@id/navigation_edit_city" />
+        <action
+            android:id="@+id/action_navigation_weatherFullInfoFragment_to_navigation_delete_dialog"
+            app:destination="@id/navigation_delete_dialog" />
+    </fragment>
+
+    <dialog
+        android:id="@+id/navigation_delete_dialog"
+        android:name="com.example.weatherapp2.ui.deleteDialog.DeleteDialog">
+        <action
+            android:id="@+id/action_navigation_delete_dialog_to_navigation_home"
+            app:destination="@id/navigation_home" />
+    </dialog>
 
 </navigation>

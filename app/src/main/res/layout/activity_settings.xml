@@ -41,11 +41,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_marginTop="25dp"
+        android:entries="@array/maps_spinner"
         android:textAlignment="center"
         app:layout_constraintEnd_toStartOf="@id/guideline2"
         app:layout_constraintStart_toEndOf="@+id/map_text"
-        app:layout_constraintTop_toBottomOf="@id/appBarLayout"
-        android:entries="@array/maps_spinner"/>
+        app:layout_constraintTop_toBottomOf="@id/appBarLayout" />
 
 
     <com.google.android.material.switchmaterial.SwitchMaterial
@@ -67,10 +67,12 @@
         app:layout_constraintStart_toStartOf="@id/guideline1"
         app:layout_constraintTop_toBottomOf="@id/switch_service"
         android:visibility="invisible"
-        android:text="30"
+        android:text="@string/default_time"
         android:maxLength="3"
         android:digits="1234567890"
-        android:inputType="numberDecimal" />
+        android:inputType="numberDecimal"
+        android:importantForAutofill="no"
+        android:hint="@string/input_time_hint"/>
 
     <TextView
         android:id="@+id/text_minutes"

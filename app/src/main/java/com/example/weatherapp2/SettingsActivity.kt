@@ -5,6 +5,8 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import com.example.weatherapp2.databinding.ActivitySettingsBinding
+import com.example.weatherapp2.model.repository.LocalDataCache
+import com.example.weatherapp2.ui.dialogs.SaveSettingsDialog
 
 class SettingsActivity : AppCompatActivity(), SaveSettingsDialog.NoticeDialogListener {
     private lateinit var binding: ActivitySettingsBinding
@@ -18,7 +20,7 @@ class SettingsActivity : AppCompatActivity(), SaveSettingsDialog.NoticeDialogLis
         binding.toolbar.setNavigationOnClickListener {
             finish()
         }
-
+        binding.mapsSpinner.setSelection(LocalDataCache.getChosenMapId())
         binding.switchService.isChecked = LocalDataCache.getServiceState()
         if (binding.switchService.isChecked) {
             binding.timeText.visibility = View.VISIBLE
@@ -41,7 +43,8 @@ class SettingsActivity : AppCompatActivity(), SaveSettingsDialog.NoticeDialogLis
     override fun onDialogPositiveClick(dialog: DialogFragment) {
         LocalDataCache.setServiceUpdateTime(binding.timeText.text.toString().toInt())
         LocalDataCache.setServiceState(binding.switchService.isChecked)
-        LocalDataCache.setChosenMap(binding.mapsSpinner.selectedItem.toString())
+        LocalDataCache.setChosenMapId(binding.mapsSpinner.selectedItemPosition)
+        finish()
     }
 
     override fun onDialogNegativeClick(dialog: DialogFragment) {

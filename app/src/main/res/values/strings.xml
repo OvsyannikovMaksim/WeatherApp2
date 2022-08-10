@@ -14,8 +14,48 @@
     <string name="minutes">minutes</string>
     <string name="update_time" translatable="false">update_time</string>
     <string name="map">map</string>
+    <string name="title_input_city">Add city</string>
     <string-array name="maps_spinner">
         <item>Google</item>
         <item>Yandex</item>
     </string-array>
+    <string name="text_city_input">Input city name</string>
+    <string name="title_edit_city">Edit City</string>
+    <string name="text_city_comment">Input comment</string>
+    <string name="celsius" translatable="false">%1$d °C</string>
+    <string name="feels_celsius" translatable="false">feels %1$d °C</string>
+    <string name="UV">UV index</string>
+    <string name="pressure">hPa</string>
+    <string name="ms">m/s</string>
+    <string name="feels">feels</string>
+    <string name="E">E</string>
+    <string name="ENE">ENE</string>
+    <string name="NE">NE</string>
+    <string name="NNE">NNE</string>
+    <string name="N">N</string>
+    <string name="ESE">ESE</string>
+    <string name="SE">SE</string>
+    <string name="SSE">SSE</string>
+    <string name="S">S</string>
+    <string name="SSW">SSW</string>
+    <string name="SW">SW</string>
+    <string name="WSW">WSW</string>
+    <string name="W">W</string>
+    <string name="WNW">WNW</string>
+    <string name="NW">NW</string>
+    <string name="NNW">NNW</string>
+    <string name="humidity">humidity</string>
+    <string name="wind">wind</string>
+    <string name="edit_button_text">Edit</string>
+    <string name="delete_button_text">Delete</string>
+    <string name="comment_pretext">Comment:</string>
+    <string name="delete_dialog_text">Do you want to delete?</string>
+    <string name="save_button">Save</string>
+    <string name="default_time">30</string>
+    <string name="input_time_hint">Input time in minutes</string>
+    <string name="city_weather_pic_description">show_weather_in_city</string>
+    <string name="add_city_button_description">add_city_button</string>
+    <string name="place_pic_description">place_pic</string>
+    <string name="add_picture_gallery_button">Gallery</string>
+    <string name="add_picture_camera_button">Camera</string>
 </resources>

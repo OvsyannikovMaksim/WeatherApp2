@@ -2,14 +2,17 @@ package com.example.weatherapp2
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.weatherapp2.databinding.ActivityMainBinding
+import com.example.weatherapp2.model.repository.LocalDataCache
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
@@ -39,6 +42,24 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        binding.toolbar.setNavigationOnClickListener {
+            Log.d("TAG", "here")
+            navController.popBackStack()
+        }
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.id == R.id.navigation_input_city ||
+                destination.id == R.id.navigation_edit_city ||
+                destination.id == R.id.navigation_save_dialog ||
+                destination.id == R.id.navigation_weatherFullInfoFragment ||
+                destination.id == R.id.navigation_delete_dialog
+            ) {
+                binding.navView.visibility = View.GONE
+            } else {
+                binding.navView.visibility = View.VISIBLE
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
