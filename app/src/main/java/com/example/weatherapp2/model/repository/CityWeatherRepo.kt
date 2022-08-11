@@ -12,4 +12,9 @@ interface CityWeatherRepo {
     suspend fun getCityCoordinateByName(
         cityName: String
     ): List<CityFullInfo>
+
+    suspend fun getCityNameByCoordinates(
+        lat: String,
+        lon: String
+    ): CityFullInfo
 }

@@ -7,7 +7,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/input_city_name"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="@string/text_city_input"
         app:layout_constraintEnd_toEndOf="parent"
@@ -15,7 +15,9 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/citiesRecyclerView"
         android:layout_margin="15dp"
-        app:endIconDrawable="@drawable/ic_baseline_search_24">
+        app:startIconDrawable="@drawable/ic_baseline_search_24"
+        app:endIconMode="custom"
+        app:endIconDrawable="@drawable/ic_baseline_map_24">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/input_city_name_edit_text"

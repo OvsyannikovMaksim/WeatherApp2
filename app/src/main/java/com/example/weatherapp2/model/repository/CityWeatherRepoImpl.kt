@@ -1,7 +1,5 @@
 package com.example.weatherapp2.model.repository
 
-import android.content.pm.ApplicationInfo
-import android.content.pm.PackageManager
 import com.example.weatherapp2.model.api.OpenWeatherApi
 import com.example.weatherapp2.model.common.CityFullInfo
 
@@ -34,5 +32,9 @@ class CityWeatherRepoImpl(private val openWeatherApi: OpenWeatherApi) : CityWeat
 
     override suspend fun getCityCoordinateByName(cityName: String): List<CityFullInfo> {
         return openWeatherApi.getCityCoordinateByName(cityName, "5", apiKeyOpenWeather)
+    }
+
+    override suspend fun getCityNameByCoordinates(lat: String, lon: String): CityFullInfo {
+        return openWeatherApi.getCityNameByCoordinate(lat, lon, "1", apiKeyOpenWeather).first()
     }
 }

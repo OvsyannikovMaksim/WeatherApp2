@@ -53,7 +53,8 @@ class MainActivity : AppCompatActivity() {
                 destination.id == R.id.navigation_edit_city ||
                 destination.id == R.id.navigation_save_dialog ||
                 destination.id == R.id.navigation_weatherFullInfoFragment ||
-                destination.id == R.id.navigation_delete_dialog
+                destination.id == R.id.navigation_delete_dialog ||
+                destination.id == R.id.navigation_mapCityInputFragment
             ) {
                 binding.navView.visibility = View.GONE
             } else {
