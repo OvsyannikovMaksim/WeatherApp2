@@ -1,6 +1,7 @@
 package com.example.weatherapp2.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,17 +11,20 @@ import androidx.lifecycle.LiveData
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp2.R
 import com.example.weatherapp2.databinding.FragmentHomeBinding
 import com.example.weatherapp2.model.api.OpenWeatherApiRetrofit
 import com.example.weatherapp2.model.common.CityFullInfo
 import com.example.weatherapp2.model.db.DataBase
 import com.example.weatherapp2.model.repository.CityWeatherRepoImpl
+import com.example.weatherapp2.model.repository.LocalDataCache
 import com.example.weatherapp2.model.repository.LocalRepoImpl
 import com.example.weatherapp2.ui.WeatherInfoAdapter
 
 class HomeFragment : Fragment() {
 
+    private lateinit var mRecyclerView: RecyclerView
     private lateinit var fragmentHomeBinding: FragmentHomeBinding
     private val homeViewModel by viewModels<HomeViewModel> {
         HomeViewModelFactory(
@@ -42,6 +46,7 @@ class HomeFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Log.d("HomeFragment", "onViewCreated")
         super.onViewCreated(view, savedInstanceState)
         val mLayout = GridLayoutManager(
             activity,
@@ -50,17 +55,25 @@ class HomeFragment : Fragment() {
             false
         )
         homeViewModel.getCitiesInfoAndLoadItToLocalRepo("en")
-        val recyclerView = fragmentHomeBinding.cityInfoRecyclerview
-        recyclerView.layoutManager = mLayout
+        mRecyclerView = fragmentHomeBinding.cityInfoRecyclerview
+        mRecyclerView.layoutManager = mLayout
         val weatherInfoAdapter = WeatherInfoAdapter()
         val citiesWeather: LiveData<List<CityFullInfo>> = homeViewModel.cityWeatherList
         citiesWeather.observe(viewLifecycleOwner) {
             weatherInfoAdapter.submitList(it)
-            recyclerView.adapter = weatherInfoAdapter
+            mRecyclerView.adapter = weatherInfoAdapter
             fragmentHomeBinding.loadingIndicator.visibility = View.GONE
+            val lastPosition = LocalDataCache.getAdapterLastPosition()
+            mRecyclerView.scrollToPosition(lastPosition)
         }
         fragmentHomeBinding.addCityButton.setOnClickListener {
             it.findNavController().navigate(R.id.action_navigation_home_to_navigation_input_city)
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        val mLayoutManager = mRecyclerView.layoutManager as GridLayoutManager
+        LocalDataCache.setAdapterLastPosition(mLayoutManager.findFirstCompletelyVisibleItemPosition())
     }
 }

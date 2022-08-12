@@ -1,6 +1,5 @@
 package com.example.weatherapp2.ui.maps
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.weatherapp2.model.common.CityFullInfo
@@ -12,17 +11,10 @@ import kotlinx.coroutines.launch
 
 class MapsViewModel(private val localRepo: LocalRepo) : ViewModel() {
 
-   private val citiesFullInfo: MutableLiveData<List<CityFullInfo>> by lazy{
-       MutableLiveData<List<CityFullInfo>>().also {
-            loadCitiesFullInfoFromRepo()
-       }
-   }
+    val citiesFullInfo: MutableLiveData<List<CityFullInfo>> = MutableLiveData()
 
-    fun getCitiesFullInfo(): LiveData<List<CityFullInfo>>{
-        return citiesFullInfo
-    }
 
-    private fun loadCitiesFullInfoFromRepo(){
+    fun loadCitiesFullInfoFromRepo(){
         CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
             citiesFullInfo.postValue(localRepo.getAllCityFullInfo())
         }

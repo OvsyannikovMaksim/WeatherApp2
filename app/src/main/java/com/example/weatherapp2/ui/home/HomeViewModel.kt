@@ -21,12 +21,11 @@ class HomeViewModel(
 
     fun getCitiesInfoAndLoadItToLocalRepo(language: String) {
         CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
-            getCitiesCoordinatesList()
-            delay(1000)
+            delay(200)
             getAllCitiesInfoFromRepo()
-            delay(2000)
+            getCitiesCoordinatesList()
+            delay(200)
             if (getCitiesInfoFromApi(language) && resultForAllCitiesFromApi.isNotEmpty()) {
-                Log.d("HomeViewModel.kt: getCitiesInfoAndLoadItToLocalRepo()", "Download to repo")
                 loadCitiesToRepo(resultForAllCitiesFromApi)
             }
         }
@@ -63,10 +62,6 @@ class HomeViewModel(
                         loadOneCityInfoFromApi(it, language)
                     )
                 }
-                Log.d(
-                    "HomeViewModel.kt: getCitiesInfoFromApi()",
-                    "SuccessDownloadInfoFromApi $resultForAllCitiesFromApi"
-                )
                 withContext(Dispatchers.Main) {
                     cityWeatherList.postValue(resultForAllCitiesFromApi)
                 }
@@ -87,10 +82,6 @@ class HomeViewModel(
                         resultForAllCitiesFromRepo.add(cityFullInfo)
                     }
                 }
-                Log.d(
-                    "HomeViewModel.kt: getAllCitiesInfoFromRepo()",
-                    "SuccessDownloadInfoFromRepo $resultForAllCitiesFromRepo"
-                )
                 if (resultForAllCitiesFromRepo.isNotEmpty()) {
                     withContext(Dispatchers.Main) {
                         cityWeatherList.postValue(resultForAllCitiesFromRepo)
@@ -109,8 +100,6 @@ class HomeViewModel(
     ) {
         try {
             launch {
-                Log.d("HomeViewModel.kt: loadCitiesToRepo() input:", citiesFullInfo.toString())
-
                 for (cityFullInfo in citiesFullInfo) {
                     if (localRepo.getOneCityFullInfo(cityFullInfo.id!!) != null) {
                         localRepo.updateCityFullInfo(cityFullInfo)

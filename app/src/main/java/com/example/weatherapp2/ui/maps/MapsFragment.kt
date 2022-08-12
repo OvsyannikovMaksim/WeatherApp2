@@ -40,13 +40,14 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         mapBinding = FragmentMapBinding.inflate(inflater, container, false)
         val supportMapFragment = childFragmentManager.findFragmentById(R.id.google_map) as SupportMapFragment
         supportMapFragment.getMapAsync(this)
+        mapsViewModel.loadCitiesFullInfoFromRepo()
         return mapBinding.root
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
         Log.d("Map", "onMapReady")
         googleMap.uiSettings.isZoomControlsEnabled = true
-        mapsViewModel.getCitiesFullInfo().observe(viewLifecycleOwner) { citiesFullInfo ->
+        mapsViewModel.citiesFullInfo.observe(viewLifecycleOwner) { citiesFullInfo ->
             val cityMarkers = createCityMarkers(citiesFullInfo)
             cityMarkers.forEach { googleMap.addMarker(it) }
             googleMap.setOnInfoWindowClickListener {
