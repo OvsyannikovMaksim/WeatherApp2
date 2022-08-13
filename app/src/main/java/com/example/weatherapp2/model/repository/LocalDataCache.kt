@@ -14,6 +14,7 @@ object LocalDataCache {
     private const val ServiceStateTag = "ServiceStateTag"
     private const val ChosenMapIdTag = "ChosenMapIdTag"
     private const val AdapterLastPositionId = "AdapterLastPositionId"
+    private const val IsYandexMapInitId = "IsYandexMapInitId"
     private const val DefaultChosenMap = 0
 
     fun init(context: Context) {

@@ -14,6 +14,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.weatherapp2.databinding.ActivityMainBinding
 import com.example.weatherapp2.model.repository.LocalDataCache
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.yandex.mapkit.MapKitFactory
 
 class MainActivity : AppCompatActivity() {
 
@@ -22,7 +23,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         LocalDataCache.init(applicationContext)
-
+        MapKitFactory.setApiKey(LocalDataCache.getMetaData("yandexMapApiKey"))
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
@@ -44,7 +45,6 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
         binding.toolbar.setNavigationOnClickListener {
-            Log.d("TAG", "here")
             navController.popBackStack()
         }
 

@@ -16,5 +16,5 @@ interface CityWeatherRepo {
     suspend fun getCityNameByCoordinates(
         lat: String,
         lon: String
-    ): CityFullInfo
+    ): CityFullInfo?
 }

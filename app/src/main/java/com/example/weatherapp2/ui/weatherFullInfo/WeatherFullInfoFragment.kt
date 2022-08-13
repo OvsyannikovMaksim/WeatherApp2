@@ -3,6 +3,7 @@ package com.example.weatherapp2.ui.weatherFullInfo
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,6 +34,8 @@ class WeatherFullInfoFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         val coordinates = requireArguments().getDoubleArray("FullInfoKey")!!
+        Log.d("TAG", coordinates[0].toString())
+        Log.d("TAG", coordinates[1].toString())
         weatherFullInfoModel.getCityFromRepo(coordinates[0], coordinates[1])
     }
 
@@ -47,8 +50,7 @@ class WeatherFullInfoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val cityCoordinateLivaData: LiveData<CityFullInfo> = weatherFullInfoModel.cityCoordinate
-        cityCoordinateLivaData.observe(viewLifecycleOwner) {
+        weatherFullInfoModel.cityCoordinate.observe(viewLifecycleOwner) {
             binding(it, view.context)
         }
     }

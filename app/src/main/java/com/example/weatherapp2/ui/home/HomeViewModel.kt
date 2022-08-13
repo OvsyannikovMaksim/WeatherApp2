@@ -83,6 +83,7 @@ class HomeViewModel(
                     }
                 }
                 if (resultForAllCitiesFromRepo.isNotEmpty()) {
+                    Log.d("TAG", resultForAllCitiesFromRepo.toString() )
                     withContext(Dispatchers.Main) {
                         cityWeatherList.postValue(resultForAllCitiesFromRepo)
                     }

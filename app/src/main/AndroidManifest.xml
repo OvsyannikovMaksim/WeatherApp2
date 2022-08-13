@@ -37,10 +37,13 @@
         </activity>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="${MAPS_API_KEY}" />
+            android:value="${GOOGLE_MAP_API_KEY}" />
         <meta-data
             android:name="openWeatherApiKey"
             android:value="${OPEN_WEATHER_API_KEY}"/>
+        <meta-data
+            android:name="yandexMapApiKey"
+            android:value="${YANDEX_MAP_API_KEY}"/>
 
     </application>
 
