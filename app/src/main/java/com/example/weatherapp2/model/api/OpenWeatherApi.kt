@@ -22,4 +22,12 @@ interface OpenWeatherApi {
         @Query("limit") limit: String,
         @Query("appid") appid: String
     ): List<CityFullInfo>
+
+    @GET("geo/1.0/reverse")
+    suspend fun getCityNameByCoordinate(
+        @Query("lat") lat: String,
+        @Query("lon") lon: String,
+        @Query("limit") limit: String,
+        @Query("appid") appid: String
+    ): List<CityFullInfo>
 }

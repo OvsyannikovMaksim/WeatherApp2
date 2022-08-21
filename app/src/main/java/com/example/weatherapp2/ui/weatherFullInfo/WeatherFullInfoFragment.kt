@@ -30,13 +30,13 @@ class WeatherFullInfoFragment : Fragment() {
         )
     }
     private lateinit var fragmentWeatherFullInfoBinding: FragmentWeatherFullInfoBinding
-    private var cityId: Int = 0
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        cityId = requireArguments().getInt("FullInfoKey")
-        Log.d("WeatherFullInfoFragment.kt", cityId.toString())
-        weatherFullInfoModel.getCityFromRepo(cityId)
+        val coordinates = requireArguments().getDoubleArray("FullInfoKey")!!
+        Log.d("TAG", coordinates[0].toString())
+        Log.d("TAG", coordinates[1].toString())
+        weatherFullInfoModel.getCityFromRepo(coordinates[0], coordinates[1])
     }
 
     override fun onCreateView(
@@ -50,8 +50,7 @@ class WeatherFullInfoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val cityCoordinateLivaData: LiveData<CityFullInfo> = weatherFullInfoModel.cityCoordinate
-        cityCoordinateLivaData.observe(viewLifecycleOwner) {
+        weatherFullInfoModel.cityCoordinate.observe(viewLifecycleOwner) {
             binding(it, view.context)
         }
     }

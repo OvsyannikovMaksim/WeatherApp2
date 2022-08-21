@@ -24,7 +24,11 @@
         android:id="@+id/navigation_maps"
         android:name="com.example.weatherapp2.ui.maps.MapsFragment"
         android:label="@string/title_maps"
-        tools:layout="@layout/fragment_map" />
+        tools:layout="@layout/fragment_map" >
+        <action
+            android:id="@+id/action_navigation_maps_to_navigation_weatherFullInfoFragment"
+            app:destination="@id/navigation_weatherFullInfoFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_input_city"
@@ -34,6 +38,9 @@
         <action
             android:id="@+id/action_navigation_input_city_to_navigation_edit_city"
             app:destination="@id/navigation_edit_city" />
+        <action
+            android:id="@+id/action_navigation_input_city_to_mapCityInputFragment"
+            app:destination="@id/navigation_mapCityInputFragment" />
     </fragment>
 
     <fragment
@@ -71,5 +78,14 @@
             android:id="@+id/action_navigation_delete_dialog_to_navigation_home"
             app:destination="@id/navigation_home" />
     </dialog>
+
+    <fragment
+        android:id="@+id/navigation_mapCityInputFragment"
+        android:name="com.example.weatherapp2.ui.mapCityInput.MapCityInputFragment"
+        android:label="MapCityInputFragment" >
+        <action
+            android:id="@+id/action_mapCityInputFragment_to_navigation_edit_city"
+            app:destination="@id/navigation_edit_city" />
+    </fragment>
 
 </navigation>

@@ -13,9 +13,9 @@ class WeatherFullInfoModel(val localRepo: LocalRepo) : ViewModel() {
 
     var cityCoordinate: MutableLiveData<CityFullInfo> = MutableLiveData()
 
-    fun getCityFromRepo(id: Int) {
+    fun getCityFromRepo(lat: Double, lon: Double) {
         CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
-            cityCoordinate.postValue(localRepo.getOneCityFullInfo(id))
+            cityCoordinate.postValue(localRepo.getOneCityFullInfo(lat, lon))
         }
     }
 }

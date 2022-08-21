@@ -49,7 +49,10 @@ class WeatherInfoAdapter :
             )
             cityWeatherBinding.cityWeatherCard.setOnClickListener {
                 val bundle = Bundle()
-                bundle.putInt("FullInfoKey", cityWeather.id!!)
+                bundle.putDoubleArray(
+                    "FullInfoKey",
+                    doubleArrayOf(cityWeather.lat, cityWeather.lon)
+                )
                 it.findNavController().navigate(
                     R.id.action_navigation_home_to_weatherFullInfoFragment,
                     bundle

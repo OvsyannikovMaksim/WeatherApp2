@@ -11,9 +11,11 @@ import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.weatherapp2.R
 import com.example.weatherapp2.databinding.FragmentInputCitiesBinding
 import com.example.weatherapp2.model.api.OpenWeatherApiRetrofit
 import com.example.weatherapp2.model.common.CityFullInfo
@@ -38,6 +40,9 @@ class InputCitiesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        fragmentInputCitiesBinding.inputCityName.setEndIconOnClickListener {
+            findNavController().navigate(R.id.action_navigation_input_city_to_mapCityInputFragment)
+        }
         val recyclerView = setupRecyclerView()
         val cityInfoAdapter = CityInfoAdapter()
         val resultOfSearch: LiveData<List<CityFullInfo>> = inputCitiesModel.resultOfSearch

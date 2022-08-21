@@ -2,14 +2,19 @@ package com.example.weatherapp2.model.repository
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
 
 object LocalDataCache {
 
     private lateinit var preferences: SharedPreferences
+    private lateinit var applicationInfo: ApplicationInfo
     private const val SharedPreferencesTag = "SharedPreferencesTag"
     private const val ServiceUpdateTimeTag = "ServiceUpdateTimeTag"
     private const val ServiceStateTag = "ServiceStateTag"
     private const val ChosenMapIdTag = "ChosenMapIdTag"
+    private const val AdapterLastPositionId = "AdapterLastPositionId"
+    private const val IsYandexMapInitId = "IsYandexMapInitId"
     private const val DefaultChosenMap = 0
 
     fun init(context: Context) {
@@ -17,6 +22,14 @@ object LocalDataCache {
             SharedPreferencesTag,
             Context.MODE_PRIVATE
         )
+        applicationInfo = context.packageManager.getApplicationInfo(
+            context.packageName,
+            PackageManager.GET_META_DATA
+        )
+    }
+
+    fun getMetaData(name: String): String{
+        return applicationInfo.metaData[name].toString()
     }
 
     fun getServiceUpdateTime(): Int {
@@ -46,6 +59,16 @@ object LocalDataCache {
     fun setChosenMapId(chosenMapId: Int) {
         preferences.edit()
             .putInt(ChosenMapIdTag, chosenMapId)
+            .apply()
+    }
+
+    fun getAdapterLastPosition(): Int{
+        return preferences.getInt(AdapterLastPositionId, 0)
+    }
+
+    fun setAdapterLastPosition(num: Int){
+        preferences.edit()
+            .putInt(AdapterLastPositionId, num)
             .apply()
     }
 }
