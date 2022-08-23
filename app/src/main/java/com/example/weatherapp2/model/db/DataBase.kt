@@ -11,7 +11,7 @@ import com.example.weatherapp2.model.common.CityFullInfo
 
 @Database(
     entities = [CityFullInfo::class],
-    version = 2,
+    version = 3,
     exportSchema = true
 )
 @TypeConverters(Converters::class)
@@ -28,7 +28,6 @@ abstract class DataBase : RoomDatabase() {
                         "comment TEXT, pic TEXT, id INTEGER PRIMARY KEY AUTOINCREMENT," +
                         "'temp' REAL, feels_like REAL, pressure INTEGER, humidity INTEGER," +
                         "uvi REAL, wind_speed REAL, wind_deg INTEGER, weather TEXT)")
-                //database.execSQL("SELECT t2.name, t2.state, t2.country, t2.lat, t2.lon, t2.comment, t2.pic_uri, t1.current, t2.id FROM CityWeatherFullInfo as t1 JOIN CityCoordinate as t2 on t1.id = t2.id")
                 database.execSQL(
                     "INSERT INTO CityFullInfo SELECT t2.name, t2.state, t2.country, t2.lat," +
                             "t2.lon, t2.comment, t2.pic_uri, t2.id, t1.'temp', " +
@@ -41,6 +40,12 @@ abstract class DataBase : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE CityFullInfo ADD COLUMN updateTime TEXT DEFAULT null ")
+            }
+        }
+
         fun getDataBase(context: Context): DataBase? {
             if (INSTANCE == null) {
                 synchronized(DataBase::class) {
@@ -49,6 +54,7 @@ abstract class DataBase : RoomDatabase() {
                         DataBase::class.java,
                         "myDB"
                     ).addMigrations(MIGRATION_1_2)
+                        .addMigrations(MIGRATION_2_3)
                         .build()
                 }
             }

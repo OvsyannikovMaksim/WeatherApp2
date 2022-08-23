@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
+import android.net.ConnectivityManager
 
 object LocalDataCache {
 
@@ -14,7 +15,8 @@ object LocalDataCache {
     private const val ServiceStateTag = "ServiceStateTag"
     private const val ChosenMapIdTag = "ChosenMapIdTag"
     private const val AdapterLastPositionId = "AdapterLastPositionId"
-    private const val IsYandexMapInitId = "IsYandexMapInitId"
+    private const val LastCityInNotification = "LastCityInNotificationId"
+    private const val InternetIsOn = "InternetIsOnId"
     private const val DefaultChosenMap = 0
 
     fun init(context: Context) {
@@ -27,6 +29,7 @@ object LocalDataCache {
             PackageManager.GET_META_DATA
         )
     }
+
 
     fun getMetaData(name: String): String{
         return applicationInfo.metaData[name].toString()
@@ -69,6 +72,26 @@ object LocalDataCache {
     fun setAdapterLastPosition(num: Int){
         preferences.edit()
             .putInt(AdapterLastPositionId, num)
+            .apply()
+    }
+
+    fun getLastCityInNotification(): Int{
+        return preferences.getInt(LastCityInNotification, 0)
+    }
+
+    fun putLastCityInNotification(cityId: Int){
+        preferences.edit()
+            .putInt(LastCityInNotification, cityId)
+            .apply()
+    }
+
+    fun getInternetAccess(): Boolean{
+        return preferences.getBoolean(InternetIsOn, false)
+    }
+
+    fun setInternetAccess(isOn: Boolean){
+        preferences.edit()
+            .putBoolean(InternetIsOn, isOn)
             .apply()
     }
 }
