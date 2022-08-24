@@ -1,7 +1,6 @@
 package com.example.weatherapp2.ui.home
 
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.weatherapp2.model.common.CityFullInfo
@@ -19,10 +18,11 @@ class HomeViewModel(
     private val cityFullInfo = mutableListOf<CityFullInfo>()
     private val resultForAllCitiesFromApi = mutableListOf<CityFullInfo>()
     private val resultForAllCitiesFromRepo = mutableListOf<CityFullInfo>()
+    private val job = SupervisorJob()
 
 
     fun getCitiesInfoAndLoadItToLocalRepo(language: String) {
-        CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
+        CoroutineScope(job + Dispatchers.IO).launch {
             delay(200)
             getAllCitiesInfoFromRepo()
             getCitiesCoordinatesList()
@@ -34,7 +34,7 @@ class HomeViewModel(
     }
 
     fun getCitiesInfo(){
-        CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
+        CoroutineScope(job + Dispatchers.IO).launch {
             delay(500)
             getAllCitiesInfoFromRepo()
         }
@@ -44,7 +44,7 @@ class HomeViewModel(
         return cityWeatherRepoImpl.getCityWeatherFullInfo(cityFullInfo, language)
     }
 
-    private suspend fun getCitiesCoordinatesList() = withContext(SupervisorJob() + Dispatchers.IO) {
+    private suspend fun getCitiesCoordinatesList() = withContext(job + Dispatchers.IO) {
         Log.d("getCitiesCoordinatesList", "here")
         try {
             launch {
@@ -61,7 +61,7 @@ class HomeViewModel(
         }
     }
 
-    private suspend fun getCitiesInfoFromApi(language: String) = withContext(SupervisorJob() + Dispatchers.IO) {
+    private suspend fun getCitiesInfoFromApi(language: String) = withContext(job + Dispatchers.IO) {
         try {
             launch {
                 resultForAllCitiesFromApi.clear()
@@ -71,7 +71,6 @@ class HomeViewModel(
                             loadOneCityInfoFromApi(it, language)
                         )
                     }
-
                     withContext(Dispatchers.Main) {
                         cityWeatherList.postValue(resultForAllCitiesFromApi)
                     }
@@ -84,7 +83,7 @@ class HomeViewModel(
         }
     }
 
-    private suspend fun getAllCitiesInfoFromRepo() = withContext(SupervisorJob() + Dispatchers.IO) {
+    private suspend fun getAllCitiesInfoFromRepo() = withContext(job + Dispatchers.IO) {
         Log.d("getAllCitiesInfoFromRepo", "here")
         try {
             launch {
@@ -109,7 +108,7 @@ class HomeViewModel(
     }
 
     private suspend fun loadCitiesToRepo(citiesFullInfo: List<CityFullInfo>) = withContext(
-        SupervisorJob() + Dispatchers.IO
+        job + Dispatchers.IO
     ) {
         Log.d("loadCitiesToRepo", "here")
         try {
