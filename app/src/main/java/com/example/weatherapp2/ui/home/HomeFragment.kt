@@ -62,7 +62,7 @@ class HomeFragment : Fragment() {
         mRecyclerView = fragmentHomeBinding.cityInfoRecyclerview
         mRecyclerView.layoutManager = mLayout
         val weatherInfoAdapter = WeatherInfoAdapter()
-        if(!LocalDataCache.getInternetAccess()){
+        if (!LocalDataCache.getInternetAccess()) {
             Toast.makeText(requireContext(), "No internet", Toast.LENGTH_SHORT).show()
         }
         val citiesWeather: LiveData<List<CityFullInfo>> = homeViewModel.cityWeatherList
@@ -80,7 +80,7 @@ class HomeFragment : Fragment() {
         WorkManager.getInstance(requireContext())
             .getWorkInfosByTagLiveData(updateWeatherWorkerTag)
             .observe(viewLifecycleOwner) {
-                if(it.isNotEmpty()) {
+                if (it.isNotEmpty()) {
                     if (prev == WorkInfo.State.RUNNING && it[0].state == WorkInfo.State.ENQUEUED) {
                         homeViewModel.getCitiesInfo()
                     }
@@ -92,6 +92,8 @@ class HomeFragment : Fragment() {
     override fun onPause() {
         super.onPause()
         val mLayoutManager = mRecyclerView.layoutManager as GridLayoutManager
-        LocalDataCache.setAdapterLastPosition(mLayoutManager.findFirstCompletelyVisibleItemPosition())
+        LocalDataCache.setAdapterLastPosition(
+            mLayoutManager.findFirstCompletelyVisibleItemPosition()
+        )
     }
 }

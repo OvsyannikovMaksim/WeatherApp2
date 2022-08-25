@@ -27,9 +27,12 @@ import com.example.weatherapp2.ui.CityInfoAdapter
 class InputCitiesFragment : Fragment() {
 
     private lateinit var fragmentInputCitiesBinding: FragmentInputCitiesBinding
-    private val inputCitiesModel by viewModels<InputCitiesModel> { InputCitiesModelFactory(
-        CityWeatherRepoImpl(OpenWeatherApiRetrofit.openWeatherApi)
-    ) }
+    private lateinit var mRecyclerView: RecyclerView
+    private val inputCitiesModel by viewModels<InputCitiesModel> {
+        InputCitiesModelFactory(
+            CityWeatherRepoImpl(OpenWeatherApiRetrofit.openWeatherApi)
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,27 +45,30 @@ class InputCitiesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if(LocalDataCache.getInternetAccess()) {
+        if (LocalDataCache.getInternetAccess()) {
             fragmentInputCitiesBinding.inputCityName.setEndIconOnClickListener {
-                findNavController().navigate(R.id.action_navigation_input_city_to_mapCityInputFragment)
+                findNavController().navigate(
+                    R.id.action_navigation_input_city_to_mapCityInputFragment
+                )
             }
         }
-        val recyclerView = setupRecyclerView()
+        mRecyclerView = setupRecyclerView()
         val cityInfoAdapter = CityInfoAdapter()
         val resultOfSearch: LiveData<List<CityFullInfo>> = inputCitiesModel.resultOfSearch
         fragmentInputCitiesBinding.inputCityNameEditText.setOnKeyListener { v, _, keyEvent ->
             if (keyEvent.action == KeyEvent.ACTION_DOWN && keyEvent.keyCode == KeyEvent.KEYCODE_ENTER) {
                 fragmentInputCitiesBinding.inputCityNameEditText.clearFocus()
                 hideKeyboard(requireContext(), v)
-                if(LocalDataCache.getInternetAccess()) {
+                if (LocalDataCache.getInternetAccess()) {
                     inputCitiesModel.getCitiesFromLine(
-                        fragmentInputCitiesBinding.inputCityNameEditText.text.toString())
+                        fragmentInputCitiesBinding.inputCityNameEditText.text.toString()
+                    )
                 } else {
                     Toast.makeText(requireContext(), "No internet", Toast.LENGTH_SHORT).show()
                 }
                 resultOfSearch.observe(viewLifecycleOwner) {
                     cityInfoAdapter.submitList(it)
-                    recyclerView.adapter = cityInfoAdapter
+                    mRecyclerView.adapter = cityInfoAdapter
                 }
                 return@setOnKeyListener true
             }

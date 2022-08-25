@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
-import android.net.ConnectivityManager
 
 object LocalDataCache {
 
@@ -30,8 +29,7 @@ object LocalDataCache {
         )
     }
 
-
-    fun getMetaData(name: String): String{
+    fun getMetaData(name: String): String {
         return applicationInfo.metaData[name].toString()
     }
 
@@ -65,31 +63,31 @@ object LocalDataCache {
             .apply()
     }
 
-    fun getAdapterLastPosition(): Int{
+    fun getAdapterLastPosition(): Int {
         return preferences.getInt(AdapterLastPositionId, 0)
     }
 
-    fun setAdapterLastPosition(num: Int){
+    fun setAdapterLastPosition(num: Int) {
         preferences.edit()
             .putInt(AdapterLastPositionId, num)
             .apply()
     }
 
-    fun getLastCityInNotification(): Int{
+    fun getLastCityInNotification(): Int {
         return preferences.getInt(LastCityInNotification, 0)
     }
 
-    fun putLastCityInNotification(cityId: Int){
+    fun putLastCityInNotification(cityId: Int) {
         preferences.edit()
             .putInt(LastCityInNotification, cityId)
             .apply()
     }
 
-    fun getInternetAccess(): Boolean{
+    fun getInternetAccess(): Boolean {
         return preferences.getBoolean(InternetIsOn, false)
     }
 
-    fun setInternetAccess(isOn: Boolean){
+    fun setInternetAccess(isOn: Boolean) {
         preferences.edit()
             .putBoolean(InternetIsOn, isOn)
             .apply()

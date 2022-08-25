@@ -6,7 +6,7 @@ import com.example.weatherapp2.model.db.LocalDao
 
 class LocalRepoImpl(private val localDao: LocalDao) : LocalRepo {
 
-    override fun dbUpdateLiveData(): LiveData<List<CityFullInfo>>{
+    override fun dbUpdateLiveData(): LiveData<List<CityFullInfo>> {
         return localDao.dbUpdateLiveData()
     }
 

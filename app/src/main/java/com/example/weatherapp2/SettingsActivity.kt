@@ -81,7 +81,7 @@ class SettingsActivity : AppCompatActivity(), SaveSettingsDialog.NoticeDialogLis
             .build()
         if (binding.switchService.isChecked && !isWorkerOn(updateWeatherWorkerTag)) {
             WorkManager.getInstance(applicationContext).enqueue(updateWeatherWorker)
-            //updateWeatherWorker.id
+            // updateWeatherWorker.id
         } else if (!binding.switchService.isChecked && isWorkerOn(updateWeatherWorkerTag)) {
             WorkManager.getInstance(applicationContext).cancelAllWorkByTag(updateWeatherWorkerTag)
         } else if (binding.switchService.isChecked && isWorkerOn(updateWeatherWorkerTag) &&
@@ -133,9 +133,9 @@ class SettingsActivity : AppCompatActivity(), SaveSettingsDialog.NoticeDialogLis
     }
 
     private fun syncNotification() {
-        if (binding.switchService.isChecked && binding.switchService.isChecked!=LocalDataCache.getServiceState()) {
+        if (binding.switchService.isChecked && binding.switchService.isChecked != LocalDataCache.getServiceState()) {
             startService(Intent(this, WeatherNotificationService::class.java))
-        } else if (!binding.switchService.isChecked && binding.switchService.isChecked!=LocalDataCache.getServiceState()){
+        } else if (!binding.switchService.isChecked && binding.switchService.isChecked != LocalDataCache.getServiceState()) {
             stopService(Intent(this, WeatherNotificationService::class.java))
         }
     }

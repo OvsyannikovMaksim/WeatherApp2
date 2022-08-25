@@ -14,12 +14,14 @@ import kotlinx.coroutines.*
 
 class UpdateWeatherWorker(
     context: Context,
-    workerParams: WorkerParameters,
+    workerParams: WorkerParameters
 ) :
     Worker(context, workerParams) {
 
     val localRepo: LocalRepo = LocalRepoImpl(DataBase.getDataBase(context)!!.localDao())
-    val cityWeatherRepoImpl: CityWeatherRepoImpl = CityWeatherRepoImpl(OpenWeatherApiRetrofit.openWeatherApi)
+    val cityWeatherRepoImpl: CityWeatherRepoImpl = CityWeatherRepoImpl(
+        OpenWeatherApiRetrofit.openWeatherApi
+    )
 
     private val cityFullInfo = mutableListOf<CityFullInfo>()
     private val resultForAllCitiesFromApi = mutableListOf<CityFullInfo>()

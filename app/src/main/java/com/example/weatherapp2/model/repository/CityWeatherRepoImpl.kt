@@ -1,13 +1,9 @@
 package com.example.weatherapp2.model.repository
 
-import android.util.Log
 import com.example.weatherapp2.model.api.OpenWeatherApi
 import com.example.weatherapp2.model.common.CityFullInfo
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.*
-
 
 class CityWeatherRepoImpl(private val openWeatherApi: OpenWeatherApi) : CityWeatherRepo {
 
@@ -42,9 +38,9 @@ class CityWeatherRepoImpl(private val openWeatherApi: OpenWeatherApi) : CityWeat
 
     override suspend fun getCityNameByCoordinates(lat: String, lon: String): CityFullInfo? {
         val result = openWeatherApi.getCityNameByCoordinate(lat, lon, "1", apiKeyOpenWeather)
-        return if(result != emptyList<CityFullInfo>()){
+        return if (result != emptyList<CityFullInfo>()) {
             result.first()
-        } else{
+        } else {
             null
         }
     }

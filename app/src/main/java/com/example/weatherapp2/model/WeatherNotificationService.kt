@@ -19,9 +19,9 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
-import kotlinx.coroutines.SupervisorJob
 import kotlin.math.pow
 import kotlin.math.sqrt
+import kotlinx.coroutines.SupervisorJob
 
 class WeatherNotificationService : Service() {
 
@@ -83,9 +83,12 @@ class WeatherNotificationService : Service() {
     @SuppressLint("MissingPermission")
     private fun getCityForNotificationAndLaunchNotification(citiesWeather: List<CityFullInfo>) {
         var result: CityFullInfo?
-        val locationTask = fusedLocationClient.getCurrentLocation(Priority.PRIORITY_LOW_POWER, cancellationTokenSource.token)
+        val locationTask = fusedLocationClient.getCurrentLocation(
+            Priority.PRIORITY_LOW_POWER,
+            cancellationTokenSource.token
+        )
         locationTask.addOnCompleteListener {
-            if (it.isSuccessful && it.result!=null) {
+            if (it.isSuccessful && it.result != null) {
                 result = findNearest(it.result.latitude, it.result.longitude, citiesWeather)
                 if (result != null) {
                     LocalDataCache.putLastCityInNotification(result!!.id!!)
@@ -116,9 +119,9 @@ class WeatherNotificationService : Service() {
     }
 
     private fun findLastInNotification(cityId: Int, citiesWeather: List<CityFullInfo>): CityFullInfo? {
-        if(citiesWeather.isNotEmpty()){
-            for(cityWeather in citiesWeather){
-                if(cityWeather.id==cityId){
+        if (citiesWeather.isNotEmpty()) {
+            for (cityWeather in citiesWeather) {
+                if (cityWeather.id == cityId) {
                     return cityWeather
                 }
             }

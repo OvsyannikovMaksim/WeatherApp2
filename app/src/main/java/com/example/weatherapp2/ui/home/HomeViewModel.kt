@@ -20,7 +20,6 @@ class HomeViewModel(
     private val resultForAllCitiesFromRepo = mutableListOf<CityFullInfo>()
     private val job = SupervisorJob()
 
-
     fun getCitiesInfoAndLoadItToLocalRepo(language: String) {
         CoroutineScope(job + Dispatchers.IO).launch {
             delay(200)
@@ -33,7 +32,7 @@ class HomeViewModel(
         }
     }
 
-    fun getCitiesInfo(){
+    fun getCitiesInfo() {
         CoroutineScope(job + Dispatchers.IO).launch {
             delay(500)
             getAllCitiesInfoFromRepo()
@@ -65,7 +64,7 @@ class HomeViewModel(
         try {
             launch {
                 resultForAllCitiesFromApi.clear()
-                if(LocalDataCache.getInternetAccess()) {
+                if (LocalDataCache.getInternetAccess()) {
                     cityFullInfo.forEach {
                         resultForAllCitiesFromApi.add(
                             loadOneCityInfoFromApi(it, language)
