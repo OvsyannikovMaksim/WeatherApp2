@@ -39,8 +39,7 @@
             </intent-filter>
         </activity>
         <service android:name=".model.WeatherNotificationService"
-            android:foregroundServiceType="dataSync|location"
-            android:permission="android.permission.ACCESS_COARSE_LOCATION"/>
+            android:foregroundServiceType="dataSync|location"/>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${GOOGLE_MAP_API_KEY}" />

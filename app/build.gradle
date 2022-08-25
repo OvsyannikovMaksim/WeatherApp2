@@ -47,6 +47,7 @@ dependencies {
     implementation 'androidx.work:work-runtime-ktx:2.7.1'
     implementation 'com.yandex.android:maps.mobile:4.1.0-lite'
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
+    implementation 'com.google.android.gms:play-services-location:20.0.0'
     implementation 'com.google.firebase:firebase-crashlytics-ktx:18.2.12'
     implementation 'com.google.firebase:firebase-analytics-ktx:21.1.0'
     implementation "androidx.room:room-runtime:2.4.3"

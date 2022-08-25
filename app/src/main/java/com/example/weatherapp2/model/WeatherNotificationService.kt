@@ -4,8 +4,11 @@ import android.annotation.SuppressLint
 import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
+import android.os.Bundle
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
+import androidx.navigation.NavDeepLinkBuilder
+import com.example.weatherapp2.MainActivity
 import com.example.weatherapp2.R
 import com.example.weatherapp2.model.common.CityFullInfo
 import com.example.weatherapp2.model.db.DataBase
@@ -14,7 +17,9 @@ import com.example.weatherapp2.model.repository.LocalRepo
 import com.example.weatherapp2.model.repository.LocalRepoImpl
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import kotlinx.coroutines.*
+import com.google.android.gms.location.Priority
+import com.google.android.gms.tasks.CancellationTokenSource
+import kotlinx.coroutines.SupervisorJob
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -22,6 +27,7 @@ class WeatherNotificationService : Service() {
 
     private lateinit var notificationManager: NotificationManager
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private var cancellationTokenSource = CancellationTokenSource()
     private val localRepo: LocalRepo = LocalRepoImpl(DataBase.getDataBase(this)!!.localDao())
     private val job = SupervisorJob()
     private val CHANNEL_ID = "WeatherApp2Channel"
@@ -33,7 +39,9 @@ class WeatherNotificationService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        getCityForNotificationAndLaunchNotification()
+        localRepo.dbUpdateLiveData().observeForever {
+            getCityForNotificationAndLaunchNotification(it)
+        }
         return super.onStartCommand(intent, flags, startId)
     }
 
@@ -47,60 +55,82 @@ class WeatherNotificationService : Service() {
         job.cancel()
     }
 
-    private fun createNotification(cityFullInfo: CityFullInfo?) {
-        if (cityFullInfo != null) {
-            val builder = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_baseline_location_on_24)
-                .setContentTitle("Weather in ${cityFullInfo.name}, ${cityFullInfo.country}")
-                .setContentText(getString(R.string.celsius, cityFullInfo.current!!.temp.toInt()))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setOngoing(true)
-                .setAutoCancel(false)
-                .setSilent(true)
-            val notification = builder.build()
-            notificationManager.notify(1, notification)
-        }
+    private fun createNotification(cityFullInfo: CityFullInfo) {
+        val bundle = Bundle()
+        bundle.putDoubleArray(
+            "FullInfoKey",
+            doubleArrayOf(cityFullInfo.lat, cityFullInfo.lon)
+        )
+        val pendingIntent = NavDeepLinkBuilder(this)
+            .setGraph(R.navigation.mobile_navigation)
+            .setDestination(R.id.navigation_weatherFullInfoFragment)
+            .setComponentName(MainActivity::class.java)
+            .setArguments(bundle)
+            .createPendingIntent()
+        val builder = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_baseline_location_on_24)
+            .setContentTitle("Weather in ${cityFullInfo.name}, ${cityFullInfo.country}")
+            .setContentText(getString(R.string.celsius, cityFullInfo.current!!.temp.toInt()))
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setOngoing(true)
+            .setAutoCancel(false)
+            .setSilent(true)
+            .setContentIntent(pendingIntent)
+        val notification = builder.build()
+        notificationManager.notify(1, notification)
     }
 
     @SuppressLint("MissingPermission")
-    private fun getCityForNotificationAndLaunchNotification(){
+    private fun getCityForNotificationAndLaunchNotification(citiesWeather: List<CityFullInfo>) {
         var result: CityFullInfo?
-        fusedLocationClient.lastLocation.addOnCompleteListener {
-            CoroutineScope(Dispatchers.IO + job).launch {
-                if (it.isSuccessful) {
-                    result = findNearest(it.result.latitude, it.result.longitude)
+        val locationTask = fusedLocationClient.getCurrentLocation(Priority.PRIORITY_LOW_POWER, cancellationTokenSource.token)
+        locationTask.addOnCompleteListener {
+            if (it.isSuccessful && it.result!=null) {
+                result = findNearest(it.result.latitude, it.result.longitude, citiesWeather)
+                if (result != null) {
                     LocalDataCache.putLastCityInNotification(result!!.id!!)
-                } else if (LocalDataCache.getLastCityInNotification() != 0) {
-                    result = findLastInNotification(LocalDataCache.getLastCityInNotification())
-                } else {
-                    result = findLast()
                 }
-                createNotification(result)
+            } else if (LocalDataCache.getLastCityInNotification() != 0) {
+                result = findLastInNotification(
+                    LocalDataCache.getLastCityInNotification(),
+                    citiesWeather
+                )
+            } else {
+                result = findLast(citiesWeather)
+            }
+            if (result != null && result!!.current != null) {
+                createNotification(result!!)
             }
         }
     }
 
-    private suspend fun findNearest(lat: Double, lon: Double) = withContext(Dispatchers.IO + job) {
-        val allCities = localRepo.getAllCityFullInfo()
+    private fun findNearest(lat: Double, lon: Double, citiesWeather: List<CityFullInfo>): CityFullInfo? {
         val distance = mutableListOf<Double>()
-        allCities.forEach { distance.add(findMinDistance(it.lon, it.lat, lon, lat)) }
-        if(distance.minOrNull()!=null) {
+        citiesWeather.forEach { distance.add(findMinDistance(it.lon, it.lat, lon, lat)) }
+        return if (distance.minOrNull() != null) {
             distance.indexOf(distance.minOrNull())
-            return@withContext allCities[distance.indexOf(distance.minOrNull())]
+            citiesWeather[distance.indexOf(distance.minOrNull())]
         } else {
-            return@withContext null
+            null
         }
     }
 
-    private suspend fun findLastInNotification(cityId: Int) = withContext(Dispatchers.IO + job) {
-        return@withContext localRepo.getOneCityFullInfo(cityId)
+    private fun findLastInNotification(cityId: Int, citiesWeather: List<CityFullInfo>): CityFullInfo? {
+        if(citiesWeather.isNotEmpty()){
+            for(cityWeather in citiesWeather){
+                if(cityWeather.id==cityId){
+                    return cityWeather
+                }
+            }
+        }
+        return null
     }
 
-    private suspend fun findLast() = withContext(Dispatchers.IO + job) {
-        if(localRepo.getAllCityFullInfo().isNotEmpty()) {
-            return@withContext localRepo.getAllCityFullInfo().last()
+    private fun findLast(citiesWeather: List<CityFullInfo>): CityFullInfo? {
+        return if (citiesWeather.isNotEmpty()) {
+            citiesWeather.last()
         } else {
-            return@withContext null
+            null
         }
     }
 
