@@ -55,6 +55,10 @@ class InputCitiesFragment : Fragment() {
         mRecyclerView = setupRecyclerView()
         val cityInfoAdapter = CityInfoAdapter()
         val resultOfSearch: LiveData<List<CityFullInfo>> = inputCitiesModel.resultOfSearch
+        resultOfSearch.observe(viewLifecycleOwner) {
+            cityInfoAdapter.submitList(it)
+            mRecyclerView.adapter = cityInfoAdapter
+        }
         fragmentInputCitiesBinding.inputCityNameEditText.setOnKeyListener { v, _, keyEvent ->
             if (keyEvent.action == KeyEvent.ACTION_DOWN && keyEvent.keyCode == KeyEvent.KEYCODE_ENTER) {
                 fragmentInputCitiesBinding.inputCityNameEditText.clearFocus()
@@ -65,10 +69,6 @@ class InputCitiesFragment : Fragment() {
                     )
                 } else {
                     Toast.makeText(requireContext(), "No internet", Toast.LENGTH_SHORT).show()
-                }
-                resultOfSearch.observe(viewLifecycleOwner) {
-                    cityInfoAdapter.submitList(it)
-                    mRecyclerView.adapter = cityInfoAdapter
                 }
                 return@setOnKeyListener true
             }
