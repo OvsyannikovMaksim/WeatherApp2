@@ -20,9 +20,8 @@ import com.example.weatherapp2.databinding.FragmentHomeBinding
 import com.example.weatherapp2.model.api.OpenWeatherApiRetrofit
 import com.example.weatherapp2.model.common.CityFullInfo
 import com.example.weatherapp2.model.db.DataBase
-import com.example.weatherapp2.model.repository.CityWeatherRepoImpl
 import com.example.weatherapp2.model.repository.LocalDataCache
-import com.example.weatherapp2.model.repository.LocalRepoImpl
+import com.example.weatherapp2.model.repository.WeatherApiRepositoryImpl
 import com.example.weatherapp2.ui.WeatherInfoAdapter
 
 class HomeFragment : Fragment() {
@@ -31,13 +30,8 @@ class HomeFragment : Fragment() {
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var fragmentHomeBinding: FragmentHomeBinding
     private val homeViewModel by viewModels<HomeViewModel> {
-        HomeViewModelFactory(
-            CityWeatherRepoImpl(OpenWeatherApiRetrofit.openWeatherApi),
-            LocalRepoImpl(
-                DataBase.getDataBase(this.requireContext())!!
-                    .localDao()
-            )
-        )
+        HomeViewModelFactory( WeatherApiRepositoryImpl(DataBase.getDataBase(this.requireContext())!!
+            .localDao() ,OpenWeatherApiRetrofit.openWeatherApi))
     }
 
     override fun onCreateView(

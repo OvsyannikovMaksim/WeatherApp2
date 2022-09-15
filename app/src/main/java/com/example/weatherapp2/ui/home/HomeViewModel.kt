@@ -1,44 +1,41 @@
 package com.example.weatherapp2.ui.home
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.weatherapp2.model.common.CityFullInfo
-import com.example.weatherapp2.model.repository.CityWeatherRepoImpl
-import com.example.weatherapp2.model.repository.LocalDataCache
-import com.example.weatherapp2.model.repository.LocalRepo
-import kotlinx.coroutines.*
+import com.example.weatherapp2.model.repository.Repository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class HomeViewModel(
-    private val cityWeatherRepoImpl: CityWeatherRepoImpl,
-    private val localRepo: LocalRepo
+    private val repository: Repository
+    //private val cityWeatherRepoImpl: CityWeatherRepoImpl,
+    //private val localRepo: LocalRepo
 ) : ViewModel() {
 
-    var cityWeatherList: MutableLiveData<List<CityFullInfo>> = MutableLiveData()
-    private val cityFullInfo = mutableListOf<CityFullInfo>()
-    private val resultForAllCitiesFromApi = mutableListOf<CityFullInfo>()
-    private val resultForAllCitiesFromRepo = mutableListOf<CityFullInfo>()
-    private val job = SupervisorJob()
+    var cityWeatherList: MutableLiveData<List<CityFullInfo>> = repository.cityWeatherList
+    private val viewModelScope = CoroutineScope(SupervisorJob())
 
     fun getCitiesInfoAndLoadItToLocalRepo(language: String) {
-        CoroutineScope(job + Dispatchers.IO).launch {
+        viewModelScope.launch {
             delay(200)
-            getAllCitiesInfoFromRepo()
-            getCitiesCoordinatesList()
+            repository.getAllCitiesInfoFromRepo()
+            repository.getCitiesCoordinates()
             delay(200)
-            if (getCitiesInfoFromApi(language) && resultForAllCitiesFromApi.isNotEmpty()) {
-                loadCitiesToRepo(resultForAllCitiesFromApi)
-            }
+            repository.getCitiesInfoFromApi(language)
+            repository.putCitiesToRepo()
         }
     }
 
     fun getCitiesInfo() {
-        CoroutineScope(job + Dispatchers.IO).launch {
-            delay(500)
-            getAllCitiesInfoFromRepo()
+       viewModelScope.launch {
+           delay(500)
+           repository.getAllCitiesInfoFromRepo()
         }
     }
-
+/*
     private suspend fun loadOneCityInfoFromApi(cityFullInfo: CityFullInfo, language: String): CityFullInfo {
         return cityWeatherRepoImpl.getCityWeatherFullInfo(cityFullInfo, language)
     }
@@ -126,4 +123,5 @@ class HomeViewModel(
             false
         }
     }
+     */
 }
