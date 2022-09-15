@@ -1,13 +1,13 @@
 package com.example.weatherapp2.model.repository
 
-import android.util.Log
 import com.example.weatherapp2.model.api.OpenWeatherApi
 import com.example.weatherapp2.model.common.CityFullInfo
-
+import java.text.SimpleDateFormat
+import java.util.*
 
 class CityWeatherRepoImpl(private val openWeatherApi: OpenWeatherApi) : CityWeatherRepo {
 
-    private val apiKeyOpenWeather: String = LocalDataCache.getMetaData("openWeatherApiKey") //"4eddd7394f54a0dd81465aa802a837f5"
+    private val apiKeyOpenWeather: String = LocalDataCache.getMetaData("openWeatherApiKey")
     private val excludeFullInfo: String = "minutely,hourly,alerts"
 
     override suspend fun getCityWeatherFullInfo(
@@ -28,6 +28,7 @@ class CityWeatherRepoImpl(private val openWeatherApi: OpenWeatherApi) : CityWeat
         result.country = cityFullInfo.country
         result.pic = cityFullInfo.pic
         result.id = cityFullInfo.id
+        result.updateTime = SimpleDateFormat("HH:mm", Locale.US).format(Date())
         return result
     }
 
@@ -37,10 +38,9 @@ class CityWeatherRepoImpl(private val openWeatherApi: OpenWeatherApi) : CityWeat
 
     override suspend fun getCityNameByCoordinates(lat: String, lon: String): CityFullInfo? {
         val result = openWeatherApi.getCityNameByCoordinate(lat, lon, "1", apiKeyOpenWeather)
-        Log.d("TAG", result.toString())
-        return if(result != emptyList<CityFullInfo>()){
+        return if (result != emptyList<CityFullInfo>()) {
             result.first()
-        } else{
+        } else {
             null
         }
     }

@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
@@ -12,6 +13,8 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import com.example.weatherapp2.R
 import com.example.weatherapp2.databinding.FragmentHomeBinding
 import com.example.weatherapp2.model.api.OpenWeatherApiRetrofit
@@ -24,6 +27,7 @@ import com.example.weatherapp2.ui.WeatherInfoAdapter
 
 class HomeFragment : Fragment() {
 
+    private val updateWeatherWorkerTag = "UpdateWeatherWorkerTag"
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var fragmentHomeBinding: FragmentHomeBinding
     private val homeViewModel by viewModels<HomeViewModel> {
@@ -58,6 +62,9 @@ class HomeFragment : Fragment() {
         mRecyclerView = fragmentHomeBinding.cityInfoRecyclerview
         mRecyclerView.layoutManager = mLayout
         val weatherInfoAdapter = WeatherInfoAdapter()
+        if (!LocalDataCache.getInternetAccess()) {
+            Toast.makeText(requireContext(), "No internet", Toast.LENGTH_SHORT).show()
+        }
         val citiesWeather: LiveData<List<CityFullInfo>> = homeViewModel.cityWeatherList
         citiesWeather.observe(viewLifecycleOwner) {
             weatherInfoAdapter.submitList(it)
@@ -69,11 +76,24 @@ class HomeFragment : Fragment() {
         fragmentHomeBinding.addCityButton.setOnClickListener {
             it.findNavController().navigate(R.id.action_navigation_home_to_navigation_input_city)
         }
+        var prev: WorkInfo.State = WorkInfo.State.SUCCEEDED
+        WorkManager.getInstance(requireContext())
+            .getWorkInfosByTagLiveData(updateWeatherWorkerTag)
+            .observe(viewLifecycleOwner) {
+                if (it.isNotEmpty()) {
+                    if (prev == WorkInfo.State.RUNNING && it[0].state == WorkInfo.State.ENQUEUED) {
+                        homeViewModel.getCitiesInfo()
+                    }
+                    prev = it[0].state
+                }
+            }
     }
 
     override fun onPause() {
         super.onPause()
         val mLayoutManager = mRecyclerView.layoutManager as GridLayoutManager
-        LocalDataCache.setAdapterLastPosition(mLayoutManager.findFirstCompletelyVisibleItemPosition())
+        LocalDataCache.setAdapterLastPosition(
+            mLayoutManager.findFirstCompletelyVisibleItemPosition()
+        )
     }
 }

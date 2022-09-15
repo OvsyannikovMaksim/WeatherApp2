@@ -1,8 +1,11 @@
 package com.example.weatherapp2.model.repository
 
+import androidx.lifecycle.LiveData
 import com.example.weatherapp2.model.common.CityFullInfo
 
 interface LocalRepo {
+
+    fun dbUpdateLiveData(): LiveData<List<CityFullInfo>>
 
     suspend fun getAllCityFullInfo(): List<CityFullInfo>
 

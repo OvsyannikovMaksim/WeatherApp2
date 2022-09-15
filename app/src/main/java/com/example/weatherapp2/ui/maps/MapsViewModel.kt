@@ -13,8 +13,7 @@ class MapsViewModel(private val localRepo: LocalRepo) : ViewModel() {
 
     val citiesFullInfo: MutableLiveData<List<CityFullInfo>> = MutableLiveData()
 
-
-    fun loadCitiesFullInfoFromRepo(){
+    fun loadCitiesFullInfoFromRepo() {
         CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
             citiesFullInfo.postValue(localRepo.getAllCityFullInfo())
         }

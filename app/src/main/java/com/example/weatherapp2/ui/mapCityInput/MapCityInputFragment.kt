@@ -40,15 +40,15 @@ class MapCityInputFragment : Fragment(), OnMapReadyCallback {
     private var nothingToast: Toast? = null
     private var googleMarker: Marker? = null
     private var yandexMarker: PlacemarkMapObject? = null
-    private val onMapListener = object : InputListener{
+    private val onMapListener = object : InputListener {
         override fun onMapTap(p0: Map, p1: Point) {
             mapCityInputModel.resultOfSearch = MutableLiveData()
             mapCityInputModel.getCitiesFromLine(p1.latitude.toString(), p1.longitude.toString())
             mapCityInputModel.resultOfSearch.observe(viewLifecycleOwner) { cityInfo ->
-                if (cityInfo != null){
+                if (cityInfo != null) {
                     cityInfo1 = cityInfo
                     addMarkerYandex(cityInfo)
-                } else{
+                } else {
                     nothingToast!!.show()
                 }
             }
@@ -124,8 +124,7 @@ class MapCityInputFragment : Fragment(), OnMapReadyCallback {
                         )
                         return@setOnMarkerClickListener false
                     }
-                }
-                else{
+                } else {
                     nothingToast!!.show()
                 }
             }
@@ -145,7 +144,7 @@ class MapCityInputFragment : Fragment(), OnMapReadyCallback {
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng))
     }
 
-    private fun addMarkerYandex(cityInfo: CityFullInfo){
+    private fun addMarkerYandex(cityInfo: CityFullInfo) {
         val textStyle = TextStyle()
         textStyle.size = 8f
         textStyle.color = Color.BLACK
@@ -157,11 +156,11 @@ class MapCityInputFragment : Fragment(), OnMapReadyCallback {
             Toast.LENGTH_SHORT
         ).show()
         val point = Point(cityInfo.lat, cityInfo.lon)
-        if(yandexMarker!=null){
+        if (yandexMarker != null) {
             yandexMarker!!.setText("${cityInfo.name}, ${cityInfo.country}", textStyle)
             yandexMarker!!.geometry = point
             yandexMarker!!.removeTapListener(onMarkListener)
-        } else{
+        } else {
             yandexMarker = mapBinding.yandexMap.map.mapObjects.addPlacemark(point)
             yandexMarker!!.setText("${cityInfo.name}, ${cityInfo.country}", textStyle)
         }

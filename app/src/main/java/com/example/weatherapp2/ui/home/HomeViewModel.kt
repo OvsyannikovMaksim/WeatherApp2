@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.weatherapp2.model.common.CityFullInfo
 import com.example.weatherapp2.model.repository.CityWeatherRepoImpl
+import com.example.weatherapp2.model.repository.LocalDataCache
 import com.example.weatherapp2.model.repository.LocalRepo
 import kotlinx.coroutines.*
 
@@ -17,10 +18,10 @@ class HomeViewModel(
     private val cityFullInfo = mutableListOf<CityFullInfo>()
     private val resultForAllCitiesFromApi = mutableListOf<CityFullInfo>()
     private val resultForAllCitiesFromRepo = mutableListOf<CityFullInfo>()
-
+    private val job = SupervisorJob()
 
     fun getCitiesInfoAndLoadItToLocalRepo(language: String) {
-        CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
+        CoroutineScope(job + Dispatchers.IO).launch {
             delay(200)
             getAllCitiesInfoFromRepo()
             getCitiesCoordinatesList()
@@ -31,11 +32,19 @@ class HomeViewModel(
         }
     }
 
+    fun getCitiesInfo() {
+        CoroutineScope(job + Dispatchers.IO).launch {
+            delay(500)
+            getAllCitiesInfoFromRepo()
+        }
+    }
+
     private suspend fun loadOneCityInfoFromApi(cityFullInfo: CityFullInfo, language: String): CityFullInfo {
         return cityWeatherRepoImpl.getCityWeatherFullInfo(cityFullInfo, language)
     }
 
-    private suspend fun getCitiesCoordinatesList() = withContext(SupervisorJob() + Dispatchers.IO) {
+    private suspend fun getCitiesCoordinatesList() = withContext(job + Dispatchers.IO) {
+        Log.d("getCitiesCoordinatesList", "here")
         try {
             launch {
                 val temp = localRepo.getAllCityFullInfo()
@@ -51,29 +60,30 @@ class HomeViewModel(
         }
     }
 
-    private suspend fun getCitiesInfoFromApi(language: String) = withContext(
-        SupervisorJob() + Dispatchers.IO
-    ) {
+    private suspend fun getCitiesInfoFromApi(language: String) = withContext(job + Dispatchers.IO) {
         try {
             launch {
                 resultForAllCitiesFromApi.clear()
-                cityFullInfo.forEach {
-                    resultForAllCitiesFromApi.add(
-                        loadOneCityInfoFromApi(it, language)
-                    )
-                }
-                withContext(Dispatchers.Main) {
-                    cityWeatherList.postValue(resultForAllCitiesFromApi)
+                if (LocalDataCache.getInternetAccess()) {
+                    cityFullInfo.forEach {
+                        resultForAllCitiesFromApi.add(
+                            loadOneCityInfoFromApi(it, language)
+                        )
+                    }
+                    withContext(Dispatchers.Main) {
+                        cityWeatherList.postValue(resultForAllCitiesFromApi)
+                    }
                 }
             }.join()
             true
         } catch (e: Throwable) {
-            Log.d("HomeViewModel.kt: getCitiesInfo()", e.toString())
+            Log.d("HomeViewModel.kt: getCitiesInfoFromApi()", e.toString())
             false
         }
     }
 
-    private suspend fun getAllCitiesInfoFromRepo() = withContext(SupervisorJob() + Dispatchers.IO) {
+    private suspend fun getAllCitiesInfoFromRepo() = withContext(job + Dispatchers.IO) {
+        Log.d("getAllCitiesInfoFromRepo", "here")
         try {
             launch {
                 resultForAllCitiesFromRepo.clear()
@@ -83,7 +93,7 @@ class HomeViewModel(
                     }
                 }
                 if (resultForAllCitiesFromRepo.isNotEmpty()) {
-                    Log.d("TAG", resultForAllCitiesFromRepo.toString() )
+                    Log.d("TAG", resultForAllCitiesFromRepo.toString())
                     withContext(Dispatchers.Main) {
                         cityWeatherList.postValue(resultForAllCitiesFromRepo)
                     }
@@ -97,8 +107,9 @@ class HomeViewModel(
     }
 
     private suspend fun loadCitiesToRepo(citiesFullInfo: List<CityFullInfo>) = withContext(
-        SupervisorJob() + Dispatchers.IO
+        job + Dispatchers.IO
     ) {
+        Log.d("loadCitiesToRepo", "here")
         try {
             launch {
                 for (cityFullInfo in citiesFullInfo) {

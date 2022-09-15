@@ -16,6 +16,7 @@ data class CityFullInfo(
     var country: String,
     val lat: Double,
     val lon: Double,
+    var updateTime: String?,
     var comment: String?,
     var pic: String?,
     @Embedded val current: @RawValue Current?,

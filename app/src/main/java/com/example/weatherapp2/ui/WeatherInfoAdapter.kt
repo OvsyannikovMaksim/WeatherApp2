@@ -47,6 +47,7 @@ class WeatherInfoAdapter :
                 R.string.celsius,
                 cityWeather.current.temp.roundToInt()
             )
+            cityWeatherBinding.updateTime.text = cityWeather.updateTime
             cityWeatherBinding.cityWeatherCard.setOnClickListener {
                 val bundle = Bundle()
                 bundle.putDoubleArray(
@@ -78,7 +79,7 @@ class WeatherInfoAdapter :
         }
 
         override fun areContentsTheSame(oldItem: CityFullInfo, newItem: CityFullInfo): Boolean {
-            if (oldItem.current!!.temp == newItem.current!!.temp && oldItem.current.weather == newItem.current.weather) {
+            if (oldItem.current!!.temp == newItem.current!!.temp && oldItem.current.weather == newItem.current.weather && oldItem.updateTime == newItem.updateTime) {
                 return true
             }
             return false

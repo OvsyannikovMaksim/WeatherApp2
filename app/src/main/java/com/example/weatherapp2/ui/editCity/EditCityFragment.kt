@@ -55,9 +55,8 @@ class EditCityFragment : Fragment() {
         ) { isGranted: Boolean ->
             if (isGranted) {
                 launchCamera()
-
             } else {
-                if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.Q){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     launchCamera()
                 }
             }
@@ -116,17 +115,17 @@ class EditCityFragment : Fragment() {
         }
     }
 
-    private fun getPhotoUri(): Uri{
+    private fun getPhotoUri(): Uri {
         val df = DateFormat.format("yyyyMMdd_HHmmss", System.currentTimeMillis())
         val path = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-        val contentValues = ContentValues().apply{
+        val contentValues = ContentValues().apply {
             put(MediaStore.Images.Media.DISPLAY_NAME, "$df.jpg")
             put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
         }
         return requireContext().contentResolver.insert(path, contentValues)!!
     }
 
-    private fun launchCamera(){
+    private fun launchCamera() {
         uri = getPhotoUri()
         getPictureFromCameraLauncher.launch(uri)
     }

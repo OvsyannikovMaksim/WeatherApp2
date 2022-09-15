@@ -1,9 +1,14 @@
 package com.example.weatherapp2.model.repository
 
+import androidx.lifecycle.LiveData
 import com.example.weatherapp2.model.common.CityFullInfo
 import com.example.weatherapp2.model.db.LocalDao
 
 class LocalRepoImpl(private val localDao: LocalDao) : LocalRepo {
+
+    override fun dbUpdateLiveData(): LiveData<List<CityFullInfo>> {
+        return localDao.dbUpdateLiveData()
+    }
 
     override suspend fun getAllCityFullInfo(): List<CityFullInfo> {
         return localDao.getAllCityFullInfo()
