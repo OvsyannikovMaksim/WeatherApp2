@@ -2,10 +2,9 @@ package com.example.weatherapp2.ui.home
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.weatherapp2.model.common.CityFullInfo
 import com.example.weatherapp2.model.repository.Repository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -14,7 +13,6 @@ class HomeViewModel(
 ) : ViewModel() {
 
     var cityWeatherList: MutableLiveData<List<CityFullInfo>> = repository.cityWeatherList
-    private val viewModelScope = CoroutineScope(SupervisorJob())
 
     fun getCitiesInfoAndLoadItToLocalRepo(language: String) {
         viewModelScope.launch {
@@ -28,9 +26,9 @@ class HomeViewModel(
     }
 
     fun getCitiesInfo() {
-       viewModelScope.launch {
-           delay(500)
-           repository.getAllCitiesInfoFromRepo()
+        viewModelScope.launch {
+            delay(500)
+            repository.getAllCitiesInfoFromRepo()
         }
     }
 }

@@ -1,7 +1,6 @@
 package com.example.weatherapp2.ui.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,8 +29,13 @@ class HomeFragment : Fragment() {
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var fragmentHomeBinding: FragmentHomeBinding
     private val homeViewModel by viewModels<HomeViewModel> {
-        HomeViewModelFactory( WeatherApiRepositoryImpl(DataBase.getDataBase(this.requireContext())!!
-            .localDao() ,OpenWeatherApiRetrofit.openWeatherApi))
+        HomeViewModelFactory(
+            WeatherApiRepositoryImpl(
+                DataBase.getDataBase(this.requireContext())!!
+                    .localDao(),
+                OpenWeatherApiRetrofit.openWeatherApi
+            )
+        )
     }
 
     override fun onCreateView(
@@ -44,7 +48,6 @@ class HomeFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        Log.d("HomeFragment", "onViewCreated")
         super.onViewCreated(view, savedInstanceState)
         val mLayout = GridLayoutManager(
             activity,

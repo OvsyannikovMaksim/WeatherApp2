@@ -41,19 +41,19 @@ class WeatherApiRepositoryImpl(
     }
 
     override suspend fun getCitiesCoordinates(): Unit = withContext(Dispatchers.IO) {
-        try {
-            launch {
+        launch {
+            try {
                 cityFullInfo.clear()
                 cityFullInfo.addAll(localDao.getAllCityFullInfo())
-            }.join()
-        } catch (e: Throwable) {
-            Log.d("WeatherApiRepositoryImpl.kt: getCitiesCoordinatesList()", e.toString())
-        }
+            } catch (e: Throwable) {
+                Log.d("WeatherApiRepositoryImpl.kt: getCitiesCoordinatesList()", e.toString())
+            }
+        }.join()
     }
 
     override suspend fun getCitiesInfoFromApi(language: String) = withContext(Dispatchers.IO) {
-        try {
-            launch {
+        launch {
+            try {
                 resultForAllCitiesFromApi.clear()
                 if (LocalDataCache.getInternetAccess()) {
                     cityFullInfo.forEach {
@@ -65,12 +65,10 @@ class WeatherApiRepositoryImpl(
                         cityWeatherList.postValue(resultForAllCitiesFromApi)
                     }
                 }
-            }.join()
-            true
-        } catch (e: Throwable) {
-            Log.d("WeatherApiRepositoryImpl.kt: getCitiesInfoFromApi()", e.toString())
-            false
-        }
+            } catch (e: Throwable) {
+                Log.d("WeatherApiRepositoryImpl.kt: getCitiesInfoFromApi()", e.toString())
+            }
+        }.join()
     }
 
     override suspend fun putCitiesToRepo(): Unit = withContext(Dispatchers.IO) {

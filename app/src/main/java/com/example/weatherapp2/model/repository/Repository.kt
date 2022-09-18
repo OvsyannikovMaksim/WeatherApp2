@@ -12,6 +12,6 @@ interface Repository {
 
     suspend fun getAllCitiesInfoFromRepo()
     suspend fun getCitiesCoordinates()
-    suspend fun getCitiesInfoFromApi(language: String): Boolean
+    suspend fun getCitiesInfoFromApi(language: String)
     suspend fun putCitiesToRepo()
 }
