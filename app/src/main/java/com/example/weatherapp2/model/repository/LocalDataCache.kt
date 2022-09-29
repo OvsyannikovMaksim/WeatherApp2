@@ -13,7 +13,6 @@ object LocalDataCache {
     private const val ServiceUpdateTimeTag = "ServiceUpdateTimeTag"
     private const val ServiceStateTag = "ServiceStateTag"
     private const val ChosenMapIdTag = "ChosenMapIdTag"
-    private const val AdapterLastPositionId = "AdapterLastPositionId"
     private const val LastCityInNotification = "LastCityInNotificationId"
     private const val InternetIsOn = "InternetIsOnId"
     private const val DefaultChosenMap = 0
@@ -60,16 +59,6 @@ object LocalDataCache {
     fun setChosenMapId(chosenMapId: Int) {
         preferences.edit()
             .putInt(ChosenMapIdTag, chosenMapId)
-            .apply()
-    }
-
-    fun getAdapterLastPosition(): Int {
-        return preferences.getInt(AdapterLastPositionId, 0)
-    }
-
-    fun setAdapterLastPosition(num: Int) {
-        preferences.edit()
-            .putInt(AdapterLastPositionId, num)
             .apply()
     }
 

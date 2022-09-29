@@ -20,6 +20,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.weatherapp2.databinding.ActivityMainBinding
 import com.example.weatherapp2.model.repository.LocalDataCache
+import com.example.weatherapp2.model.repository.OpenWeatherRepositoryImpl
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.yandex.mapkit.MapKitFactory
 
@@ -31,6 +32,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         LocalDataCache.init(applicationContext)
+        OpenWeatherRepositoryImpl.SharedPref.init(applicationContext)
         MapKitFactory.setApiKey(LocalDataCache.getMetaData("yandexMapApiKey"))
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
