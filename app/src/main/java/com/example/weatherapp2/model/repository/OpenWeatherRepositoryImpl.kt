@@ -10,9 +10,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 import kotlin.math.roundToInt
 
-class OpenWeatherRepositoryImpl(
+class OpenWeatherRepositoryImpl @Inject constructor (
     private val dao: Dao,
     private val api: Api
 ) : Repository {

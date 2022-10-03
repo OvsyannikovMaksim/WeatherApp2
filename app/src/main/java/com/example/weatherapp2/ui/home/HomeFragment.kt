@@ -13,26 +13,15 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weatherapp2.R
 import com.example.weatherapp2.databinding.FragmentHomeBinding
-import com.example.weatherapp2.model.api.OpenWeatherApiRetrofit
 import com.example.weatherapp2.model.common.CityFullInfo
-import com.example.weatherapp2.model.db.DataBase
 import com.example.weatherapp2.model.repository.LocalDataCache
-import com.example.weatherapp2.model.repository.OpenWeatherRepositoryImpl
 import com.example.weatherapp2.ui.WeatherInfoAdapter
 
 class HomeFragment : Fragment() {
 
     private var mAdapter = WeatherInfoAdapter()
     private lateinit var fragmentHomeBinding: FragmentHomeBinding
-    private val homeViewModel by viewModels<HomeViewModel> {
-        HomeViewModelFactory(
-            OpenWeatherRepositoryImpl(
-                DataBase.getDataBase(this.requireContext())!!
-                    .localDao(),
-                OpenWeatherApiRetrofit.openWeatherApi
-            )
-        )
-    }
+    private val homeViewModel: HomeViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,

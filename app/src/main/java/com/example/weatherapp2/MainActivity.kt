@@ -23,7 +23,9 @@ import com.example.weatherapp2.model.repository.LocalDataCache
 import com.example.weatherapp2.model.repository.OpenWeatherRepositoryImpl
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.yandex.mapkit.MapKitFactory
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
