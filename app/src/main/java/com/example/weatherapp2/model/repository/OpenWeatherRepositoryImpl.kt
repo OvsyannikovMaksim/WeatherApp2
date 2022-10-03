@@ -5,15 +5,16 @@ import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.LiveData
 import com.example.weatherapp2.model.common.CityFullInfo
-import java.text.SimpleDateFormat
-import java.util.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.math.roundToInt
 
 class OpenWeatherRepositoryImpl(
-    val dao: Dao,
-    val api: Api
+    private val dao: Dao,
+    private val api: Api
 ) : Repository {
 
     private val apiKeyOpenWeather: String = LocalDataCache.getMetaData("openWeatherApiKey")
@@ -62,37 +63,39 @@ class OpenWeatherRepositoryImpl(
         }
     }
 
-    override suspend fun getCityByName(cityName: String): List<CityFullInfo> {
-        return api.getCityCoordinateByName(cityName, "5", apiKeyOpenWeather)
+    override suspend fun getCityByName(cityName: String): List<CityFullInfo> = withContext(Dispatchers.IO) {
+        return@withContext api.getCityCoordinateByName(cityName, "5", apiKeyOpenWeather)
     }
 
-    override suspend fun getOneCityFullInfo(latitude: Double, longitude: Double): CityFullInfo? {
-        return dao.getOneCityFullInfo(latitude, longitude)
+    override suspend fun getOneCityFullInfo(latitude: Double, longitude: Double): CityFullInfo? = withContext(Dispatchers.IO) {
+        return@withContext dao.getOneCityFullInfo(latitude, longitude)
     }
 
-    override suspend fun insertCityFullInfo(cityFullInfo: CityFullInfo) {
-        dao.insertCityFullInfo(cityFullInfo)
+    override suspend fun putCityToRepo(cityFullInfo: CityFullInfo) = withContext(Dispatchers.IO) {
+        val lat = (cityFullInfo.lat * 10000).roundToInt() / 10000.0
+        val lon = (cityFullInfo.lon * 10000).roundToInt() / 10000.0
+        if (dao.getOneCityFullInfo(lat, lon) != null) {
+            dao.updateCityFullInfo(cityFullInfo)
+        } else {
+            dao.insertCityFullInfo(cityFullInfo)
+        }
     }
 
-    override suspend fun updateCityFullInfo(cityFullInfo: CityFullInfo) {
-        dao.updateCityFullInfo(cityFullInfo)
-    }
-
-    override suspend fun getCityByCoordinates(lat: String, lon: String): CityFullInfo? {
+    override suspend fun getCityByCoordinates(lat: String, lon: String): CityFullInfo? = withContext(Dispatchers.IO) {
         val result = api.getCityNameByCoordinate(lat, lon, "1", apiKeyOpenWeather)
-        return if (result != emptyList<CityFullInfo>()) {
+        return@withContext if (result != emptyList<CityFullInfo>()) {
             result.first()
         } else {
             null
         }
     }
 
-    override suspend fun deleteCityFullInfo(cityFullInfo: CityFullInfo) {
+    override suspend fun deleteCityFullInfo(cityFullInfo: CityFullInfo) = withContext(Dispatchers.IO) {
         dao.deleteCityFullInfo(cityFullInfo)
     }
 
-    override suspend fun getOneCityFullInfo(id: Int): CityFullInfo? {
-        return dao.getOneCityFullInfo(id)
+    override suspend fun getOneCityFullInfo(id: Int): CityFullInfo? = withContext(Dispatchers.IO) {
+        return@withContext dao.getOneCityFullInfo(id)
     }
 
     private suspend fun getCityWeatherFullInfo(
