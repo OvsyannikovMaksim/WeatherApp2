@@ -11,10 +11,11 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.weatherapp2.R
 import com.example.weatherapp2.databinding.FragmentMapBinding
+import com.example.weatherapp2.model.api.OpenWeatherApiRetrofit
 import com.example.weatherapp2.model.common.CityFullInfo
 import com.example.weatherapp2.model.db.DataBase
 import com.example.weatherapp2.model.repository.LocalDataCache
-import com.example.weatherapp2.model.repository.LocalRepoImpl
+import com.example.weatherapp2.model.repository.OpenWeatherRepositoryImpl
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -31,9 +32,10 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     private lateinit var mapBinding: FragmentMapBinding
     private val mapsViewModel by viewModels<MapsViewModel> {
         MapsViewModelFactory(
-            LocalRepoImpl(
+            OpenWeatherRepositoryImpl(
                 DataBase.getDataBase(this.requireContext())!!
-                    .localDao()
+                    .localDao(),
+                OpenWeatherApiRetrofit.openWeatherApi
             )
         )
     }
@@ -45,7 +47,6 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     ): View {
         MapKitFactory.initialize(requireContext())
         mapBinding = FragmentMapBinding.inflate(inflater, container, false)
-        mapsViewModel.loadCitiesFullInfoFromRepo()
         return mapBinding.root
     }
 
@@ -77,7 +78,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         Log.d("Map", "onMapReady")
         googleMap.uiSettings.isZoomControlsEnabled = true
         mapsViewModel.citiesFullInfo.observe(viewLifecycleOwner) { citiesFullInfo ->
-            val cityMarkers = createCityMarkers(citiesFullInfo)
+            val cityMarkers = createGoogleCityMarkers(citiesFullInfo)
             cityMarkers.forEach { googleMap.addMarker(it) }
             googleMap.setOnInfoWindowClickListener {
                 val bundle = Bundle()
@@ -93,7 +94,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    private fun createCityMarkers(citiesFullInfo: List<CityFullInfo>): List<MarkerOptions> {
+    private fun createGoogleCityMarkers(citiesFullInfo: List<CityFullInfo>): List<MarkerOptions> {
         val markers = mutableListOf<MarkerOptions>()
         for (cityInfo in citiesFullInfo) {
             val marker = MarkerOptions()

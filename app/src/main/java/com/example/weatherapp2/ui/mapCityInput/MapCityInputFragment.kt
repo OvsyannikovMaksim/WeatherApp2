@@ -14,8 +14,9 @@ import com.example.weatherapp2.R
 import com.example.weatherapp2.databinding.FragmentMapBinding
 import com.example.weatherapp2.model.api.OpenWeatherApiRetrofit
 import com.example.weatherapp2.model.common.CityFullInfo
-import com.example.weatherapp2.model.repository.CityWeatherRepoImpl
+import com.example.weatherapp2.model.db.DataBase
 import com.example.weatherapp2.model.repository.LocalDataCache
+import com.example.weatherapp2.model.repository.OpenWeatherRepositoryImpl
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -34,7 +35,11 @@ class MapCityInputFragment : Fragment(), OnMapReadyCallback {
     private lateinit var mapBinding: FragmentMapBinding
     private val mapCityInputModel by viewModels<MapCityInputModel> {
         MapCityInputModelFactory(
-            CityWeatherRepoImpl(OpenWeatherApiRetrofit.openWeatherApi)
+            OpenWeatherRepositoryImpl(
+                DataBase.getDataBase(this.requireContext())!!
+                    .localDao(),
+                OpenWeatherApiRetrofit.openWeatherApi
+            )
         )
     }
     private var nothingToast: Toast? = null

@@ -62,6 +62,39 @@ class OpenWeatherRepositoryImpl(
         }
     }
 
+    override suspend fun getCityByName(cityName: String): List<CityFullInfo> {
+        return api.getCityCoordinateByName(cityName, "5", apiKeyOpenWeather)
+    }
+
+    override suspend fun getOneCityFullInfo(latitude: Double, longitude: Double): CityFullInfo? {
+        return dao.getOneCityFullInfo(latitude, longitude)
+    }
+
+    override suspend fun insertCityFullInfo(cityFullInfo: CityFullInfo) {
+        dao.insertCityFullInfo(cityFullInfo)
+    }
+
+    override suspend fun updateCityFullInfo(cityFullInfo: CityFullInfo) {
+        dao.updateCityFullInfo(cityFullInfo)
+    }
+
+    override suspend fun getCityByCoordinates(lat: String, lon: String): CityFullInfo? {
+        val result = api.getCityNameByCoordinate(lat, lon, "1", apiKeyOpenWeather)
+        return if (result != emptyList<CityFullInfo>()) {
+            result.first()
+        } else {
+            null
+        }
+    }
+
+    override suspend fun deleteCityFullInfo(cityFullInfo: CityFullInfo) {
+        dao.deleteCityFullInfo(cityFullInfo)
+    }
+
+    override suspend fun getOneCityFullInfo(id: Int): CityFullInfo? {
+        return dao.getOneCityFullInfo(id)
+    }
+
     private suspend fun getCityWeatherFullInfo(
         cityFullInfo: CityFullInfo,
         lang: String

@@ -69,7 +69,11 @@ class EditCityFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         fragmentEditCityBinding = FragmentEditCityBinding.inflate(inflater, container, false)
-        cityFullInfo = requireArguments().getParcelable("CityInfoKey")!!
+        cityFullInfo = if (Build.VERSION.SDK_INT == Build.VERSION_CODES.TIRAMISU) {
+            requireArguments().getParcelable("CityInfoKey", CityFullInfo::class.java)!!
+        } else {
+            requireArguments().getParcelable("CityInfoKey")!!
+        }
         pic = cityFullInfo.pic
         return fragmentEditCityBinding.root
     }

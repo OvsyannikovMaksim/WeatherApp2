@@ -15,22 +15,26 @@ import androidx.lifecycle.LiveData
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp2.R
 import com.example.weatherapp2.databinding.FragmentInputCitiesBinding
 import com.example.weatherapp2.model.api.OpenWeatherApiRetrofit
 import com.example.weatherapp2.model.common.CityFullInfo
-import com.example.weatherapp2.model.repository.CityWeatherRepoImpl
+import com.example.weatherapp2.model.db.DataBase
 import com.example.weatherapp2.model.repository.LocalDataCache
+import com.example.weatherapp2.model.repository.OpenWeatherRepositoryImpl
 import com.example.weatherapp2.ui.CityInfoAdapter
 
 class InputCitiesFragment : Fragment() {
 
     private lateinit var fragmentInputCitiesBinding: FragmentInputCitiesBinding
-    private lateinit var mRecyclerView: RecyclerView
+    private val mAdapter = CityInfoAdapter()
     private val inputCitiesModel by viewModels<InputCitiesModel> {
         InputCitiesModelFactory(
-            CityWeatherRepoImpl(OpenWeatherApiRetrofit.openWeatherApi)
+            OpenWeatherRepositoryImpl(
+                DataBase.getDataBase(this.requireContext())!!
+                    .localDao(),
+                OpenWeatherApiRetrofit.openWeatherApi
+            )
         )
     }
 
@@ -52,12 +56,10 @@ class InputCitiesFragment : Fragment() {
                 )
             }
         }
-        mRecyclerView = setupRecyclerView()
-        val cityInfoAdapter = CityInfoAdapter()
+        setupRecyclerView()
         val resultOfSearch: LiveData<List<CityFullInfo>> = inputCitiesModel.resultOfSearch
         resultOfSearch.observe(viewLifecycleOwner) {
-            cityInfoAdapter.submitList(it)
-            mRecyclerView.adapter = cityInfoAdapter
+            mAdapter.submitList(it)
         }
         fragmentInputCitiesBinding.inputCityNameEditText.setOnKeyListener { v, _, keyEvent ->
             if (keyEvent.action == KeyEvent.ACTION_DOWN && keyEvent.keyCode == KeyEvent.KEYCODE_ENTER) {
@@ -82,7 +84,7 @@ class InputCitiesFragment : Fragment() {
         imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
-    private fun setupRecyclerView(): RecyclerView {
+    private fun setupRecyclerView() {
         val mLayout = GridLayoutManager(
             activity,
             1,
@@ -91,6 +93,6 @@ class InputCitiesFragment : Fragment() {
         )
         val recyclerView = fragmentInputCitiesBinding.citiesRecyclerView
         recyclerView.layoutManager = mLayout
-        return recyclerView
+        recyclerView.adapter = mAdapter
     }
 }

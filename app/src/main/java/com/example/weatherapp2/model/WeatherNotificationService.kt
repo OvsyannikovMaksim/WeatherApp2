@@ -10,11 +10,11 @@ import androidx.core.app.NotificationCompat
 import androidx.navigation.NavDeepLinkBuilder
 import com.example.weatherapp2.MainActivity
 import com.example.weatherapp2.R
+import com.example.weatherapp2.model.api.OpenWeatherApiRetrofit
 import com.example.weatherapp2.model.common.CityFullInfo
 import com.example.weatherapp2.model.db.DataBase
 import com.example.weatherapp2.model.repository.LocalDataCache
-import com.example.weatherapp2.model.repository.LocalRepo
-import com.example.weatherapp2.model.repository.LocalRepoImpl
+import com.example.weatherapp2.model.repository.OpenWeatherRepositoryImpl
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
@@ -28,7 +28,10 @@ class WeatherNotificationService : Service() {
     private lateinit var notificationManager: NotificationManager
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var cancellationTokenSource = CancellationTokenSource()
-    private val localRepo: LocalRepo = LocalRepoImpl(DataBase.getDataBase(this)!!.localDao())
+    private val repositoryImpl = OpenWeatherRepositoryImpl(
+        DataBase.getDataBase(this)!!.localDao(),
+        OpenWeatherApiRetrofit.openWeatherApi
+    )
     private val job = SupervisorJob()
     private val CHANNEL_ID = "WeatherApp2Channel"
 
@@ -39,7 +42,7 @@ class WeatherNotificationService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        localRepo.dbUpdateLiveData().observeForever {
+        repositoryImpl.dbUpdateLiveData().observeForever {
             getCityForNotificationAndLaunchNotification(it)
         }
         return super.onStartCommand(intent, flags, startId)

@@ -3,7 +3,6 @@ package com.example.weatherapp2.ui.weatherFullInfo
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,18 +12,20 @@ import androidx.navigation.findNavController
 import com.example.weatherapp2.R
 import com.example.weatherapp2.databinding.FragmentWeatherFullInfoBinding
 import com.example.weatherapp2.model.CurrentMapper
+import com.example.weatherapp2.model.api.OpenWeatherApiRetrofit
 import com.example.weatherapp2.model.common.CityFullInfo
 import com.example.weatherapp2.model.db.DataBase
-import com.example.weatherapp2.model.repository.LocalRepoImpl
+import com.example.weatherapp2.model.repository.OpenWeatherRepositoryImpl
 import com.squareup.picasso.Picasso
 
 class WeatherFullInfoFragment : Fragment() {
 
     private val weatherFullInfoModel by viewModels<WeatherFullInfoModel> {
         WeatherFullInfoModelFactory(
-            LocalRepoImpl(
+            OpenWeatherRepositoryImpl(
                 DataBase.getDataBase(this.requireContext())!!
-                    .localDao()
+                    .localDao(),
+                OpenWeatherApiRetrofit.openWeatherApi
             )
         )
     }
@@ -33,8 +34,6 @@ class WeatherFullInfoFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         val coordinates = requireArguments().getDoubleArray("FullInfoKey")!!
-        Log.d("TAG", coordinates[0].toString())
-        Log.d("TAG", coordinates[1].toString())
         weatherFullInfoModel.getCityFromRepo(coordinates[0], coordinates[1])
     }
 

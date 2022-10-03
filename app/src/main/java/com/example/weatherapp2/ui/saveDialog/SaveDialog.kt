@@ -7,17 +7,19 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.weatherapp2.R
+import com.example.weatherapp2.model.api.OpenWeatherApiRetrofit
 import com.example.weatherapp2.model.common.CityFullInfo
 import com.example.weatherapp2.model.db.DataBase
-import com.example.weatherapp2.model.repository.LocalRepoImpl
+import com.example.weatherapp2.model.repository.OpenWeatherRepositoryImpl
 
 class SaveDialog : DialogFragment() {
 
     private val saveDialogModel by viewModels<SaveDialogModel> {
         SaveDialogModelFactory(
-            LocalRepoImpl(
+            OpenWeatherRepositoryImpl(
                 DataBase.getDataBase(this.requireContext())!!
-                    .localDao()
+                    .localDao(),
+                OpenWeatherApiRetrofit.openWeatherApi
             )
         )
     }
