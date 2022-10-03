@@ -16,7 +16,9 @@ import com.example.weatherapp2.databinding.FragmentHomeBinding
 import com.example.weatherapp2.model.common.CityFullInfo
 import com.example.weatherapp2.model.repository.LocalDataCache
 import com.example.weatherapp2.ui.WeatherInfoAdapter
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private var mAdapter = WeatherInfoAdapter()
