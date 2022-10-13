@@ -4,9 +4,8 @@ import android.content.Context
 import android.util.Log
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import com.example.weatherapp2.model.api.OpenWeatherApiRetrofit
-import com.example.weatherapp2.model.db.DataBase
 import com.example.weatherapp2.model.repository.OpenWeatherRepositoryImpl
+import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -18,10 +17,8 @@ class UpdateWeatherWorker(
 ) :
     Worker(context, workerParams) {
 
-    private val repositoryImpl = OpenWeatherRepositoryImpl(
-        DataBase.getDataBase(context)!!.localDao(),
-        OpenWeatherApiRetrofit.openWeatherApi
-    )
+    @Inject
+    lateinit var repositoryImpl: OpenWeatherRepositoryImpl
 
     override fun doWork(): Result {
         try {

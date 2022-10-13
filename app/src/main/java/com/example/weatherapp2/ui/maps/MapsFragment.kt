@@ -11,11 +11,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.weatherapp2.R
 import com.example.weatherapp2.databinding.FragmentMapBinding
-import com.example.weatherapp2.model.api.OpenWeatherApiRetrofit
 import com.example.weatherapp2.model.common.CityFullInfo
-import com.example.weatherapp2.model.db.DataBase
 import com.example.weatherapp2.model.repository.LocalDataCache
-import com.example.weatherapp2.model.repository.OpenWeatherRepositoryImpl
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -25,20 +22,14 @@ import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.map.TextStyle
 import com.yandex.mapkit.map.UserData
+import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.roundToInt
 
+@AndroidEntryPoint
 class MapsFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var mapBinding: FragmentMapBinding
-    private val mapsViewModel by viewModels<MapsViewModel> {
-        MapsViewModelFactory(
-            OpenWeatherRepositoryImpl(
-                DataBase.getDataBase(this.requireContext())!!
-                    .localDao(),
-                OpenWeatherApiRetrofit.openWeatherApi
-            )
-        )
-    }
+    private val mapsViewModel: MapsViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,

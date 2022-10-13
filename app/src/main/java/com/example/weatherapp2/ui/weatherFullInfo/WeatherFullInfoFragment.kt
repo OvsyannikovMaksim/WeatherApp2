@@ -12,23 +12,14 @@ import androidx.navigation.findNavController
 import com.example.weatherapp2.R
 import com.example.weatherapp2.databinding.FragmentWeatherFullInfoBinding
 import com.example.weatherapp2.model.CurrentMapper
-import com.example.weatherapp2.model.api.OpenWeatherApiRetrofit
 import com.example.weatherapp2.model.common.CityFullInfo
-import com.example.weatherapp2.model.db.DataBase
-import com.example.weatherapp2.model.repository.OpenWeatherRepositoryImpl
 import com.squareup.picasso.Picasso
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class WeatherFullInfoFragment : Fragment() {
 
-    private val weatherFullInfoModel by viewModels<WeatherFullInfoModel> {
-        WeatherFullInfoModelFactory(
-            OpenWeatherRepositoryImpl(
-                DataBase.getDataBase(this.requireContext())!!
-                    .localDao(),
-                OpenWeatherApiRetrofit.openWeatherApi
-            )
-        )
-    }
+    private val weatherFullInfoModel: WeatherFullInfoModel by viewModels()
     private lateinit var fragmentWeatherFullInfoBinding: FragmentWeatherFullInfoBinding
 
     override fun onAttach(context: Context) {

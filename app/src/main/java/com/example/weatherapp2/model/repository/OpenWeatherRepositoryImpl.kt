@@ -5,15 +5,15 @@ import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.LiveData
 import com.example.weatherapp2.model.common.CityFullInfo
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 import kotlin.math.roundToInt
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class OpenWeatherRepositoryImpl @Inject constructor (
+class OpenWeatherRepositoryImpl @Inject constructor(
     private val dao: Dao,
     private val api: Api
 ) : Repository {
@@ -64,11 +64,15 @@ class OpenWeatherRepositoryImpl @Inject constructor (
         }
     }
 
-    override suspend fun getCityByName(cityName: String): List<CityFullInfo> = withContext(Dispatchers.IO) {
+    override suspend fun getCityByName(cityName: String): List<CityFullInfo> = withContext(
+        Dispatchers.IO
+    ) {
         return@withContext api.getCityCoordinateByName(cityName, "5", apiKeyOpenWeather)
     }
 
-    override suspend fun getOneCityFullInfo(latitude: Double, longitude: Double): CityFullInfo? = withContext(Dispatchers.IO) {
+    override suspend fun getOneCityFullInfo(latitude: Double, longitude: Double): CityFullInfo? = withContext(
+        Dispatchers.IO
+    ) {
         return@withContext dao.getOneCityFullInfo(latitude, longitude)
     }
 
@@ -82,7 +86,9 @@ class OpenWeatherRepositoryImpl @Inject constructor (
         }
     }
 
-    override suspend fun getCityByCoordinates(lat: String, lon: String): CityFullInfo? = withContext(Dispatchers.IO) {
+    override suspend fun getCityByCoordinates(lat: String, lon: String): CityFullInfo? = withContext(
+        Dispatchers.IO
+    ) {
         val result = api.getCityNameByCoordinate(lat, lon, "1", apiKeyOpenWeather)
         return@withContext if (result != emptyList<CityFullInfo>()) {
             result.first()
@@ -91,7 +97,9 @@ class OpenWeatherRepositoryImpl @Inject constructor (
         }
     }
 
-    override suspend fun deleteCityFullInfo(cityFullInfo: CityFullInfo) = withContext(Dispatchers.IO) {
+    override suspend fun deleteCityFullInfo(cityFullInfo: CityFullInfo) = withContext(
+        Dispatchers.IO
+    ) {
         dao.deleteCityFullInfo(cityFullInfo)
     }
 

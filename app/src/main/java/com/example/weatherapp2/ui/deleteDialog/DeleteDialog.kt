@@ -7,21 +7,12 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.weatherapp2.R
-import com.example.weatherapp2.model.api.OpenWeatherApiRetrofit
-import com.example.weatherapp2.model.db.DataBase
-import com.example.weatherapp2.model.repository.OpenWeatherRepositoryImpl
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class DeleteDialog : DialogFragment() {
 
-    private val deleteDialogModel by viewModels<DeleteDialogModel> {
-        DeleteDialogModelFactory(
-            OpenWeatherRepositoryImpl(
-                DataBase.getDataBase(this.requireContext())!!
-                    .localDao(),
-                OpenWeatherApiRetrofit.openWeatherApi
-            )
-        )
-    }
+    private val deleteDialogModel: DeleteDialogModel by viewModels()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return activity?.let {

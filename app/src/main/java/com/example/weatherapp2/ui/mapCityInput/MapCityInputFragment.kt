@@ -12,11 +12,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import com.example.weatherapp2.R
 import com.example.weatherapp2.databinding.FragmentMapBinding
-import com.example.weatherapp2.model.api.OpenWeatherApiRetrofit
 import com.example.weatherapp2.model.common.CityFullInfo
-import com.example.weatherapp2.model.db.DataBase
 import com.example.weatherapp2.model.repository.LocalDataCache
-import com.example.weatherapp2.model.repository.OpenWeatherRepositoryImpl
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -29,19 +26,13 @@ import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.map.*
 import com.yandex.mapkit.map.Map
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MapCityInputFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var mapBinding: FragmentMapBinding
-    private val mapCityInputModel by viewModels<MapCityInputModel> {
-        MapCityInputModelFactory(
-            OpenWeatherRepositoryImpl(
-                DataBase.getDataBase(this.requireContext())!!
-                    .localDao(),
-                OpenWeatherApiRetrofit.openWeatherApi
-            )
-        )
-    }
+    private val mapCityInputModel: MapCityInputModel by viewModels()
     private var nothingToast: Toast? = null
     private var googleMarker: Marker? = null
     private var yandexMarker: PlacemarkMapObject? = null
