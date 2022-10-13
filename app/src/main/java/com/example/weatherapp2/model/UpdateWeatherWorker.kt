@@ -2,23 +2,23 @@ package com.example.weatherapp2.model
 
 import android.content.Context
 import android.util.Log
+import androidx.hilt.work.HiltWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.example.weatherapp2.model.repository.OpenWeatherRepositoryImpl
-import javax.inject.Inject
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
-class UpdateWeatherWorker(
-    context: Context,
-    workerParams: WorkerParameters
-) :
-    Worker(context, workerParams) {
-
-    @Inject
-    lateinit var repositoryImpl: OpenWeatherRepositoryImpl
+@HiltWorker
+class UpdateWeatherWorker @AssistedInject constructor(
+    @Assisted context: Context,
+    @Assisted workerParams: WorkerParameters,
+    val repositoryImpl: OpenWeatherRepositoryImpl
+) : Worker(context, workerParams) {
 
     override fun doWork(): Result {
         try {

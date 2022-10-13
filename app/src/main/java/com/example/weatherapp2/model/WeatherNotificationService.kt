@@ -17,11 +17,13 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlin.math.pow
 import kotlin.math.sqrt
 import kotlinx.coroutines.SupervisorJob
 
+@AndroidEntryPoint
 class WeatherNotificationService : Service() {
 
     private lateinit var notificationManager: NotificationManager

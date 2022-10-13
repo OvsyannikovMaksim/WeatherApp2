@@ -21,8 +21,8 @@ class AppModule {
     fun provideRepository(dao: Dao, api: Api): Repository = OpenWeatherRepositoryImpl(dao, api)
 
     @Provides
-    fun getApi(): Api = OpenWeatherApiRetrofit.openWeatherApi
+    fun provideApi(): Api = OpenWeatherApiRetrofit.openWeatherApi
 
     @Provides
-    fun getDao(@ApplicationContext context: Context): Dao = DataBase.getDataBase(context)!!.localDao()
+    fun provideDao(@ApplicationContext context: Context): Dao = DataBase.getDataBase(context)!!.localDao()
 }

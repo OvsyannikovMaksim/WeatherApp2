@@ -22,17 +22,13 @@ class WeatherFullInfoFragment : Fragment() {
     private val weatherFullInfoModel: WeatherFullInfoModel by viewModels()
     private lateinit var fragmentWeatherFullInfoBinding: FragmentWeatherFullInfoBinding
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        val coordinates = requireArguments().getDoubleArray("FullInfoKey")!!
-        weatherFullInfoModel.getCityFromRepo(coordinates[0], coordinates[1])
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        val coordinates = requireArguments().getDoubleArray("FullInfoKey")!!
+        weatherFullInfoModel.getCityFromRepo(coordinates[0], coordinates[1])
         fragmentWeatherFullInfoBinding = FragmentWeatherFullInfoBinding.inflate(inflater)
         return fragmentWeatherFullInfoBinding.root
     }
