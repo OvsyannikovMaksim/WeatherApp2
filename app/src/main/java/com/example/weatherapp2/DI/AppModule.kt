@@ -1,4 +1,4 @@
-package com.example.weatherapp2
+package com.example.weatherapp2.DI
 
 import android.content.Context
 import com.example.weatherapp2.model.api.OpenWeatherApiRetrofit
