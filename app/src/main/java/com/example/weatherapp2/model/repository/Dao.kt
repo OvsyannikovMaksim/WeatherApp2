@@ -17,5 +17,5 @@ interface Dao {
 
     suspend fun updateCityFullInfo(cityFullInfo: CityFullInfo)
 
-    suspend fun deleteCityFullInfo(cityFullInfo: CityFullInfo)
+    suspend fun deleteCityFullInfo(cityId: Int)
 }

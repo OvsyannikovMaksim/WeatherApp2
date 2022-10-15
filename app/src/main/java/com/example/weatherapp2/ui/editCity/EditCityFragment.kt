@@ -88,9 +88,11 @@ class EditCityFragment : Fragment() {
             getPictureFromGalleryLauncher.launch(intent)
         }
         fragmentEditCityBinding.addPictureCameraButton.setOnClickListener {
-            if(Build.VERSION.SDK_INT<=Build.VERSION_CODES.Q){
-                getStoragePermissionLauncher.launch(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            } else{
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
+                getStoragePermissionLauncher.launch(
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                )
+            } else {
                 launchCamera()
             }
         }

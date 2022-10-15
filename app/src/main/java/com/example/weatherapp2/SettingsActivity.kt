@@ -45,12 +45,16 @@ class SettingsActivity : AppCompatActivity(), SaveSettingsDialog.NoticeDialogLis
 
         getMultiplePermissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
-        ) {  permissions ->
+        ) { permissions ->
             val isGranted = checkMultiplePermissions(permissions)
-            if(isGranted){
+            if (isGranted) {
                 SaveSettingsDialog().show(supportFragmentManager, "SaveDialog")
             } else {
-                Toast.makeText(this, "We need your location and notification for live weather", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "We need your location and notification for live weather",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
@@ -73,13 +77,17 @@ class SettingsActivity : AppCompatActivity(), SaveSettingsDialog.NoticeDialogLis
 
         binding.saveButton.setOnClickListener {
             if (binding.switchService.isChecked) {
-                if(Build.VERSION.SDK_INT<Build.VERSION_CODES.TIRAMISU) {
-                    getOnePermissionLauncher.launch(android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+                    getOnePermissionLauncher.launch(
+                        android.Manifest.permission.ACCESS_COARSE_LOCATION
+                    )
                 } else {
-                    getMultiplePermissionLauncher.launch(arrayOf(
-                        android.Manifest.permission.ACCESS_COARSE_LOCATION,
-                        android.Manifest.permission.POST_NOTIFICATIONS
-                    ))
+                    getMultiplePermissionLauncher.launch(
+                        arrayOf(
+                            android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                            android.Manifest.permission.POST_NOTIFICATIONS
+                        )
+                    )
                 }
             } else {
                 SaveSettingsDialog().show(supportFragmentManager, "SaveDialog")
@@ -157,10 +165,10 @@ class SettingsActivity : AppCompatActivity(), SaveSettingsDialog.NoticeDialogLis
         }
     }
 
-    private fun checkMultiplePermissions(permissions: Map<String, Boolean>): Boolean{
+    private fun checkMultiplePermissions(permissions: Map<String, Boolean>): Boolean {
         var res = true
-        for (entry in permissions.entries){
-            res= res && entry.value
+        for (entry in permissions.entries) {
+            res = res && entry.value
         }
         return res
     }

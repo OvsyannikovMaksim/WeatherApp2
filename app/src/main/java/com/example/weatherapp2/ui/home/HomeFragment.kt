@@ -1,6 +1,7 @@
 package com.example.weatherapp2.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -50,6 +51,7 @@ class HomeFragment : Fragment() {
         }
         val citiesWeather: LiveData<List<CityFullInfo>> = homeViewModel.cityWeatherList
         citiesWeather.observe(viewLifecycleOwner) {
+            Log.d("TAG2", it.toString())
             val listOfValidCities: MutableList<CityFullInfo> = mutableListOf()
             it.forEach { city -> if (city.current != null) { listOfValidCities.add(city) } }
             mAdapter.submitList(listOfValidCities)

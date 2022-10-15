@@ -13,6 +13,6 @@ interface Repository {
     suspend fun getCityByName(cityName: String): List<CityFullInfo>
     suspend fun getOneCityFullInfo(latitude: Double, longitude: Double): CityFullInfo?
     suspend fun getOneCityFullInfo(id: Int): CityFullInfo?
-    suspend fun deleteCityFullInfo(cityFullInfo: CityFullInfo)
     suspend fun putCityToRepo(cityFullInfo: CityFullInfo)
+    suspend fun deleteCityFullInfo(cityId: Int)
 }

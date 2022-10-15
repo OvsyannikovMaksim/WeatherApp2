@@ -25,6 +25,6 @@ interface LocalDao : com.example.weatherapp2.model.repository.Dao {
     @Update
     override suspend fun updateCityFullInfo(cityFullInfo: CityFullInfo)
 
-    @Delete
-    override suspend fun deleteCityFullInfo(cityFullInfo: CityFullInfo)
+    @Query("DELETE FROM CityFullInfo WHERE id=:cityId")
+    override suspend fun deleteCityFullInfo(cityId: Int)
 }

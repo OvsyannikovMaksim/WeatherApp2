@@ -76,7 +76,9 @@ class OpenWeatherRepositoryImpl @Inject constructor(
         return@withContext dao.getOneCityFullInfo(latitude, longitude)
     }
 
-    override suspend fun putCityToRepo(cityFullInfo: CityFullInfo) = withContext(Dispatchers.IO) {
+    override suspend fun putCityToRepo(cityFullInfo: CityFullInfo) = withContext(
+        Dispatchers.IO
+    ) {
         val lat = (cityFullInfo.lat * 10000).roundToInt() / 10000.0
         val lon = (cityFullInfo.lon * 10000).roundToInt() / 10000.0
         if (dao.getOneCityFullInfo(lat, lon) != null) {
@@ -97,14 +99,18 @@ class OpenWeatherRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun deleteCityFullInfo(cityFullInfo: CityFullInfo) = withContext(
+    override suspend fun deleteCityFullInfo(cityId: Int) = withContext(
         Dispatchers.IO
     ) {
-        dao.deleteCityFullInfo(cityFullInfo)
+        dao.deleteCityFullInfo(cityId)
     }
 
-    override suspend fun getOneCityFullInfo(id: Int): CityFullInfo? = withContext(Dispatchers.IO) {
-        return@withContext dao.getOneCityFullInfo(id)
+    override suspend fun getOneCityFullInfo(id: Int): CityFullInfo? = withContext(
+        Dispatchers.IO
+    ) {
+        val res = dao.getOneCityFullInfo(id)
+        Log.d("TAG1", res.toString())
+        return@withContext res
     }
 
     private suspend fun getCityWeatherFullInfo(
