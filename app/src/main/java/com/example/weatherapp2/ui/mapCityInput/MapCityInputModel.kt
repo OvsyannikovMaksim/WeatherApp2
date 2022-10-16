@@ -19,4 +19,8 @@ class MapCityInputModel @Inject constructor(private val repository: Repository) 
             resultOfSearch.postValue(repository.getCityByCoordinates(lat, lon))
         }
     }
+
+    fun getChosenMapId(): Int {
+        return repository.getChosenMapId()
+    }
 }

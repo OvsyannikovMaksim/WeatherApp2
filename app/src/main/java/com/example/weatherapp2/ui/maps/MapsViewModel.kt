@@ -8,6 +8,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class MapsViewModel @Inject constructor(repository: Repository) : ViewModel() {
+class MapsViewModel @Inject constructor(private val repository: Repository) : ViewModel() {
     val citiesFullInfo: LiveData<List<CityFullInfo>> = repository.dbUpdateLiveData()
+
+    fun getChosenMapId(): Int {
+        return repository.getChosenMapId()
+    }
 }

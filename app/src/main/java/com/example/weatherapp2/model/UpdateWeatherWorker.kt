@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 class UpdateWeatherWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted workerParams: WorkerParameters,
-    val repositoryImpl: OpenWeatherRepositoryImpl
+    private val repository: OpenWeatherRepositoryImpl
 ) : Worker(context, workerParams) {
 
     override fun doWork(): Result {
@@ -32,7 +32,7 @@ class UpdateWeatherWorker @AssistedInject constructor(
 
     private fun getCitiesInfoAndLoadItToLocalRepo(language: String) {
         CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
-            repositoryImpl.getCitiesInfoAndLoadItToLocalRepo(language)
+            repository.getCitiesInfoAndLoadItToLocalRepo(language)
         }
     }
 }

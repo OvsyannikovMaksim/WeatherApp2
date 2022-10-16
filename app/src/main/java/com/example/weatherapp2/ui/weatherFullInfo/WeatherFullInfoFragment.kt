@@ -11,8 +11,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.example.weatherapp2.R
 import com.example.weatherapp2.databinding.FragmentWeatherFullInfoBinding
-import com.example.weatherapp2.model.CurrentMapper
 import com.example.weatherapp2.model.common.CityFullInfo
+import com.example.weatherapp2.model.common.CurrentMapper
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 

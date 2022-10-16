@@ -1,12 +1,9 @@
-package com.example.weatherapp2.DI
+package com.example.weatherapp2.di
 
 import android.content.Context
 import com.example.weatherapp2.model.api.OpenWeatherApiRetrofit
 import com.example.weatherapp2.model.db.DataBase
-import com.example.weatherapp2.model.repository.Api
-import com.example.weatherapp2.model.repository.Dao
-import com.example.weatherapp2.model.repository.OpenWeatherRepositoryImpl
-import com.example.weatherapp2.model.repository.Repository
+import com.example.weatherapp2.model.repository.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,11 +15,17 @@ import dagger.hilt.components.SingletonComponent
 class AppModule {
 
     @Provides
-    fun provideRepository(dao: Dao, api: Api): Repository = OpenWeatherRepositoryImpl(dao, api)
+    fun provideRepository(dao: Dao, api: Api, sharedPref: MySharedPreference): Repository =
+        OpenWeatherRepositoryImpl(dao, api, sharedPref)
 
     @Provides
     fun provideApi(): Api = OpenWeatherApiRetrofit.openWeatherApi
 
     @Provides
     fun provideDao(@ApplicationContext context: Context): Dao = DataBase.getDataBase(context)!!.localDao()
+
+    @Provides
+    fun provideSharedPref(@ApplicationContext context: Context): MySharedPreference = LocalCache(
+        context
+    )
 }

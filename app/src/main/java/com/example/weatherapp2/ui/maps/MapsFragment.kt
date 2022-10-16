@@ -12,7 +12,6 @@ import androidx.navigation.fragment.findNavController
 import com.example.weatherapp2.R
 import com.example.weatherapp2.databinding.FragmentMapBinding
 import com.example.weatherapp2.model.common.CityFullInfo
-import com.example.weatherapp2.model.repository.LocalDataCache
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -43,14 +42,14 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
 
     override fun onStart() {
         super.onStart()
-        if (LocalDataCache.getChosenMapId() == 0) {
+        if (mapsViewModel.getChosenMapId() == 0) {
             mapBinding.googleMap.visibility = View.VISIBLE
             mapBinding.yandexMap.visibility = View.GONE
             val supportMapFragment =
                 childFragmentManager.findFragmentById(R.id.google_map) as SupportMapFragment
             supportMapFragment.getMapAsync(this)
         }
-        if (LocalDataCache.getChosenMapId() == 1) {
+        if (mapsViewModel.getChosenMapId() == 1) {
             mapBinding.googleMap.visibility = View.GONE
             mapBinding.yandexMap.visibility = View.VISIBLE
             mapBinding.yandexMap.onStart()

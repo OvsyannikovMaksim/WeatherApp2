@@ -1,9 +1,8 @@
 package com.example.weatherapp2.model.repository
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.LiveData
+import com.example.weatherapp2.model.NetworkMonitor
 import com.example.weatherapp2.model.common.CityFullInfo
 import java.text.SimpleDateFormat
 import java.util.*
@@ -15,21 +14,11 @@ import kotlinx.coroutines.withContext
 
 class OpenWeatherRepositoryImpl @Inject constructor(
     private val dao: Dao,
-    private val api: Api
+    private val api: Api,
+    private val sharedPref: MySharedPreference
 ) : Repository {
 
-    private val apiKeyOpenWeather: String = LocalDataCache.getMetaData("openWeatherApiKey")
-
-    object SharedPref {
-        private lateinit var preferences: SharedPreferences
-
-        fun init(context: Context) {
-            preferences = context.getSharedPreferences(
-                SharedPreferencesTag,
-                Context.MODE_PRIVATE
-            )
-        }
-    }
+    private val apiKeyOpenWeather: String = sharedPref.getMetaData("openWeatherApiKey")
 
     override fun dbUpdateLiveData(): LiveData<List<CityFullInfo>> {
         return dao.dbUpdateLiveData()
@@ -43,7 +32,7 @@ class OpenWeatherRepositoryImpl @Inject constructor(
                 val citiesFromRepo = mutableListOf<CityFullInfo>()
                 val resultFromApi = mutableListOf<CityFullInfo>()
                 citiesFromRepo.addAll(dao.getAllCityFullInfo())
-                if (LocalDataCache.getInternetAccess()) {
+                if (NetworkMonitor.myNetwork) {
                     citiesFromRepo.forEach {
                         resultFromApi.add(getCityWeatherFullInfo(it, language))
                     }
@@ -108,9 +97,7 @@ class OpenWeatherRepositoryImpl @Inject constructor(
     override suspend fun getOneCityFullInfo(id: Int): CityFullInfo? = withContext(
         Dispatchers.IO
     ) {
-        val res = dao.getOneCityFullInfo(id)
-        Log.d("TAG1", res.toString())
-        return@withContext res
+        return@withContext dao.getOneCityFullInfo(id)
     }
 
     private suspend fun getCityWeatherFullInfo(
@@ -135,8 +122,44 @@ class OpenWeatherRepositoryImpl @Inject constructor(
         return result
     }
 
+    // SharedPref
+    override fun getMetaData(name: String): String {
+        return sharedPref.getMetaData(name)
+    }
+
+    override fun getChosenMapId(): Int {
+        return sharedPref.getChosenMapId()
+    }
+
+    override fun setChosenMapId(chosenMapId: Int) {
+        sharedPref.setChosenMapId(chosenMapId)
+    }
+
+    override fun getServiceState(): Boolean {
+        return sharedPref.getServiceState()
+    }
+
+    override fun setServiceState(isServiceOn: Boolean) {
+        sharedPref.setServiceState(isServiceOn)
+    }
+
+    override fun getLastCityInNotification(): Int {
+        return sharedPref.getLastCityInNotification()
+    }
+
+    override fun putLastCityInNotification(cityId: Int) {
+        sharedPref.putLastCityInNotification(cityId)
+    }
+
+    override fun getServiceUpdateTime(): Int {
+        return sharedPref.getServiceUpdateTime()
+    }
+
+    override fun setServiceUpdateTime(updateTime: Int) {
+        sharedPref.setServiceUpdateTime(updateTime)
+    }
+
     companion object {
-        private const val SharedPreferencesTag = "SharedPreferencesTag"
         private const val excludeFullInfo: String = "minutely,hourly,alerts"
     }
 }

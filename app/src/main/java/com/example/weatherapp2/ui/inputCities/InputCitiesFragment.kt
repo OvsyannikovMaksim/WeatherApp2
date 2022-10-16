@@ -17,8 +17,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weatherapp2.R
 import com.example.weatherapp2.databinding.FragmentInputCitiesBinding
+import com.example.weatherapp2.model.NetworkMonitor
 import com.example.weatherapp2.model.common.CityFullInfo
-import com.example.weatherapp2.model.repository.LocalDataCache
 import com.example.weatherapp2.ui.CityInfoAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -40,7 +40,7 @@ class InputCitiesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (LocalDataCache.getInternetAccess()) {
+        if (NetworkMonitor.myNetwork) {
             fragmentInputCitiesBinding.inputCityName.setEndIconOnClickListener {
                 findNavController().navigate(
                     R.id.action_navigation_input_city_to_mapCityInputFragment
@@ -56,7 +56,7 @@ class InputCitiesFragment : Fragment() {
             if (keyEvent.action == KeyEvent.ACTION_DOWN && keyEvent.keyCode == KeyEvent.KEYCODE_ENTER) {
                 fragmentInputCitiesBinding.inputCityNameEditText.clearFocus()
                 hideKeyboard(requireContext(), v)
-                if (LocalDataCache.getInternetAccess()) {
+                if (NetworkMonitor.myNetwork) {
                     inputCitiesModel.getCitiesFromLine(
                         fragmentInputCitiesBinding.inputCityNameEditText.text.toString()
                     )

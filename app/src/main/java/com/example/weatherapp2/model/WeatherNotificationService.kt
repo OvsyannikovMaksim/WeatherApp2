@@ -11,7 +11,6 @@ import androidx.navigation.NavDeepLinkBuilder
 import com.example.weatherapp2.MainActivity
 import com.example.weatherapp2.R
 import com.example.weatherapp2.model.common.CityFullInfo
-import com.example.weatherapp2.model.repository.LocalDataCache
 import com.example.weatherapp2.model.repository.OpenWeatherRepositoryImpl
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -31,9 +30,8 @@ class WeatherNotificationService : Service() {
     private var cancellationTokenSource = CancellationTokenSource()
 
     @Inject
-    lateinit var repositoryImpl: OpenWeatherRepositoryImpl
+    lateinit var repository: OpenWeatherRepositoryImpl
     private val job = SupervisorJob()
-    private val CHANNEL_ID = "WeatherApp2Channel"
 
     override fun onCreate() {
         super.onCreate()
@@ -42,7 +40,7 @@ class WeatherNotificationService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        repositoryImpl.dbUpdateLiveData().observeForever {
+        repository.dbUpdateLiveData().observeForever {
             getCityForNotificationAndLaunchNotification(it)
         }
         return super.onStartCommand(intent, flags, startId)
@@ -94,11 +92,11 @@ class WeatherNotificationService : Service() {
             if (it.isSuccessful && it.result != null) {
                 result = findNearest(it.result.latitude, it.result.longitude, citiesWeather)
                 if (result != null) {
-                    LocalDataCache.putLastCityInNotification(result!!.id!!)
+                    repository.putLastCityInNotification(result!!.id!!)
                 }
-            } else if (LocalDataCache.getLastCityInNotification() != 0) {
+            } else if (repository.getLastCityInNotification() != 0) {
                 result = findLastInNotification(
-                    LocalDataCache.getLastCityInNotification(),
+                    repository.getLastCityInNotification(),
                     citiesWeather
                 )
             } else {
@@ -142,5 +140,9 @@ class WeatherNotificationService : Service() {
 
     private fun findMinDistance(cityLon: Double, cityLat: Double, Lon: Double, Lat: Double): Double {
         return sqrt(((cityLon - Lon).pow(2) + (cityLat - Lat).pow(2)))
+    }
+
+    companion object {
+        const val CHANNEL_ID = "WeatherApp2Channel"
     }
 }

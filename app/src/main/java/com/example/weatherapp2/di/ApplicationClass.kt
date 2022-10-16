@@ -1,4 +1,4 @@
-package com.example.weatherapp2.DI
+package com.example.weatherapp2.di
 
 import android.app.Application
 import androidx.hilt.work.HiltWorkerFactory

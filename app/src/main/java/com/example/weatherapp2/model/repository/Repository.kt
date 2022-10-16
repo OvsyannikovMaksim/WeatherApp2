@@ -15,4 +15,15 @@ interface Repository {
     suspend fun getOneCityFullInfo(id: Int): CityFullInfo?
     suspend fun putCityToRepo(cityFullInfo: CityFullInfo)
     suspend fun deleteCityFullInfo(cityId: Int)
+
+    // SharedPref
+    fun getMetaData(name: String): String
+    fun getServiceUpdateTime(): Int
+    fun setServiceUpdateTime(updateTime: Int)
+    fun getServiceState(): Boolean
+    fun setServiceState(isServiceOn: Boolean)
+    fun getChosenMapId(): Int
+    fun setChosenMapId(chosenMapId: Int)
+    fun getLastCityInNotification(): Int
+    fun putLastCityInNotification(cityId: Int)
 }

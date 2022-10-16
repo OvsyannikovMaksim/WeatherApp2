@@ -1,7 +1,6 @@
 package com.example.weatherapp2.ui.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,8 +13,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weatherapp2.R
 import com.example.weatherapp2.databinding.FragmentHomeBinding
+import com.example.weatherapp2.model.NetworkMonitor
 import com.example.weatherapp2.model.common.CityFullInfo
-import com.example.weatherapp2.model.repository.LocalDataCache
 import com.example.weatherapp2.ui.WeatherInfoAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -46,18 +45,18 @@ class HomeFragment : Fragment() {
         val mRecyclerView = fragmentHomeBinding.cityInfoRecyclerview
         mRecyclerView.layoutManager = mLayout
         mRecyclerView.adapter = mAdapter
-        if (!LocalDataCache.getInternetAccess()) {
-            Toast.makeText(requireContext(), "No internet", Toast.LENGTH_SHORT).show()
-        }
         val citiesWeather: LiveData<List<CityFullInfo>> = homeViewModel.cityWeatherList
         citiesWeather.observe(viewLifecycleOwner) {
-            Log.d("TAG2", it.toString())
             val listOfValidCities: MutableList<CityFullInfo> = mutableListOf()
             it.forEach { city -> if (city.current != null) { listOfValidCities.add(city) } }
             mAdapter.submitList(listOfValidCities)
             fragmentHomeBinding.loadingIndicator.visibility = View.GONE
         }
-        homeViewModel.getCitiesInfoAndLoadItToLocalRepo("en")
+        if(NetworkMonitor.myNetwork) {
+            homeViewModel.getCitiesInfoAndLoadItToLocalRepo("en")
+        } else {
+            Toast.makeText(context, "No Internet", Toast.LENGTH_SHORT).show()
+        }
         fragmentHomeBinding.addCityButton.setOnClickListener {
             it.findNavController().navigate(R.id.action_navigation_home_to_navigation_input_city)
         }

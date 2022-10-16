@@ -1,4 +1,4 @@
-package com.example.weatherapp2.model
+package com.example.weatherapp2.model.common
 
 import android.content.Context
 
