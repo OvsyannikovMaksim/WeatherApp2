@@ -13,9 +13,9 @@ object NetworkMonitor {
     lateinit var connectivityManager: ConnectivityManager
 
     fun init(context: Context) {
-        createInternetMonitor()
         connectivityManager =
             getSystemService(context, ConnectivityManager::class.java) as ConnectivityManager
+        createInternetMonitor()
     }
 
 

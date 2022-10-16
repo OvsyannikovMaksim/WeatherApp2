@@ -37,7 +37,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
-        // createInternetMonitor()
         val navView: BottomNavigationView = binding.navView
 
         val navHostFragment = supportFragmentManager
