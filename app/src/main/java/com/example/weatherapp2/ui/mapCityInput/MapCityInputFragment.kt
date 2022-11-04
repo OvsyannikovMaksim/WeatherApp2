@@ -12,10 +12,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import com.example.weatherapp2.R
 import com.example.weatherapp2.databinding.FragmentMapBinding
-import com.example.weatherapp2.model.api.OpenWeatherApiRetrofit
 import com.example.weatherapp2.model.common.CityFullInfo
-import com.example.weatherapp2.model.repository.CityWeatherRepoImpl
-import com.example.weatherapp2.model.repository.LocalDataCache
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -28,15 +25,13 @@ import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.map.*
 import com.yandex.mapkit.map.Map
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MapCityInputFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var mapBinding: FragmentMapBinding
-    private val mapCityInputModel by viewModels<MapCityInputModel> {
-        MapCityInputModelFactory(
-            CityWeatherRepoImpl(OpenWeatherApiRetrofit.openWeatherApi)
-        )
-    }
+    private val mapCityInputModel: MapCityInputModel by viewModels()
     private var nothingToast: Toast? = null
     private var googleMarker: Marker? = null
     private var yandexMarker: PlacemarkMapObject? = null
@@ -79,14 +74,14 @@ class MapCityInputFragment : Fragment(), OnMapReadyCallback {
 
     override fun onStart() {
         super.onStart()
-        if (LocalDataCache.getChosenMapId() == 0) {
+        if (mapCityInputModel.getChosenMapId() == 0) {
             mapBinding.googleMap.visibility = View.VISIBLE
             mapBinding.yandexMap.visibility = View.GONE
             val supportMapFragment =
                 childFragmentManager.findFragmentById(R.id.google_map) as SupportMapFragment
             supportMapFragment.getMapAsync(this)
         }
-        if (LocalDataCache.getChosenMapId() == 1) {
+        if (mapCityInputModel.getChosenMapId() == 1) {
             mapBinding.googleMap.visibility = View.GONE
             mapBinding.yandexMap.visibility = View.VISIBLE
             mapBinding.yandexMap.onStart()

@@ -4,10 +4,6 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
-import android.net.ConnectivityManager
-import android.net.Network
-import android.net.NetworkCapabilities
-import android.net.NetworkRequest
 import android.os.Build
 import android.os.Bundle
 import android.view.Menu
@@ -19,23 +15,28 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.weatherapp2.databinding.ActivityMainBinding
-import com.example.weatherapp2.model.repository.LocalDataCache
+import com.example.weatherapp2.model.NetworkMonitor
+import com.example.weatherapp2.model.WeatherNotificationService
+import com.example.weatherapp2.model.repository.OpenWeatherRepositoryImpl
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.yandex.mapkit.MapKitFactory
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
+    @Inject
+    lateinit var repository: OpenWeatherRepositoryImpl
     private lateinit var binding: ActivityMainBinding
-    val CHANNEL_ID = "WeatherApp2Channel"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        LocalDataCache.init(applicationContext)
-        MapKitFactory.setApiKey(LocalDataCache.getMetaData("yandexMapApiKey"))
+        NetworkMonitor.init(applicationContext)
+        MapKitFactory.setApiKey(repository.getMetaData("yandexMapApiKey"))
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
-        createInternetMonitor()
         val navView: BottomNavigationView = binding.navView
 
         val navHostFragment = supportFragmentManager
@@ -90,33 +91,16 @@ class MainActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = "Notification"
             val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+            val channel = NotificationChannel(
+                WeatherNotificationService.CHANNEL_ID,
+                name,
+                importance
+            ).apply {
                 setShowBadge(false)
             }
             val notificationManager: NotificationManager =
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
-    }
-
-    private fun createInternetMonitor() {
-        val networkRequest = NetworkRequest.Builder()
-            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-            .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
-            .build()
-        val networkCallback = object : ConnectivityManager.NetworkCallback() {
-            override fun onAvailable(network: Network) {
-                super.onAvailable(network)
-                LocalDataCache.setInternetAccess(true)
-            }
-
-            override fun onLost(network: Network) {
-                super.onLost(network)
-                LocalDataCache.setInternetAccess(false)
-            }
-        }
-        val connectivityManager = getSystemService(ConnectivityManager::class.java) as ConnectivityManager
-        connectivityManager.requestNetwork(networkRequest, networkCallback)
     }
 }

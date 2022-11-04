@@ -1,19 +1,20 @@
 package com.example.weatherapp2.ui.deleteDialog
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.example.weatherapp2.model.repository.LocalRepo
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
+import androidx.lifecycle.viewModelScope
+import com.example.weatherapp2.model.repository.Repository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.launch
 
-class DeleteDialogModel(private val localRepo: LocalRepo) : ViewModel() {
+@HiltViewModel
+class DeleteDialogModel @Inject constructor(
+    private val repository: Repository
+) : ViewModel() {
 
     fun deleteCity(cityId: Int) {
-        CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
-            Log.d("TAG", cityId.toString())
-            localRepo.getOneCityFullInfo(cityId)?.let { localRepo.deleteCityFullInfo(it) }
+        viewModelScope.launch {
+            repository.deleteCityFullInfo(cityId)
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.example.weatherapp2.ui.dialogs
+package com.example.weatherapp2.ui.saveSettingsDialog
 
 import android.app.Dialog
 import android.content.Context
@@ -24,7 +24,7 @@ class SaveSettingsDialog : DialogFragment() {
             throw ClassCastException(
                 (
                     context.toString() +
-                        " must implement NoticeDialogListener"
+                        "Must implement NoticeDialogListener"
                     )
             )
         }

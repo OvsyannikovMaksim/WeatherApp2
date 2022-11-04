@@ -3,7 +3,6 @@ package com.example.weatherapp2.ui.weatherFullInfo
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,37 +11,24 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.example.weatherapp2.R
 import com.example.weatherapp2.databinding.FragmentWeatherFullInfoBinding
-import com.example.weatherapp2.model.CurrentMapper
 import com.example.weatherapp2.model.common.CityFullInfo
-import com.example.weatherapp2.model.db.DataBase
-import com.example.weatherapp2.model.repository.LocalRepoImpl
+import com.example.weatherapp2.model.common.CurrentMapper
 import com.squareup.picasso.Picasso
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class WeatherFullInfoFragment : Fragment() {
 
-    private val weatherFullInfoModel by viewModels<WeatherFullInfoModel> {
-        WeatherFullInfoModelFactory(
-            LocalRepoImpl(
-                DataBase.getDataBase(this.requireContext())!!
-                    .localDao()
-            )
-        )
-    }
+    private val weatherFullInfoModel: WeatherFullInfoModel by viewModels()
     private lateinit var fragmentWeatherFullInfoBinding: FragmentWeatherFullInfoBinding
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        val coordinates = requireArguments().getDoubleArray("FullInfoKey")!!
-        Log.d("TAG", coordinates[0].toString())
-        Log.d("TAG", coordinates[1].toString())
-        weatherFullInfoModel.getCityFromRepo(coordinates[0], coordinates[1])
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        val coordinates = requireArguments().getDoubleArray("FullInfoKey")!!
+        weatherFullInfoModel.getCityFromRepo(coordinates[0], coordinates[1])
         fragmentWeatherFullInfoBinding = FragmentWeatherFullInfoBinding.inflate(inflater)
         return fragmentWeatherFullInfoBinding.root
     }

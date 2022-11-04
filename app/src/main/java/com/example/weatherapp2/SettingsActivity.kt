@@ -1,6 +1,7 @@
 package com.example.weatherapp2
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -12,15 +13,21 @@ import androidx.work.*
 import com.example.weatherapp2.databinding.ActivitySettingsBinding
 import com.example.weatherapp2.model.UpdateWeatherWorker
 import com.example.weatherapp2.model.WeatherNotificationService
-import com.example.weatherapp2.model.repository.LocalDataCache
-import com.example.weatherapp2.ui.dialogs.SaveSettingsDialog
+import com.example.weatherapp2.model.repository.OpenWeatherRepositoryImpl
+import com.example.weatherapp2.ui.saveSettingsDialog.SaveSettingsDialog
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class SettingsActivity : AppCompatActivity(), SaveSettingsDialog.NoticeDialogListener {
 
     private lateinit var binding: ActivitySettingsBinding
-    private val updateWeatherWorkerTag = "UpdateWeatherWorkerTag"
-    private lateinit var getLocationPermissionLauncher: ActivityResultLauncher<String>
+    private lateinit var getOnePermissionLauncher: ActivityResultLauncher<String>
+    private lateinit var getMultiplePermissionLauncher: ActivityResultLauncher<Array<String>>
+
+    @Inject
+    lateinit var repository: OpenWeatherRepositoryImpl
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +38,7 @@ class SettingsActivity : AppCompatActivity(), SaveSettingsDialog.NoticeDialogLis
         binding.toolbar.setNavigationOnClickListener {
             finish()
         }
-        getLocationPermissionLauncher = registerForActivityResult(
+        getOnePermissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestPermission()
         ) { isGranted: Boolean ->
             if (isGranted) {
@@ -40,17 +47,32 @@ class SettingsActivity : AppCompatActivity(), SaveSettingsDialog.NoticeDialogLis
                 Toast.makeText(this, "We need your location for live weather", Toast.LENGTH_SHORT).show()
             }
         }
+
+        getMultiplePermissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            val isGranted = checkMultiplePermissions(permissions)
+            if (isGranted) {
+                SaveSettingsDialog().show(supportFragmentManager, "SaveDialog")
+            } else {
+                Toast.makeText(
+                    this,
+                    "We need your location and notification for live weather",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
     }
 
     override fun onStart() {
         super.onStart()
-        binding.mapsSpinner.setSelection(LocalDataCache.getChosenMapId())
-        binding.switchService.isChecked = LocalDataCache.getServiceState()
+        binding.mapsSpinner.setSelection(repository.getChosenMapId())
+        binding.switchService.isChecked = repository.getServiceState()
         if (binding.switchService.isChecked) {
             binding.timeText.visibility = View.VISIBLE
             binding.textMinutes.visibility = View.VISIBLE
             binding.timeText.setText(
-                LocalDataCache.getServiceUpdateTime().toString()
+                repository.getServiceUpdateTime().toString()
             )
         }
 
@@ -60,9 +82,18 @@ class SettingsActivity : AppCompatActivity(), SaveSettingsDialog.NoticeDialogLis
 
         binding.saveButton.setOnClickListener {
             if (binding.switchService.isChecked) {
-                getLocationPermissionLauncher.launch(
-                    android.Manifest.permission.ACCESS_COARSE_LOCATION
-                )
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+                    getOnePermissionLauncher.launch(
+                        android.Manifest.permission.ACCESS_COARSE_LOCATION
+                    )
+                } else {
+                    getMultiplePermissionLauncher.launch(
+                        arrayOf(
+                            android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                            android.Manifest.permission.POST_NOTIFICATIONS
+                        )
+                    )
+                }
             } else {
                 SaveSettingsDialog().show(supportFragmentManager, "SaveDialog")
             }
@@ -81,7 +112,6 @@ class SettingsActivity : AppCompatActivity(), SaveSettingsDialog.NoticeDialogLis
             .build()
         if (binding.switchService.isChecked && !isWorkerOn(updateWeatherWorkerTag)) {
             WorkManager.getInstance(applicationContext).enqueue(updateWeatherWorker)
-            // updateWeatherWorker.id
         } else if (!binding.switchService.isChecked && isWorkerOn(updateWeatherWorkerTag)) {
             WorkManager.getInstance(applicationContext).cancelAllWorkByTag(updateWeatherWorkerTag)
         } else if (binding.switchService.isChecked && isWorkerOn(updateWeatherWorkerTag) &&
@@ -91,9 +121,9 @@ class SettingsActivity : AppCompatActivity(), SaveSettingsDialog.NoticeDialogLis
             WorkManager.getInstance(applicationContext).enqueue(updateWeatherWorker)
         }
         syncNotification()
-        LocalDataCache.setServiceUpdateTime(binding.timeText.text.toString().toInt())
-        LocalDataCache.setServiceState(binding.switchService.isChecked)
-        LocalDataCache.setChosenMapId(binding.mapsSpinner.selectedItemPosition)
+        repository.setServiceUpdateTime(binding.timeText.text.toString().toInt())
+        repository.setServiceState(binding.switchService.isChecked)
+        repository.setChosenMapId(binding.mapsSpinner.selectedItemPosition)
         finish()
     }
 
@@ -125,7 +155,7 @@ class SettingsActivity : AppCompatActivity(), SaveSettingsDialog.NoticeDialogLis
     }
 
     private fun isTimeChanged(newTime: Long): Boolean {
-        val oldTime = LocalDataCache.getServiceUpdateTime().toLong()
+        val oldTime = repository.getServiceUpdateTime().toLong()
         if (newTime != oldTime) {
             return true
         }
@@ -133,10 +163,21 @@ class SettingsActivity : AppCompatActivity(), SaveSettingsDialog.NoticeDialogLis
     }
 
     private fun syncNotification() {
-        if (binding.switchService.isChecked && binding.switchService.isChecked != LocalDataCache.getServiceState()) {
+        if (binding.switchService.isChecked && binding.switchService.isChecked != repository.getServiceState()) {
             startService(Intent(this, WeatherNotificationService::class.java))
-        } else if (!binding.switchService.isChecked && binding.switchService.isChecked != LocalDataCache.getServiceState()) {
+        } else if (!binding.switchService.isChecked && binding.switchService.isChecked != repository.getServiceState()) {
             stopService(Intent(this, WeatherNotificationService::class.java))
         }
+    }
+
+    private fun checkMultiplePermissions(permissions: Map<String, Boolean>): Boolean {
+        var res = true
+        for (entry in permissions.entries) {
+            res = res && entry.value
+        }
+        return res
+    }
+    companion object {
+        const val updateWeatherWorkerTag = "UpdateWeatherWorkerTag"
     }
 }

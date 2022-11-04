@@ -1,21 +1,17 @@
 package com.example.weatherapp2.ui.maps
 
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.example.weatherapp2.model.common.CityFullInfo
-import com.example.weatherapp2.model.repository.LocalRepo
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
+import com.example.weatherapp2.model.repository.Repository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class MapsViewModel(private val localRepo: LocalRepo) : ViewModel() {
+@HiltViewModel
+class MapsViewModel @Inject constructor(private val repository: Repository) : ViewModel() {
+    val citiesFullInfo: LiveData<List<CityFullInfo>> = repository.dbUpdateLiveData()
 
-    val citiesFullInfo: MutableLiveData<List<CityFullInfo>> = MutableLiveData()
-
-    fun loadCitiesFullInfoFromRepo() {
-        CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
-            citiesFullInfo.postValue(localRepo.getAllCityFullInfo())
-        }
+    fun getChosenMapId(): Int {
+        return repository.getChosenMapId()
     }
 }

@@ -5,26 +5,26 @@ import androidx.room.*
 import com.example.weatherapp2.model.common.CityFullInfo
 
 @Dao
-interface LocalDao {
+interface LocalDao : com.example.weatherapp2.model.repository.Dao {
 
     @Query("SELECT * FROM CityFullInfo")
-    fun dbUpdateLiveData(): LiveData<List<CityFullInfo>>
+    override fun dbUpdateLiveData(): LiveData<List<CityFullInfo>>
 
     @Query("SELECT * FROM CityFullInfo")
-    suspend fun getAllCityFullInfo(): List<CityFullInfo>
+    override suspend fun getAllCityFullInfo(): List<CityFullInfo>
 
     @Query("SELECT * FROM CityFullInfo WHERE id =:id")
-    suspend fun getOneCityFullInfo(id: Int): CityFullInfo?
+    override suspend fun getOneCityFullInfo(id: Int): CityFullInfo?
 
     @Query("SELECT * FROM CityFullInfo WHERE lon =:longitude and lat=:latitude")
-    suspend fun getOneCityFullInfo(latitude: Double, longitude: Double): CityFullInfo?
+    override suspend fun getOneCityFullInfo(latitude: Double, longitude: Double): CityFullInfo?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCityFullInfo(cityFullInfo: CityFullInfo)
+    override suspend fun insertCityFullInfo(cityFullInfo: CityFullInfo)
 
     @Update
-    suspend fun updateCityFullInfo(cityFullInfo: CityFullInfo)
+    override suspend fun updateCityFullInfo(cityFullInfo: CityFullInfo)
 
-    @Delete
-    suspend fun deleteCityFullInfo(cityFullInfo: CityFullInfo)
+    @Query("DELETE FROM CityFullInfo WHERE id=:cityId")
+    override suspend fun deleteCityFullInfo(cityId: Int)
 }

@@ -55,10 +55,6 @@ class EditCityFragment : Fragment() {
         ) { isGranted: Boolean ->
             if (isGranted) {
                 launchCamera()
-            } else {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    launchCamera()
-                }
             }
         }
     }
@@ -69,7 +65,11 @@ class EditCityFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         fragmentEditCityBinding = FragmentEditCityBinding.inflate(inflater, container, false)
-        cityFullInfo = requireArguments().getParcelable("CityInfoKey")!!
+        cityFullInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requireArguments().getParcelable("CityInfoKey", CityFullInfo::class.java)!!
+        } else {
+            requireArguments().getParcelable("CityInfoKey")!!
+        }
         pic = cityFullInfo.pic
         return fragmentEditCityBinding.root
     }
@@ -88,7 +88,13 @@ class EditCityFragment : Fragment() {
             getPictureFromGalleryLauncher.launch(intent)
         }
         fragmentEditCityBinding.addPictureCameraButton.setOnClickListener {
-            getStoragePermissionLauncher.launch(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
+                getStoragePermissionLauncher.launch(
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                )
+            } else {
+                launchCamera()
+            }
         }
 
         fragmentEditCityBinding.saveCityButton.setOnClickListener {

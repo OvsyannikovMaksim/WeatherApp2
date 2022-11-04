@@ -3,7 +3,7 @@ package com.example.weatherapp2.model.repository
 import androidx.lifecycle.LiveData
 import com.example.weatherapp2.model.common.CityFullInfo
 
-interface LocalRepo {
+interface Dao {
 
     fun dbUpdateLiveData(): LiveData<List<CityFullInfo>>
 
@@ -17,5 +17,5 @@ interface LocalRepo {
 
     suspend fun updateCityFullInfo(cityFullInfo: CityFullInfo)
 
-    suspend fun deleteCityFullInfo(cityFullInfo: CityFullInfo)
+    suspend fun deleteCityFullInfo(cityId: Int)
 }
